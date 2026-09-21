@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: campusgent_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - campusgent_net
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: campusgent_server
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/campusgent
+      - JWT_SECRET=productionsecretjwtaccesskey12345678
+      - JWT_REFRESH_SECRET=productionsecretjwtrefreshkey12345678
+      - CLIENT_URL=http://localhost:80
+      - AI_API_KEY=mock-key-for-now
+    depends_on:
+      - mongodb
+    networks:
+      - campusgent_net
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: campusgent_web
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - campusgent_net
+
+volumes:
+  mongo_data:
+
+networks:
+  campusgent_net:
+    driver: bridge
