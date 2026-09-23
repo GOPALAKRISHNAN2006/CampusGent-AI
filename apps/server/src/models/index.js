@@ -1,0 +1,17 @@
+import './User.js';
+import './StudentProfile.js';
+import './FacultyProfile.js';
+import './Department.js';
+import './Job.js';
+import './JobApplication.js';
+import './Interview.js';
+import './AIInsight.js';
+import './AIUsage.js';
+import './Notification.js';
+import './AuditLog.js';
+import './RefreshToken.js';
+import './MockInterviewSession.js';
+import './CourseClass.js';
+import './AttendanceRecord.js';
+import './Assessment.js';
+import './StudentMark.js';

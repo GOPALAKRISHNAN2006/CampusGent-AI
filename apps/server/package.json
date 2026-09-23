@@ -2,11 +2,12 @@
   "name": "@campusgent/server",
   "version": "1.0.0",
   "description": "Backend API Server for CampusGent AI",
-  "main": "dist/server.js",
+  "type": "module",
+  "main": "src/server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "node --check src/server.js",
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
     "test": "vitest run"
   },
   "dependencies": {
@@ -29,20 +30,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/compression": "^1.7.5",
-    "@types/cookie-parser": "^1.4.6",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/morgan": "^1.9.9",
-    "@types/multer": "^2.2.0",
-    "@types/node": "^20.11.16",
-    "@types/supertest": "^6.0.2",
-    "@types/uuid": "^9.0.8",
     "supertest": "^6.0.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   }
 }

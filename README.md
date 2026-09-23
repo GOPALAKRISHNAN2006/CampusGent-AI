@@ -8,7 +8,7 @@ CampusGent AI is a production-quality, secure, role-based university platform de
 
 ## 1. High-Level Architecture
 
-The platform is structured as a TypeScript monorepo using npm workspaces:
+The platform is structured as a JavaScript monorepo using npm workspaces:
 
 ```
 +-----------------------------------------------------------+
@@ -19,7 +19,7 @@ The platform is structured as a TypeScript monorepo using npm workspaces:
                               v
 +-----------------------------------------------------------+
 |                     BACKEND (server)                      |
-|  Express.js + TypeScript + Mongoose ODM                   |
+|  Express.js + JavaScript + Mongoose ODM                  |
 +-----------------------------+-----------------------------+
                               | MongoDB Wire Protocol
                               v
@@ -33,8 +33,8 @@ The platform is structured as a TypeScript monorepo using npm workspaces:
 
 ## 2. Technology Stack
 
-- **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, React Router v6, TanStack Query v5, Axios, Recharts, Lucide Icons, React Hook Form, Zod.
-- **Backend**: Node.js, Express.js, TypeScript, REST APIs, Winston Logging.
+- **Frontend**: React 18, Vite, JavaScript, Tailwind CSS, React Router v6, TanStack Query v5, Axios, Recharts, Lucide Icons, React Hook Form, Zod.
+- **Backend**: Node.js, Express.js, JavaScript, REST APIs, Winston Logging.
 - **Database**: MongoDB, Mongoose.
 - **Authentication**: Stateless JWT access tokens + secure HttpOnly cookie refresh token rotation (RTR) to prevent token replay attacks.
 - **DevOps**: Docker, Docker Compose, Vitest, Supertest.
@@ -47,13 +47,13 @@ The platform is structured as a TypeScript monorepo using npm workspaces:
 campusgent-ai/
   ├── apps/
   │    ├── web/                 # React SPA Client
-  │    └── server/              # Express TypeScript REST Server
+  │    └── server/              # Express JavaScript REST Server
   ├── packages/
-  │    └── shared/              # Shared Types and Zod Schema Validations
+  │    └── shared/              # Shared JavaScript modules and validation helpers
   ├── docs/                     # Architectural & Requirement specifications
   ├── docker-compose.yml        # Orchestrates client, server, and database containers
   ├── package.json              # Monorepo Workspace configuration
-  └── tsconfig.json             # Root TypeScript compilation options
+  └── .env.example              # Example runtime environment file
 ```
 
 ---
