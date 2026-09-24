@@ -13,23 +13,23 @@ export const Button = ({
     ...props
 }) => {
     const baseStyles =
-        'inline-flex items-center justify-center font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:pointer-events-none select-none cursor-pointer';
+        'inline-flex items-center justify-center font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#412D15] disabled:opacity-50 disabled:pointer-events-none select-none cursor-pointer';
 
     const variants = {
         primary:
-            'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-sm hover:shadow-indigo-500/20 active:scale-[0.98]',
+            'bg-gradient-to-r from-[#1F150C] via-[#140D07] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] text-[#E1DCC9] border border-[#412D15]/60 shadow-sm hover:shadow-[#412D15]/25 active:scale-[0.98]',
         secondary:
-            'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-sm active:scale-[0.98]',
+            'bg-[#FAF7F2] border border-[#E1DCC9] text-[#1F150C] hover:bg-[#F4EFE6] hover:border-[#412D15]/50 hover:text-[#000000] shadow-sm active:scale-[0.98]',
         outline:
-            'border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 active:scale-[0.98]',
+            'border border-[#412D15]/40 text-[#1F150C] hover:bg-[#F4EFE6] hover:border-[#412D15] active:scale-[0.98]',
         emerald:
-            'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-sm hover:shadow-emerald-500/20 active:scale-[0.98]',
+            'bg-gradient-to-r from-[#412D15] to-[#1F150C] hover:from-[#6B5336] hover:to-[#412D15] text-[#E1DCC9] border border-[#412D15] shadow-sm active:scale-[0.98]',
         danger:
-            'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-sm active:scale-[0.98] focus:ring-rose-500',
+            'bg-gradient-to-r from-rose-700 to-rose-800 hover:from-rose-600 hover:to-rose-700 text-white shadow-sm active:scale-[0.98] focus:ring-rose-600',
         ghost:
-            'text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:scale-[0.98]',
+            'text-[#412D15] hover:bg-[#F4EFE6] hover:text-[#1F150C] active:scale-[0.98]',
         dark:
-            'bg-slate-900 hover:bg-slate-800 text-white shadow-sm active:scale-[0.98]',
+            'bg-[#000000] hover:bg-[#1F150C] text-[#E1DCC9] border border-[#412D15]/40 shadow-sm active:scale-[0.98]',
     };
 
     const sizes = {

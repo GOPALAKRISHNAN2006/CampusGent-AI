@@ -37,14 +37,14 @@ export const PlacementDashboard = () => {
             _jsxs("div", {
                 className: "space-y-6 max-w-7xl mx-auto text-xs animate-pulse",
                 children: [
-                    _jsx("div", { className: "h-44 bg-slate-200/70 rounded-3xl" }),
+                    _jsx("div", { className: "h-44 bg-palette-sandstone/40 rounded-3xl" }),
                     _jsxs("div", {
                         className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
                         children: [1, 2, 3, 4].map((i) => (
-                            _jsx("div", { className: "h-28 bg-slate-200/70 rounded-2xl" }, i)
+                            _jsx("div", { className: "h-28 bg-palette-sandstone/30 rounded-2xl" }, i)
                         ))
                     }),
-                    _jsx("div", { className: "h-64 bg-slate-200/70 rounded-2xl" })
+                    _jsx("div", { className: "h-64 bg-palette-sandstone/30 rounded-2xl" })
                 ]
             })
         );
@@ -96,30 +96,30 @@ export const PlacementDashboard = () => {
                     title: "Drive placement outcomes with real-time confidence.",
                     description: "Coordinate top recruiters, student readiness verification, applications, live interviews, and hiring outcomes from one decision-ready workspace.",
                     icon: Briefcase,
-                    tone: "indigo",
+                    tone: "espresso",
                     action: { label: 'Open AI Placement Insights', href: '/placement/ai-insights' },
                     children: _jsxs("div", {
                         className: "grid grid-cols-3 gap-2.5 min-w-[280px]",
                         children: [
                             _jsxs("div", {
-                                className: "rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md text-center",
+                                className: "rounded-2xl border border-palette-sandstone/25 bg-palette-sandstone/10 p-3.5 backdrop-blur-md text-center",
                                 children: [
-                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-slate-300", children: "Season" }),
+                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-palette-sandstone/80", children: "Season" }),
                                     _jsx("p", { className: "mt-1 font-black text-sm text-white", children: "2026–27" })
                                 ]
                             }),
                             _jsxs("div", {
-                                className: "rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md text-center",
+                                className: "rounded-2xl border border-palette-sandstone/25 bg-palette-sandstone/10 p-3.5 backdrop-blur-md text-center",
                                 children: [
-                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-slate-300", children: "Active Drives" }),
+                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-palette-sandstone/80", children: "Active Drives" }),
                                     _jsx("p", { className: "mt-1 font-black text-sm text-white", children: stats?.totalJobs || 12 })
                                 ]
                             }),
                             _jsxs("div", {
-                                className: "rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md text-center",
+                                className: "rounded-2xl border border-palette-sandstone/25 bg-palette-sandstone/10 p-3.5 backdrop-blur-md text-center",
                                 children: [
-                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-slate-300", children: "Placement Rate" }),
-                                    _jsxs("p", { className: "mt-1 font-black text-sm text-emerald-300", children: [stats?.placementRate || 82, "%"] })
+                                    _jsx("p", { className: "text-[9.5px] font-bold uppercase tracking-wider text-palette-sandstone/80", children: "Placement Rate" }),
+                                    _jsxs("p", { className: "mt-1 font-black text-sm text-palette-sandstone font-black", children: [stats?.placementRate || 82, "%"] })
                                 ]
                             })
                         ]
@@ -142,7 +142,7 @@ export const PlacementDashboard = () => {
                             value: stats?.totalJobs || 14,
                             detail: "Active recruiter pipeline",
                             icon: Briefcase,
-                            tone: "indigo",
+                            tone: "espresso",
                             trend: "+3 this week",
                             trendUp: true
                         }),
@@ -151,14 +151,14 @@ export const PlacementDashboard = () => {
                             value: totalApps,
                             detail: "Submitted across active drives",
                             icon: FileText,
-                            tone: "cyan"
+                            tone: "bronze"
                         }),
                         _jsx(DashboardStat, {
                             label: "Placed Candidates",
                             value: selectedCount,
                             detail: "Confirmed corporate offers",
                             icon: CheckCircle,
-                            tone: "emerald",
+                            tone: "sandstone",
                             trend: "82% target hit",
                             trendUp: true
                         }),
@@ -167,7 +167,7 @@ export const PlacementDashboard = () => {
                             value: attentionRequired.length,
                             detail: "Requires review today",
                             icon: AlertTriangle,
-                            tone: "rose"
+                            tone: "espresso"
                         })
                     ]
                 }),
@@ -178,15 +178,15 @@ export const PlacementDashboard = () => {
                     children: [
                         // Left: Today's Placement Activity
                         _jsxs(Card, {
-                            className: "border border-slate-200/80 shadow-subtle lg:col-span-1",
+                            className: "border border-palette-sandstone/70 shadow-subtle lg:col-span-1 bg-white/90",
                             children: [
                                 _jsx(CardHeader, {
-                                    className: "border-b border-slate-100",
+                                    className: "border-b border-palette-sandstone/40",
                                     children: _jsxs("div", {
                                         className: "flex items-center gap-2",
                                         children: [
-                                            _jsx(Clock, { className: "h-4 w-4 text-indigo-600" }),
-                                            _jsx(CardTitle, { children: "Today's Placement Activity" })
+                                            _jsx(Clock, { className: "h-4 w-4 text-palette-bronze" }),
+                                            _jsx(CardTitle, { className: "text-palette-espresso", children: "Today's Placement Activity" })
                                         ]
                                     })
                                 }),
@@ -194,32 +194,32 @@ export const PlacementDashboard = () => {
                                     className: "p-5 space-y-4",
                                     children: todayActivities.map((act, index) => (
                                         _jsxs("div", {
-                                            className: "flex gap-3 border-l-2 border-indigo-400 pl-4 py-1 relative",
+                                            className: "flex gap-3 border-l-2 border-palette-bronze/40 pl-4 py-1 relative",
                                             children: [
-                                                _jsx("div", { className: "absolute w-2 h-2 rounded-full bg-indigo-600 -left-[5px] top-2 ring-2 ring-white shadow-xs" }),
+                                                _jsx("div", { className: "absolute w-2.5 h-2.5 rounded-full bg-palette-bronze -left-[6px] top-2 ring-2 ring-white shadow-xs" }),
                                                 _jsxs("div", {
                                                     className: "flex-1 space-y-1",
                                                     children: [
                                                         _jsxs("div", {
                                                             className: "flex justify-between items-center",
                                                             children: [
-                                                                _jsx("span", { className: "font-bold text-slate-900 text-xs", children: act.company }),
-                                                                _jsx("span", { className: "text-[10px] text-slate-400 font-semibold", children: act.time })
+                                                                _jsx("span", { className: "font-bold text-palette-espresso text-xs", children: act.company }),
+                                                                _jsx("span", { className: "text-[10px] text-palette-espresso/60 font-semibold", children: act.time })
                                                             ]
                                                         }),
-                                                        _jsx("p", { className: "text-slate-600 font-medium text-[11px]", children: act.activity }),
+                                                        _jsx("p", { className: "text-palette-espresso/80 font-medium text-[11px]", children: act.activity }),
                                                         act.count > 0 && (
                                                             _jsxs(Badge, {
-                                                                variant: "indigo",
+                                                                variant: "bronze",
                                                                 size: "xs",
                                                                 children: [act.count, " Candidates Scheduled"]
                                                             })
                                                         ),
                                                         _jsxs("div", {
-                                                            className: "flex gap-2.5 pt-1 text-[10.5px] font-bold text-indigo-600",
+                                                            className: "flex gap-2.5 pt-1 text-[10.5px] font-bold text-palette-bronze",
                                                             children: [
                                                                 _jsx(Link, { to: "/placement/drives", className: "hover:underline", children: "View Drive" }),
-                                                                _jsx("span", { className: "text-slate-300", children: "•" }),
+                                                                _jsx("span", { className: "text-palette-sandstone", children: "•" }),
                                                                 _jsx(Link, { to: "/placement/interviews", className: "hover:underline", children: "Interview Room" })
                                                             ]
                                                         })
@@ -234,20 +234,20 @@ export const PlacementDashboard = () => {
 
                         // Right: Attention Required Alerts
                         _jsxs(Card, {
-                            className: "border border-slate-200/80 shadow-subtle lg:col-span-2",
+                            className: "border border-palette-sandstone/70 shadow-subtle lg:col-span-2 bg-white/90",
                             children: [
                                 _jsxs(CardHeader, {
-                                    className: "border-b border-slate-100 flex flex-row items-center justify-between",
+                                    className: "border-b border-palette-sandstone/40 flex flex-row items-center justify-between",
                                     children: [
                                         _jsxs("div", {
                                             className: "flex items-center gap-2",
                                             children: [
-                                                _jsx(ShieldAlert, { className: "h-4 w-4 text-rose-500" }),
-                                                _jsx(CardTitle, { children: "Urgent Operational Action Queue" })
+                                                _jsx(ShieldAlert, { className: "h-4 w-4 text-palette-bronze" }),
+                                                _jsx(CardTitle, { className: "text-palette-espresso", children: "Urgent Operational Action Queue" })
                                             ]
                                         }),
                                         _jsxs(Badge, {
-                                            variant: "danger",
+                                            variant: "sandstone",
                                             dot: true,
                                             size: "sm",
                                             children: [attentionRequired.filter(i => i.priority === 'HIGH').length, " Critical"]
@@ -255,21 +255,21 @@ export const PlacementDashboard = () => {
                                     ]
                                 }),
                                 _jsx(CardContent, {
-                                    className: "p-0 divide-y divide-slate-100",
+                                    className: "p-0 divide-y divide-palette-sandstone/30",
                                     children: attentionRequired.map((item) => (
                                         _jsxs("div", {
-                                            className: "p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition-colors",
+                                            className: "p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-palette-sandstone-light/40 transition-colors",
                                             children: [
                                                 _jsxs("div", {
                                                     className: "flex items-start gap-3",
                                                     children: [
                                                         _jsx(Badge, {
-                                                            variant: item.priority === 'HIGH' ? 'danger' : item.priority === 'MEDIUM' ? 'warning' : 'neutral',
+                                                            variant: item.priority === 'HIGH' ? 'bronze' : item.priority === 'MEDIUM' ? 'sandstone' : 'neutral',
                                                             size: "xs",
                                                             className: "mt-0.5",
                                                             children: item.priority
                                                         }),
-                                                        _jsx("span", { className: "font-semibold text-slate-800 text-xs", children: item.title })
+                                                        _jsx("span", { className: "font-semibold text-palette-espresso text-xs", children: item.title })
                                                     ]
                                                 }),
                                                 _jsx(Link, {
@@ -296,19 +296,19 @@ export const PlacementDashboard = () => {
 
                 // Hiring Funnel Yield Pipeline Card
                 _jsxs(Card, {
-                    className: "border border-slate-200/80 shadow-subtle",
+                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                     children: [
                         _jsxs(CardHeader, {
-                            className: "border-b border-slate-100 flex flex-row items-center justify-between",
+                            className: "border-b border-palette-sandstone/40 flex flex-row items-center justify-between",
                             children: [
                                 _jsxs("div", {
                                     className: "flex items-center gap-2",
                                     children: [
-                                        _jsx(Award, { className: "h-4.5 w-4.5 text-indigo-600" }),
-                                        _jsx(CardTitle, { children: "Campus Hiring Yield & Conversion Pipeline" })
+                                        _jsx(Award, { className: "h-4.5 w-4.5 text-palette-bronze" }),
+                                        _jsx(CardTitle, { className: "text-palette-espresso", children: "Campus Hiring Yield & Conversion Pipeline" })
                                     ]
                                 }),
-                                _jsx("span", { className: "text-xs text-slate-400 font-medium", children: "Full placement funnel conversion" })
+                                _jsx("span", { className: "text-xs text-palette-espresso/60 font-medium", children: "Full placement funnel conversion" })
                             ]
                         }),
                         _jsx(CardContent, {
@@ -328,12 +328,12 @@ export const PlacementDashboard = () => {
                                         to: stage.label === 'Applied' ? '/placement/applications' : '/placement/drives',
                                         className: "group",
                                         children: _jsxs("div", {
-                                            className: "bg-slate-50 border border-slate-200/70 p-3.5 rounded-2xl text-center group-hover:border-indigo-400 group-hover:bg-indigo-50/30 transition-all cursor-pointer h-full flex flex-col justify-between space-y-1.5",
+                                            className: "bg-palette-sandstone-canvas border border-palette-sandstone/60 p-3.5 rounded-2xl text-center group-hover:border-palette-bronze group-hover:bg-palette-sandstone-light/60 transition-all cursor-pointer h-full flex flex-col justify-between space-y-1.5",
                                             children: [
-                                                _jsx("span", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-wider", children: stage.label }),
-                                                _jsx("p", { className: "text-xl font-black text-slate-900", children: stage.val }),
+                                                _jsx("span", { className: "text-[10px] font-bold text-palette-espresso/60 uppercase tracking-wider", children: stage.label }),
+                                                _jsx("p", { className: "text-xl font-black text-palette-espresso", children: stage.val }),
                                                 _jsx(Badge, {
-                                                    variant: "indigo",
+                                                    variant: "bronze",
                                                     size: "xs",
                                                     className: "mx-auto",
                                                     children: stage.pct
@@ -349,21 +349,21 @@ export const PlacementDashboard = () => {
 
                 // Upcoming Placement Drives Card
                 _jsxs(Card, {
-                    className: "border border-slate-200/80 shadow-subtle",
+                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                     children: [
                         _jsxs(CardHeader, {
-                            className: "border-b border-slate-100 flex flex-row items-center justify-between",
+                            className: "border-b border-palette-sandstone/40 flex flex-row items-center justify-between",
                             children: [
                                 _jsxs("div", {
                                     className: "flex items-center gap-2",
                                     children: [
-                                        _jsx(Calendar, { className: "h-4.5 w-4.5 text-indigo-600" }),
-                                        _jsx(CardTitle, { children: "Upcoming Placement Drives" })
+                                        _jsx(Calendar, { className: "h-4.5 w-4.5 text-palette-bronze" }),
+                                        _jsx(CardTitle, { className: "text-palette-espresso", children: "Upcoming Placement Drives" })
                                     ]
                                 }),
                                 _jsx(Link, {
                                     to: "/placement/drives",
-                                    className: "text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors",
+                                    className: "text-xs font-bold text-palette-bronze hover:text-palette-espresso transition-colors",
                                     children: "Manage All Drives →"
                                 })
                             ]
@@ -372,19 +372,19 @@ export const PlacementDashboard = () => {
                             className: "p-5 grid grid-cols-1 md:grid-cols-3 gap-5",
                             children: upcomingDrives.map((drv, index) => (
                                 _jsxs("div", {
-                                    className: "border border-slate-200/80 rounded-2xl p-5 space-y-3.5 bg-white hover:shadow-card-hover hover:border-slate-300 transition-all",
+                                    className: "border border-palette-sandstone/70 rounded-2xl p-5 space-y-3.5 bg-white hover:shadow-card-hover hover:border-palette-bronze/50 transition-all",
                                     children: [
                                         _jsxs("div", {
                                             className: "flex justify-between items-start",
                                             children: [
                                                 _jsxs("div", {
                                                     children: [
-                                                        _jsx("h4", { className: "font-extrabold text-slate-900 text-sm", children: drv.company }),
-                                                        _jsx("p", { className: "text-slate-500 font-medium text-xs mt-0.5", children: drv.role })
+                                                        _jsx("h4", { className: "font-extrabold text-palette-espresso text-sm", children: drv.company }),
+                                                        _jsx("p", { className: "text-palette-espresso/70 font-medium text-xs mt-0.5", children: drv.role })
                                                     ]
                                                 }),
                                                 _jsx(Badge, {
-                                                    variant: drv.status === 'Applications Open' ? 'success' : 'warning',
+                                                    variant: drv.status === 'Applications Open' ? 'bronze' : 'sandstone',
                                                     dot: true,
                                                     size: "xs",
                                                     children: drv.status
@@ -392,25 +392,25 @@ export const PlacementDashboard = () => {
                                             ]
                                         }),
                                         _jsxs("div", {
-                                            className: "grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl text-xs border border-slate-100",
+                                            className: "grid grid-cols-2 gap-2 bg-palette-sandstone-canvas p-3 rounded-xl text-xs border border-palette-sandstone/40",
                                             children: [
                                                 _jsxs("div", {
                                                     children: [
-                                                        _jsx("span", { className: "text-slate-400 block uppercase font-bold text-[9.5px]", children: "Package CTC" }),
-                                                        _jsx("span", { className: "font-bold text-slate-900", children: drv.ctc })
+                                                        _jsx("span", { className: "text-palette-espresso/50 block uppercase font-bold text-[9.5px]", children: "Package CTC" }),
+                                                        _jsx("span", { className: "font-bold text-palette-espresso", children: drv.ctc })
                                                     ]
                                                 }),
                                                 _jsxs("div", {
                                                     children: [
-                                                        _jsx("span", { className: "text-slate-400 block uppercase font-bold text-[9.5px]", children: "Drive Date" }),
-                                                        _jsx("span", { className: "font-bold text-slate-900", children: drv.date })
+                                                        _jsx("span", { className: "text-palette-espresso/50 block uppercase font-bold text-[9.5px]", children: "Drive Date" }),
+                                                        _jsx("span", { className: "font-bold text-palette-espresso", children: drv.date })
                                                     ]
                                                 }),
                                                 _jsxs("div", {
-                                                    className: "col-span-2 border-t border-slate-200 mt-1 pt-1.5 flex justify-between text-[11px] text-slate-600",
+                                                    className: "col-span-2 border-t border-palette-sandstone/40 mt-1 pt-1.5 flex justify-between text-[11px] text-palette-espresso/70",
                                                     children: [
-                                                        _jsxs("span", { children: ["Eligible: ", _jsx("strong", { className: "text-slate-900", children: drv.eligible })] }),
-                                                        _jsxs("span", { children: ["Applied: ", _jsx("strong", { className: "text-slate-900", children: drv.applied })] })
+                                                        _jsxs("span", { children: ["Eligible: ", _jsx("strong", { className: "text-palette-espresso", children: drv.eligible })] }),
+                                                        _jsxs("span", { children: ["Applied: ", _jsx("strong", { className: "text-palette-espresso", children: drv.applied })] })
                                                     ]
                                                 })
                                             ]
@@ -451,37 +451,37 @@ export const PlacementDashboard = () => {
                     children: [
                         // AI Placement Insights Card
                         _jsxs("div", {
-                            className: "rounded-3xl bg-gradient-to-br from-[#0B0F19] to-slate-900 p-6 text-white border border-slate-800 shadow-xl lg:col-span-2 space-y-4",
+                            className: "rounded-3xl bg-gradient-to-br from-palette-black via-palette-espresso to-palette-bronze p-6 text-white border border-palette-bronze/40 shadow-xl lg:col-span-2 space-y-4",
                             children: [
                                 _jsxs("div", {
-                                    className: "flex items-center justify-between border-b border-slate-800 pb-3",
+                                    className: "flex items-center justify-between border-b border-palette-sandstone/20 pb-3",
                                     children: [
                                         _jsxs("div", {
                                             className: "flex items-center gap-2",
                                             children: [
-                                                _jsx(Sparkles, { className: "h-4.5 w-4.5 text-indigo-400 animate-pulse" }),
+                                                _jsx(Sparkles, { className: "h-4.5 w-4.5 text-palette-sandstone animate-pulse" }),
                                                 _jsx("span", { className: "font-bold text-sm text-white", children: "Autonomous Placement Agent Intelligence" })
                                             ]
                                         }),
-                                        _jsx("span", { className: "text-[10px] font-bold text-indigo-300 bg-indigo-950 px-2.5 py-0.5 rounded-full border border-indigo-800", children: "AUDITED PREDICTIONS" })
+                                        _jsx("span", { className: "text-[10px] font-bold text-palette-sandstone bg-palette-espresso/80 px-2.5 py-0.5 rounded-full border border-palette-sandstone/30", children: "AUDITED PREDICTIONS" })
                                     ]
                                 }),
                                 _jsxs("div", {
-                                    className: "p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3",
+                                    className: "p-4 rounded-2xl bg-white/5 border border-palette-sandstone/15 space-y-3 backdrop-blur-md",
                                     children: [
                                         _jsx("h4", {
                                             className: "font-bold text-white text-sm leading-snug",
                                             children: "\"Software Developer role applications are up 14% this month following the Cloud Certification workshops.\""
                                         }),
                                         _jsx("p", {
-                                            className: "text-xs text-slate-300 leading-relaxed font-normal",
+                                            className: "text-xs text-palette-sandstone/80 leading-relaxed font-normal",
                                             children: "Recommended Next Step: Launch targeted practice mock coding assessments for shortlisted Google Cloud candidates before Round 1."
                                         }),
                                         _jsxs("div", {
-                                            className: "flex gap-4 pt-2 text-xs font-bold text-indigo-300",
+                                            className: "flex gap-4 pt-2 text-xs font-bold text-palette-sandstone",
                                             children: [
-                                                _jsx(Link, { to: "/placement/ai-insights", className: "hover:text-white transition-colors", children: "Open AI Intelligence Dashboard →" }),
-                                                _jsx(Link, { to: "/placement/readiness", className: "hover:text-white transition-colors", children: "View Readiness Benchmarks →" })
+                                                _jsx(Link, { to: "/placement/ai-insights", className: "hover:text-white transition-colors underline-offset-4 hover:underline", children: "Open AI Intelligence Dashboard →" }),
+                                                _jsx(Link, { to: "/placement/readiness", className: "hover:text-white transition-colors underline-offset-4 hover:underline", children: "View Readiness Benchmarks →" })
                                             ]
                                         })
                                     ]
@@ -491,15 +491,15 @@ export const PlacementDashboard = () => {
 
                         // Recruiter Activity Card
                         _jsxs(Card, {
-                            className: "border border-slate-200/80 shadow-subtle lg:col-span-1",
+                            className: "border border-palette-sandstone/70 shadow-subtle lg:col-span-1 bg-white/90",
                             children: [
                                 _jsx(CardHeader, {
-                                    className: "border-b border-slate-100",
+                                    className: "border-b border-palette-sandstone/40",
                                     children: _jsxs("div", {
                                         className: "flex items-center gap-2",
                                         children: [
-                                            _jsx(Users, { className: "h-4.5 w-4.5 text-indigo-600" }),
-                                            _jsx(CardTitle, { children: "Recruiter Feed" })
+                                            _jsx(Users, { className: "h-4.5 w-4.5 text-palette-bronze" }),
+                                            _jsx(CardTitle, { className: "text-palette-espresso", children: "Recruiter Feed" })
                                         ]
                                     })
                                 }),
@@ -511,18 +511,18 @@ export const PlacementDashboard = () => {
                                             _jsxs("div", {
                                                 className: "flex gap-3 items-start text-xs",
                                                 children: [
-                                                    _jsx("div", { className: `w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.status === 'PENDING' ? 'bg-amber-500' : 'bg-emerald-500'}` }),
+                                                    _jsx("div", { className: `w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.status === 'PENDING' ? 'bg-palette-bronze' : 'bg-emerald-600'}` }),
                                                     _jsxs("div", {
                                                         className: "flex-1 space-y-0.5",
                                                         children: [
                                                             _jsxs("div", {
-                                                                className: "flex justify-between font-bold text-slate-900",
+                                                                className: "flex justify-between font-bold text-palette-espresso",
                                                                 children: [
                                                                     _jsx("span", { children: item.company }),
-                                                                    _jsx("span", { className: "text-[9.5px] text-slate-400 font-normal", children: item.time })
+                                                                    _jsx("span", { className: "text-[9.5px] text-palette-espresso/50 font-normal", children: item.time })
                                                                 ]
                                                             }),
-                                                            _jsx("p", { className: "text-slate-500 text-[11px]", children: item.event })
+                                                            _jsx("p", { className: "text-palette-espresso/70 text-[11px]", children: item.event })
                                                         ]
                                                     })
                                                 ]

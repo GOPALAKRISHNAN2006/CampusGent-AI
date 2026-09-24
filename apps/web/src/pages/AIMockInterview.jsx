@@ -64,24 +64,24 @@ export const AIMockInterview = () => {
             children: [
                 // Header Banner
                 _jsxs("div", {
-                    className: "p-6 rounded-3xl bg-[#0B0F19] text-white border border-slate-800 shadow-xl space-y-2",
+                    className: "p-6 rounded-3xl bg-gradient-to-br from-palette-black via-palette-espresso to-palette-bronze text-white border border-palette-bronze/40 shadow-xl space-y-2",
                     children: [
                         _jsxs("div", {
-                            className: "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-[10px] font-bold uppercase tracking-wider text-indigo-300",
+                            className: "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-palette-espresso/80 border border-palette-sandstone/30 text-[10px] font-bold uppercase tracking-wider text-palette-sandstone",
                             children: [
-                                _jsx(Sparkles, { className: "h-3.5 w-3.5 text-indigo-300 animate-pulse" }),
+                                _jsx(Sparkles, { className: "h-3.5 w-3.5 text-palette-sandstone animate-pulse" }),
                                 "AI Technical & HR Simulator"
                             ]
                         }),
                         _jsxs("h1", {
                             className: "text-xl sm:text-2xl font-black text-white flex items-center gap-2",
                             children: [
-                                _jsx(BrainCircuit, { className: "h-6 w-6 text-indigo-400" }),
+                                _jsx(BrainCircuit, { className: "h-6 w-6 text-palette-sandstone" }),
                                 _jsx("span", { children: "AI Conversational Mock Interview" })
                             ]
                         }),
                         _jsx("p", {
-                            className: "text-xs text-slate-300 max-w-xl font-normal leading-relaxed",
+                            className: "text-xs text-palette-sandstone/85 max-w-xl font-normal leading-relaxed",
                             children: "Practice real-time technical and behavioural questions tailored to your target company and job role. Receive automated scorecards."
                         })
                     ]
@@ -97,11 +97,11 @@ export const AIMockInterview = () => {
                 // Setup Step
                 step === 'setup' && (
                     _jsxs(Card, {
-                        className: "border border-slate-200/80 shadow-subtle",
+                        className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                         children: [
                             _jsx(CardHeader, {
-                                className: "border-b border-slate-100",
-                                children: _jsx(CardTitle, { children: "Interview Parameters & Role Setup" })
+                                className: "border-b border-palette-sandstone/30",
+                                children: _jsx(CardTitle, { className: "text-palette-espresso", children: "Interview Parameters & Role Setup" })
                             }),
                             _jsxs(CardContent, {
                                 className: "space-y-4 p-6",
@@ -117,7 +117,7 @@ export const AIMockInterview = () => {
                                         className: "space-y-1.5",
                                         children: [
                                             _jsx("label", {
-                                                className: "block text-xs font-semibold text-slate-700 tracking-wide",
+                                                className: "block text-xs font-semibold text-palette-espresso tracking-wide",
                                                 children: "Target Job Description or Key Tech Requirements (Optional)"
                                             }),
                                             _jsx("textarea", {
@@ -125,7 +125,7 @@ export const AIMockInterview = () => {
                                                 onChange: (e) => setJobDescription(e.target.value),
                                                 rows: 5,
                                                 placeholder: "Paste required tech stack, responsibilities, or company criteria to tailor questions...",
-                                                className: "w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-400"
+                                                className: "w-full p-3.5 border border-palette-sandstone rounded-xl bg-palette-sandstone-canvas text-xs text-palette-espresso focus:outline-none focus:border-palette-bronze focus:ring-4 focus:ring-palette-bronze/10 placeholder:text-palette-espresso/40"
                                             })
                                         ]
                                     }),
@@ -152,29 +152,29 @@ export const AIMockInterview = () => {
                         className: "space-y-4 animate-fade-in",
                         children: [
                             _jsxs("div", {
-                                className: "flex items-center justify-between text-xs font-bold text-slate-500 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs",
+                                className: "flex items-center justify-between text-xs font-bold text-palette-espresso/70 bg-white/90 p-3 rounded-xl border border-palette-sandstone/70 shadow-xs",
                                 children: [
-                                    _jsxs("span", { className: "text-slate-900", children: ["TARGET ROLE: ", role] }),
-                                    _jsxs("span", { className: "text-indigo-600", children: ["QUESTION ", currentIdx + 1, " OF ", questions.length] })
+                                    _jsxs("span", { className: "text-palette-espresso", children: ["TARGET ROLE: ", role] }),
+                                    _jsxs("span", { className: "text-palette-bronze font-black", children: ["QUESTION ", currentIdx + 1, " OF ", questions.length] })
                                 ]
                             }),
                             _jsx(Card, {
-                                className: "border-indigo-100 bg-indigo-50/30 shadow-subtle",
+                                className: "border-palette-sandstone/80 bg-palette-sandstone-light/40 shadow-subtle",
                                 children: _jsxs(CardContent, {
                                     className: "p-6 space-y-3",
                                     children: [
                                         _jsx(Badge, {
-                                            variant: "indigo",
+                                            variant: "bronze",
                                             size: "xs",
                                             children: `${questions[currentIdx].type || 'TECHNICAL'} ROUND`
                                         }),
                                         _jsx("p", {
-                                            className: "text-slate-900 font-bold text-base leading-relaxed",
+                                            className: "text-palette-espresso font-bold text-base leading-relaxed",
                                             children: questions[currentIdx].question
                                         }),
                                         questions[currentIdx].criteria && (
                                             _jsxs("p", {
-                                                className: "text-xs text-slate-500 italic mt-2",
+                                                className: "text-xs text-palette-espresso/60 italic mt-2",
                                                 children: ["Evaluation Guidance: ", questions[currentIdx].criteria]
                                             })
                                         )
@@ -182,10 +182,10 @@ export const AIMockInterview = () => {
                                 })
                             }),
                             _jsxs("div", {
-                                className: "space-y-3 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-subtle",
+                                className: "space-y-3 bg-white/90 p-5 rounded-2xl border border-palette-sandstone/70 shadow-subtle",
                                 children: [
                                     _jsx("label", {
-                                        className: "block text-xs font-semibold text-slate-700 tracking-wide",
+                                        className: "block text-xs font-semibold text-palette-espresso tracking-wide",
                                         children: "Your Response / Technical Answer"
                                     }),
                                     _jsx("textarea", {
@@ -193,7 +193,7 @@ export const AIMockInterview = () => {
                                         onChange: (e) => setAnswer(e.target.value),
                                         rows: 6,
                                         placeholder: "Type your structured response explanation in detail...",
-                                        className: "w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-400 font-mono"
+                                        className: "w-full p-3.5 border border-palette-sandstone rounded-xl bg-palette-sandstone-canvas text-xs text-palette-espresso focus:outline-none focus:border-palette-bronze focus:ring-4 focus:ring-palette-bronze/10 placeholder:text-palette-espresso/40 font-mono"
                                     }),
                                     _jsx("div", {
                                         className: "flex justify-end",
@@ -221,10 +221,10 @@ export const AIMockInterview = () => {
                         children: [
                             loading && (
                                 _jsxs("div", {
-                                    className: "flex flex-col items-center justify-center p-12 space-y-4 bg-white rounded-3xl border border-slate-200 shadow-subtle",
+                                    className: "flex flex-col items-center justify-center p-12 space-y-4 bg-white/90 rounded-3xl border border-palette-sandstone/70 shadow-subtle",
                                     children: [
-                                        _jsx(RefreshCw, { className: "h-10 w-10 animate-spin text-indigo-600" }),
-                                        _jsx("p", { className: "text-sm font-bold text-slate-800", children: "AI Recruiter Agent is evaluating responses & compiling scorecards..." })
+                                        _jsx(RefreshCw, { className: "h-10 w-10 animate-spin text-palette-bronze" }),
+                                        _jsx("p", { className: "text-sm font-bold text-palette-espresso", children: "AI Recruiter Agent is evaluating responses & compiling scorecards..." })
                                     ]
                                 })
                             ),
@@ -233,15 +233,15 @@ export const AIMockInterview = () => {
                                     className: "space-y-4",
                                     children: [
                                         _jsx(Card, {
-                                            className: "border border-slate-200/80 shadow-subtle",
+                                            className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                             children: _jsxs(CardContent, {
                                                 className: "flex items-center justify-between p-6",
                                                 children: [
                                                     _jsxs("div", {
                                                         className: "space-y-1",
                                                         children: [
-                                                            _jsx("h3", { className: "text-slate-900 font-bold text-lg", children: "Interview Performance Evaluation" }),
-                                                            _jsx("p", { className: "text-xs text-slate-500", children: "Evaluated across communication, technical depth, and structure." })
+                                                            _jsx("h3", { className: "text-palette-espresso font-bold text-lg", children: "Interview Performance Evaluation" }),
+                                                            _jsx("p", { className: "text-xs text-palette-espresso/60", children: "Evaluated across communication, technical depth, and structure." })
                                                         ]
                                                     }),
                                                     _jsxs("div", {
@@ -249,12 +249,12 @@ export const AIMockInterview = () => {
                                                         children: [
                                                             _jsxs("span", {
                                                                 className: `text-3xl font-black ${
-                                                                    (evaluation.overallScore || 80) >= 75 ? 'text-emerald-600' : 'text-amber-600'
+                                                                    (evaluation.overallScore || 80) >= 75 ? 'text-emerald-700' : 'text-amber-700'
                                                                 }`,
                                                                 children: [evaluation.overallScore || 82, " / 100"]
                                                             }),
                                                             _jsx(Badge, {
-                                                                variant: "success",
+                                                                variant: "sandstone",
                                                                 size: "xs",
                                                                 className: "block text-center",
                                                                 children: `GRADE: ${evaluation.grade || 'A'}`
@@ -268,28 +268,28 @@ export const AIMockInterview = () => {
                                             className: "grid grid-cols-1 md:grid-cols-2 gap-4 text-xs",
                                             children: [
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
-                                                        _jsx(CardHeader, { className: "py-3", children: _jsx(CardTitle, { className: "text-xs font-bold text-slate-900", children: "Communication & Delivery" }) }),
-                                                        _jsx(CardContent, { className: "text-slate-700 leading-relaxed py-3", children: evaluation.communication || "Clear articulate delivery with confident structure." })
+                                                        _jsx(CardHeader, { className: "py-3 border-b border-palette-sandstone/30", children: _jsx(CardTitle, { className: "text-xs font-bold text-palette-espresso", children: "Communication & Delivery" }) }),
+                                                        _jsx(CardContent, { className: "text-palette-espresso/80 leading-relaxed py-3", children: evaluation.communication || "Clear articulate delivery with confident structure." })
                                                     ]
                                                 }),
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
-                                                        _jsx(CardHeader, { className: "py-3", children: _jsx(CardTitle, { className: "text-xs font-bold text-slate-900", children: "Technical Depth & Accuracy" }) }),
-                                                        _jsx(CardContent, { className: "text-slate-700 leading-relaxed py-3", children: evaluation.accuracy || "Strong foundation in principles with good real-world reasoning." })
+                                                        _jsx(CardHeader, { className: "py-3 border-b border-palette-sandstone/30", children: _jsx(CardTitle, { className: "text-xs font-bold text-palette-espresso", children: "Technical Depth & Accuracy" }) }),
+                                                        _jsx(CardContent, { className: "text-palette-espresso/80 leading-relaxed py-3", children: evaluation.accuracy || "Strong foundation in principles with good real-world reasoning." })
                                                     ]
                                                 })
                                             ]
                                         }),
                                         _jsxs(Card, {
-                                            className: "border border-slate-200/80 shadow-subtle",
+                                            className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                             children: [
                                                 _jsx(CardHeader, {
-                                                    className: "py-3",
+                                                    className: "py-3 border-b border-palette-sandstone/30",
                                                     children: _jsxs(CardTitle, {
-                                                        className: "text-xs font-bold text-slate-900 flex items-center gap-1.5",
+                                                        className: "text-xs font-bold text-palette-espresso flex items-center gap-1.5",
                                                         children: [
                                                             _jsx(CheckCircle, { className: "h-4 w-4 text-emerald-600" }),
                                                             _jsx("span", { children: "Actionable Recommendations for Real Rounds" })
@@ -297,7 +297,7 @@ export const AIMockInterview = () => {
                                                     })
                                                 }),
                                                 _jsx(CardContent, {
-                                                    className: "text-xs text-slate-700 leading-relaxed py-3",
+                                                    className: "text-xs text-palette-espresso/80 leading-relaxed py-3",
                                                     children: evaluation.feedback || "Continue emphasizing quantitative business impact and architectural trade-offs during system design discussions."
                                                 })
                                             ]

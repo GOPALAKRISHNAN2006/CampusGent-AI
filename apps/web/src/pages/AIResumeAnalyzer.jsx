@@ -52,27 +52,27 @@ export const AIResumeAnalyzer = () => {
             children: [
                 // Header Banner
                 _jsxs("div", {
-                    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#0B0F19] text-white border border-slate-800 shadow-xl",
+                    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-gradient-to-br from-palette-black via-palette-espresso to-palette-bronze text-white border border-palette-bronze/40 shadow-xl",
                     children: [
                         _jsxs("div", {
                             className: "space-y-1.5",
                             children: [
                                 _jsxs("div", {
-                                    className: "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-[10px] font-bold uppercase tracking-wider text-indigo-300",
+                                    className: "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-palette-espresso/80 border border-palette-sandstone/30 text-[10px] font-bold uppercase tracking-wider text-palette-sandstone",
                                     children: [
-                                        _jsx(Sparkles, { className: "h-3.5 w-3.5 text-indigo-300 animate-pulse" }),
+                                        _jsx(Sparkles, { className: "h-3.5 w-3.5 text-palette-sandstone animate-pulse" }),
                                         "Autonomous ATS Optimizer"
                                     ]
                                 }),
                                 _jsxs("h1", {
                                     className: "text-xl sm:text-2xl font-black text-white flex items-center gap-2",
                                     children: [
-                                        _jsx(FileText, { className: "h-6 w-6 text-indigo-400" }),
+                                        _jsx(FileText, { className: "h-6 w-6 text-palette-sandstone" }),
                                         _jsx("span", { children: "AI Resume & ATS Structure Analyzer" })
                                     ]
                                 }),
                                 _jsx("p", {
-                                    className: "text-xs text-slate-300 max-w-xl font-normal",
+                                    className: "text-xs text-palette-sandstone/85 max-w-xl font-normal",
                                     children: "Upload your resume PDF or paste markdown to evaluate recruiter ATS compatibility, keyword density, and formatting compliance."
                                 })
                             ]
@@ -90,9 +90,9 @@ export const AIResumeAnalyzer = () => {
                             children: [
                                 // Option 1: PDF Upload Card
                                 _jsxs("div", {
-                                    className: "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-subtle space-y-3",
+                                    className: "bg-white/90 p-5 rounded-2xl border border-palette-sandstone/70 shadow-subtle space-y-3",
                                     children: [
-                                        _jsx("h3", { className: "text-[10.5px] font-bold uppercase text-slate-500 tracking-wider", children: "Option 1: Upload Resume PDF" }),
+                                        _jsx("h3", { className: "text-[10.5px] font-bold uppercase text-palette-espresso/60 tracking-wider", children: "Option 1: Upload Resume PDF" }),
                                         _jsx("input", {
                                             type: "file",
                                             accept: ".pdf",
@@ -102,14 +102,14 @@ export const AIResumeAnalyzer = () => {
                                         }),
                                         _jsxs("div", {
                                             onClick: () => fileInputRef.current?.click(),
-                                            className: "border-2 border-dashed border-slate-200 hover:border-indigo-400 p-6 rounded-2xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-indigo-50/20",
+                                            className: "border-2 border-dashed border-palette-sandstone hover:border-palette-bronze p-6 rounded-2xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-palette-sandstone-canvas/50 hover:bg-palette-sandstone-light/60",
                                             children: [
                                                 _jsx("div", {
-                                                    className: "h-10 w-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2",
+                                                    className: "h-10 w-10 rounded-xl bg-palette-sandstone-light text-palette-bronze flex items-center justify-center mb-2",
                                                     children: _jsx(UploadCloud, { className: "h-5 w-5" })
                                                 }),
-                                                _jsx("p", { className: "font-bold text-slate-800 text-xs", children: file ? file.name : "Click to select or drop resume PDF" }),
-                                                _jsx("p", { className: "text-[11px] text-slate-400 mt-0.5", children: file ? `${(file.size / 1024).toFixed(1)} KB` : "Supports PDF documents up to 10MB" })
+                                                _jsx("p", { className: "font-bold text-palette-espresso text-xs", children: file ? file.name : "Click to select or drop resume PDF" }),
+                                                _jsx("p", { className: "text-[11px] text-palette-espresso/50 mt-0.5", children: file ? `${(file.size / 1024).toFixed(1)} KB` : "Supports PDF documents up to 10MB" })
                                             ]
                                         }),
                                         _jsxs(Button, {
@@ -128,25 +128,25 @@ export const AIResumeAnalyzer = () => {
 
                                 // Divider
                                 _jsxs("div", {
-                                    className: "flex items-center gap-3 text-slate-400",
+                                    className: "flex items-center gap-3 text-palette-espresso/40",
                                     children: [
-                                        _jsx("div", { className: "h-px bg-slate-200 flex-1" }),
-                                        _jsx("span", { className: "text-[10px] font-bold uppercase", children: "OR PASTE TEXT" }),
-                                        _jsx("div", { className: "h-px bg-slate-200 flex-1" })
+                                        _jsx("div", { className: "h-px bg-palette-sandstone/60 flex-1" }),
+                                        _jsx("span", { className: "text-[10px] font-bold uppercase tracking-wider", children: "OR PASTE TEXT" }),
+                                        _jsx("div", { className: "h-px bg-palette-sandstone/60 flex-1" })
                                     ]
                                 }),
 
                                 // Option 2: Paste Content
                                 _jsxs("div", {
-                                    className: "bg-white p-5 rounded-2xl border border-slate-200/80 shadow-subtle space-y-3",
+                                    className: "bg-white/90 p-5 rounded-2xl border border-palette-sandstone/70 shadow-subtle space-y-3",
                                     children: [
-                                        _jsx("h3", { className: "text-[10.5px] font-bold uppercase text-slate-500 tracking-wider", children: "Option 2: Paste Resume Content" }),
+                                        _jsx("h3", { className: "text-[10.5px] font-bold uppercase text-palette-espresso/60 tracking-wider", children: "Option 2: Paste Resume Content" }),
                                         _jsx("textarea", {
                                             value: resumeText,
                                             onChange: (e) => setResumeText(e.target.value),
                                             rows: 7,
                                             placeholder: "Paste plain-text or markdown resume summary here...",
-                                            className: "w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50 text-xs font-mono text-slate-800 focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 placeholder:text-slate-400"
+                                            className: "w-full p-3.5 border border-palette-sandstone rounded-xl bg-palette-sandstone-canvas text-xs font-mono text-palette-espresso focus:outline-none focus:border-palette-bronze focus:ring-4 focus:ring-palette-bronze/10 placeholder:text-palette-espresso/40"
                                         }),
                                         _jsxs(Button, {
                                             onClick: handleAnalyzeText,
@@ -177,16 +177,16 @@ export const AIResumeAnalyzer = () => {
 
                                 !analysis && !loading && (
                                     _jsx(Card, {
-                                        className: "h-full flex items-center justify-center p-10 text-center text-slate-500 border-dashed border-2 border-slate-200",
+                                        className: "h-full flex items-center justify-center p-10 text-center text-palette-espresso/60 border-dashed border-2 border-palette-sandstone bg-white/70",
                                         children: _jsxs(CardContent, {
                                             className: "space-y-2 p-0",
                                             children: [
                                                 _jsx("div", {
-                                                    className: "h-12 w-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto mb-2",
+                                                    className: "h-12 w-12 rounded-2xl bg-palette-sandstone text-palette-bronze flex items-center justify-center mx-auto mb-2",
                                                     children: _jsx(FileText, { className: "h-6 w-6" })
                                                 }),
-                                                _jsx("h3", { className: "font-bold text-slate-800 text-sm", children: "No Analysis Generated Yet" }),
-                                                _jsx("p", { className: "text-xs text-slate-400 max-w-xs mx-auto", children: "Upload your PDF or paste resume text on the left to view ATS compatibility scores and suggestions." })
+                                                _jsx("h3", { className: "font-bold text-palette-espresso text-sm", children: "No Analysis Generated Yet" }),
+                                                _jsx("p", { className: "text-xs text-palette-espresso/60 max-w-xs mx-auto", children: "Upload your PDF or paste resume text on the left to view ATS compatibility scores and suggestions." })
                                             ]
                                         })
                                     })
@@ -198,22 +198,22 @@ export const AIResumeAnalyzer = () => {
                                         children: [
                                             // Overall Score Card
                                             _jsx(Card, {
-                                                className: "border border-slate-200/80 shadow-subtle",
+                                                className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                 children: _jsxs(CardContent, {
                                                     className: "flex items-center justify-between p-5",
                                                     children: [
                                                         _jsxs("div", {
                                                             className: "space-y-1",
                                                             children: [
-                                                                _jsx("h3", { className: "text-sm font-bold text-slate-900", children: "Overall ATS Compatibility Score" }),
-                                                                _jsx("p", { className: "text-xs text-slate-500", children: "Evaluated against modern enterprise ATS parsers." })
+                                                                _jsx("h3", { className: "text-sm font-bold text-palette-espresso", children: "Overall ATS Compatibility Score" }),
+                                                                _jsx("p", { className: "text-xs text-palette-espresso/60", children: "Evaluated against modern enterprise ATS parsers." })
                                                             ]
                                                         }),
                                                         _jsxs("div", {
                                                             className: `px-4 py-2.5 rounded-2xl text-xl font-black ${
                                                                 (analysis.score || 85) >= 80
-                                                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                                                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                                                                    : 'bg-amber-50 text-amber-800 border border-amber-200'
                                                             }`,
                                                             children: [analysis.score || 85, " / 100"]
                                                         })
@@ -224,14 +224,14 @@ export const AIResumeAnalyzer = () => {
                                             // Strengths Card
                                             analysis.strengths && analysis.strengths.length > 0 && (
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
                                                         _jsx(CardHeader, {
-                                                            className: "py-3",
+                                                            className: "py-3 border-b border-palette-sandstone/30",
                                                             children: _jsxs(CardTitle, {
-                                                                className: "flex items-center gap-1.5 text-emerald-700 text-xs",
+                                                                className: "flex items-center gap-1.5 text-emerald-800 text-xs",
                                                                 children: [
-                                                                    _jsx(CheckCircle, { className: "h-4 w-4" }),
+                                                                    _jsx(CheckCircle, { className: "h-4 w-4 text-emerald-600" }),
                                                                     _jsx("span", { children: "Resume Strengths" })
                                                                 ]
                                                             })
@@ -239,7 +239,7 @@ export const AIResumeAnalyzer = () => {
                                                         _jsx(CardContent, {
                                                             className: "space-y-2 py-3",
                                                             children: analysis.strengths.map((str, i) => (
-                                                                _jsxs("p", { className: "text-slate-700 leading-relaxed text-xs flex items-start gap-2", children: [_jsx("span", { className: "text-emerald-500 font-bold", children: "✓" }), str] }, i)
+                                                                _jsxs("p", { className: "text-palette-espresso/80 leading-relaxed text-xs flex items-start gap-2", children: [_jsx("span", { className: "text-emerald-600 font-bold", children: "✓" }), str] }, i)
                                                             ))
                                                         })
                                                     ]
@@ -249,14 +249,14 @@ export const AIResumeAnalyzer = () => {
                                             // Weaknesses Card
                                             analysis.weaknesses && analysis.weaknesses.length > 0 && (
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
                                                         _jsx(CardHeader, {
-                                                            className: "py-3",
+                                                            className: "py-3 border-b border-palette-sandstone/30",
                                                             children: _jsxs(CardTitle, {
-                                                                className: "flex items-center gap-1.5 text-rose-700 text-xs",
+                                                                className: "flex items-center gap-1.5 text-rose-800 text-xs",
                                                                 children: [
-                                                                    _jsx(XCircle, { className: "h-4 w-4" }),
+                                                                    _jsx(XCircle, { className: "h-4 w-4 text-rose-600" }),
                                                                     _jsx("span", { children: "Formatting Weaknesses" })
                                                                 ]
                                                             })
@@ -264,7 +264,7 @@ export const AIResumeAnalyzer = () => {
                                                         _jsx(CardContent, {
                                                             className: "space-y-2 py-3",
                                                             children: analysis.weaknesses.map((w, i) => (
-                                                                _jsxs("p", { className: "text-slate-700 leading-relaxed text-xs flex items-start gap-2", children: [_jsx("span", { className: "text-rose-500 font-bold", children: "!" }), w] }, i)
+                                                                _jsxs("p", { className: "text-palette-espresso/80 leading-relaxed text-xs flex items-start gap-2", children: [_jsx("span", { className: "text-rose-600 font-bold", children: "!" }), w] }, i)
                                                             ))
                                                         })
                                                     ]
@@ -274,14 +274,14 @@ export const AIResumeAnalyzer = () => {
                                             // Missing Keywords Card
                                             analysis.missingKeywords && analysis.missingKeywords.length > 0 && (
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
                                                         _jsx(CardHeader, {
-                                                            className: "py-3",
+                                                            className: "py-3 border-b border-palette-sandstone/30",
                                                             children: _jsxs(CardTitle, {
-                                                                className: "flex items-center gap-1.5 text-amber-800 text-xs",
+                                                                className: "flex items-center gap-1.5 text-palette-espresso text-xs",
                                                                 children: [
-                                                                    _jsx(AlertCircle, { className: "h-4 w-4" }),
+                                                                    _jsx(AlertCircle, { className: "h-4 w-4 text-palette-bronze" }),
                                                                     _jsx("span", { children: "Target Missing Keywords" })
                                                                 ]
                                                             })
@@ -289,7 +289,7 @@ export const AIResumeAnalyzer = () => {
                                                         _jsx(CardContent, {
                                                             className: "flex flex-wrap gap-1.5 py-3",
                                                             children: analysis.missingKeywords.map((k) => (
-                                                                _jsx(Badge, { variant: "warning", size: "sm", children: k }, k)
+                                                                _jsx(Badge, { variant: "bronze", size: "sm", children: k }, k)
                                                             ))
                                                         })
                                                     ]
@@ -299,14 +299,14 @@ export const AIResumeAnalyzer = () => {
                                             // Suggestions / Action items
                                             analysis.suggestions && analysis.suggestions.length > 0 && (
                                                 _jsxs(Card, {
-                                                    className: "border border-slate-200/80 shadow-subtle",
+                                                    className: "border border-palette-sandstone/70 shadow-subtle bg-white/90",
                                                     children: [
                                                         _jsx(CardHeader, {
-                                                            className: "py-3",
+                                                            className: "py-3 border-b border-palette-sandstone/30",
                                                             children: _jsxs(CardTitle, {
-                                                                className: "text-slate-900 text-xs flex items-center gap-1.5",
+                                                                className: "text-palette-espresso text-xs flex items-center gap-1.5",
                                                                 children: [
-                                                                    _jsx(Sparkles, { className: "h-4 w-4 text-indigo-600" }),
+                                                                    _jsx(Sparkles, { className: "h-4 w-4 text-palette-bronze" }),
                                                                     _jsx("span", { children: "Proactive AI Recommendations" })
                                                                 ]
                                                             })
@@ -315,9 +315,9 @@ export const AIResumeAnalyzer = () => {
                                                             className: "space-y-2 py-3 text-xs",
                                                             children: analysis.suggestions.map((s, i) => (
                                                                 _jsxs("div", {
-                                                                    className: "flex items-start gap-2 text-slate-700 leading-relaxed",
+                                                                    className: "flex items-start gap-2 text-palette-espresso/80 leading-relaxed",
                                                                     children: [
-                                                                        _jsx("span", { className: "h-5 w-5 rounded-full bg-indigo-50 text-indigo-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5", children: i + 1 }),
+                                                                        _jsx("span", { className: "h-5 w-5 rounded-full bg-palette-sandstone-light text-palette-bronze font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5 border border-palette-sandstone", children: i + 1 }),
                                                                         _jsx("p", { children: s })
                                                                     ]
                                                                 }, i)

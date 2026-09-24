@@ -223,39 +223,39 @@ export const AppShell = ({ children }) => {
 
     return (
         _jsxs("div", {
-            className: "min-h-screen bg-slate-50 flex text-xs font-sans antialiased text-slate-800",
+            className: "min-h-screen bg-[#FAF7F2] flex text-xs font-sans antialiased text-[#1F150C]",
             children: [
                 // Mobile backdrop
                 sidebarOpen && (
                     _jsx("div", {
-                        className: "fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm md:hidden transition-opacity",
+                        className: "fixed inset-0 z-40 bg-[#000000]/60 backdrop-blur-sm md:hidden transition-opacity",
                         onClick: () => setSidebarOpen(false)
                     })
                 ),
 
-                // Sidebar
+                // Sidebar (Deep Espresso Noir with Bronze & Sandstone accents)
                 _jsxs("aside", {
-                    className: `fixed inset-y-0 left-0 z-50 bg-[#0B0F19] text-slate-300 flex flex-col transform transition-all duration-300 md:translate-x-0 md:relative shrink-0 border-r border-slate-800/80 shadow-2xl md:shadow-none ${
+                    className: `fixed inset-y-0 left-0 z-50 bg-[#1F150C] text-[#E1DCC9] flex flex-col transform transition-all duration-300 md:translate-x-0 md:relative shrink-0 border-r border-[#412D15]/70 shadow-2xl md:shadow-none ${
                         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                     } ${isCollapsed && canCollapse ? 'w-20' : 'w-64'}`,
                     children: [
                         // Sidebar Brand Header
                         _jsxs("div", {
-                            className: "h-16 flex items-center justify-between px-5 border-b border-slate-800/80 shrink-0",
+                            className: "h-16 flex items-center justify-between px-5 border-b border-[#412D15]/70 shrink-0",
                             children: [
                                 _jsxs(Link, {
                                     to: "/dashboard",
                                     className: "flex items-center gap-2.5 font-bold tracking-wider text-white group",
                                     children: [
                                         _jsx("div", {
-                                            className: "h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 shrink-0 group-hover:scale-105 transition-transform",
-                                            children: _jsx(Sparkles, { className: "h-4.5 w-4.5 text-white animate-pulse" })
+                                            className: "h-8 w-8 rounded-xl bg-gradient-to-br from-[#412D15] to-[#1F150C] border border-[#E1DCC9]/30 flex items-center justify-center text-[#E1DCC9] shadow-md shrink-0 group-hover:scale-105 transition-transform",
+                                            children: _jsx(Sparkles, { className: "h-4.5 w-4.5 text-[#E1DCC9] animate-pulse" })
                                         }),
                                         (!isCollapsed || !canCollapse) && (
                                             _jsxs("div", {
                                                 children: [
                                                     _jsx("span", { className: "block text-xs font-black tracking-[0.14em] text-white leading-none", children: "CAMPUSGENT" }),
-                                                    _jsx("span", { className: "block text-[8.5px] font-bold uppercase tracking-[0.2em] text-indigo-400 mt-0.5", children: "AI PLATFORM" })
+                                                    _jsx("span", { className: "block text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#E1DCC9]/80 mt-0.5", children: "AI PLATFORM" })
                                                 ]
                                             })
                                         )
@@ -264,7 +264,7 @@ export const AppShell = ({ children }) => {
                                 canCollapse && (
                                     _jsx("button", {
                                         onClick: () => setIsCollapsed(!isCollapsed),
-                                        className: "hidden md:flex p-1.5 hover:bg-slate-800/80 rounded-lg text-slate-400 hover:text-white transition-colors cursor-pointer",
+                                        className: "hidden md:flex p-1.5 hover:bg-[#412D15]/50 rounded-lg text-[#E1DCC9]/70 hover:text-white transition-colors cursor-pointer",
                                         children: isCollapsed ? _jsx(ChevronRight, { className: "h-4 w-4" }) : _jsx(ChevronLeft, { className: "h-4 w-4" })
                                     })
                                 )
@@ -281,7 +281,7 @@ export const AppShell = ({ children }) => {
                                         children: [
                                             !isCollapsed && (
                                                 _jsx("span", {
-                                                    className: "block px-3 text-[9.5px] font-bold text-slate-400 tracking-widest uppercase mb-1.5 select-none",
+                                                    className: "block px-3 text-[9.5px] font-bold text-[#C9BF9F] tracking-widest uppercase mb-1.5 select-none",
                                                     children: group.group
                                                 })
                                             ),
@@ -294,15 +294,15 @@ export const AppShell = ({ children }) => {
                                                         onClick: () => setSidebarOpen(false),
                                                         className: `flex items-center gap-3 px-3 py-2 rounded-xl font-semibold transition-all duration-150 group relative ${
                                                             active
-                                                                ? 'bg-indigo-600/20 text-indigo-400 border-l-2 border-indigo-500 shadow-sm font-bold'
-                                                                : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'
+                                                                ? 'bg-[#412D15]/45 text-[#E1DCC9] border-l-2 border-[#E1DCC9] shadow-sm font-bold'
+                                                                : 'text-[#E1DCC9]/70 hover:bg-[#412D15]/25 hover:text-white'
                                                         }`,
                                                         children: [
-                                                            _jsx(Icon, { className: `h-4 w-4 shrink-0 transition-colors ${active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-white'}` }),
+                                                            _jsx(Icon, { className: `h-4 w-4 shrink-0 transition-colors ${active ? 'text-[#E1DCC9]' : 'text-[#E1DCC9]/70 group-hover:text-white'}` }),
                                                             !isCollapsed && _jsx("span", { className: "truncate", children: link.label }),
                                                             isCollapsed && (
                                                                 _jsx("div", {
-                                                                    className: "absolute left-16 bg-slate-900 border border-slate-700 text-white font-bold text-[11px] rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none shadow-xl",
+                                                                    className: "absolute left-16 bg-[#000000] border border-[#412D15] text-[#E1DCC9] font-bold text-[11px] rounded-lg px-2.5 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none shadow-xl",
                                                                     children: link.label
                                                                 })
                                                             )
@@ -323,8 +323,8 @@ export const AppShell = ({ children }) => {
                                             onClick: () => setSidebarOpen(false),
                                             className: `flex items-center gap-3 px-3 py-2 rounded-xl font-semibold transition-all ${
                                                 active
-                                                    ? 'bg-indigo-600/20 text-indigo-400 border-l-2 border-indigo-500 font-bold'
-                                                    : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'
+                                                    ? 'bg-[#412D15]/45 text-[#E1DCC9] border-l-2 border-[#E1DCC9] font-bold'
+                                                    : 'text-[#E1DCC9]/70 hover:bg-[#412D15]/25 hover:text-white'
                                             }`,
                                             children: [
                                                 _jsx(Icon, { className: "h-4 w-4 shrink-0" }),
@@ -338,34 +338,34 @@ export const AppShell = ({ children }) => {
 
                         // Sidebar Bottom User Profile Pill
                         _jsxs("div", {
-                            className: "p-3 border-t border-slate-800/80 space-y-2 bg-slate-950/40 shrink-0",
+                            className: "p-3 border-t border-[#412D15]/70 space-y-2 bg-[#140D07]/90 shrink-0",
                             children: [
                                 (!isCollapsed || !canCollapse) ? (
                                     _jsxs("div", {
-                                        className: "flex items-center gap-3 px-2 py-1.5 rounded-xl bg-slate-900/70 border border-slate-800",
+                                        className: "flex items-center gap-3 px-2 py-1.5 rounded-xl bg-[#1F150C] border border-[#412D15]/70",
                                         children: [
                                             _jsx("div", {
-                                                className: "h-8 w-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-800 flex items-center justify-center font-black text-white text-[11px] shadow-sm shrink-0",
+                                                className: "h-8 w-8 rounded-lg bg-gradient-to-tr from-[#412D15] to-[#1F150C] border border-[#E1DCC9]/30 flex items-center justify-center font-black text-[#E1DCC9] text-[11px] shadow-sm shrink-0",
                                                 children: user?.name ? user.name.slice(0, 2).toUpperCase() : 'CG'
                                             }),
                                             _jsxs("div", {
                                                 className: "truncate flex-1 min-w-0",
                                                 children: [
                                                     _jsx("p", { className: "font-bold text-white text-xs truncate leading-tight", children: user?.name }),
-                                                    _jsx("p", { className: "text-[10px] text-indigo-300 font-medium truncate mt-0.5", children: user?.role?.replace('_', ' ') })
+                                                    _jsx("p", { className: "text-[10px] text-[#E1DCC9]/80 font-medium truncate mt-0.5", children: user?.role?.replace('_', ' ') })
                                                 ]
                                             })
                                         ]
                                     })
                                 ) : (
                                     _jsx("div", {
-                                        className: "mx-auto w-9 h-9 bg-gradient-to-tr from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-sm",
+                                        className: "mx-auto w-9 h-9 bg-gradient-to-tr from-[#412D15] to-[#1F150C] border border-[#E1DCC9]/30 rounded-xl flex items-center justify-center font-bold text-[#E1DCC9] text-xs shrink-0 shadow-sm",
                                         children: user?.name ? user.name.slice(0, 2).toUpperCase() : 'CG'
                                     })
                                 ),
                                 _jsxs("button", {
                                     onClick: handleLogout,
-                                    className: `w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors cursor-pointer ${
+                                    className: `w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-semibold text-rose-300 hover:bg-rose-500/15 transition-colors cursor-pointer ${
                                         isCollapsed && canCollapse ? 'justify-center' : ''
                                     }`,
                                     children: [
@@ -380,9 +380,9 @@ export const AppShell = ({ children }) => {
 
                 // Main Content Shell
                 _jsxs("div", {
-                    className: "flex-1 flex flex-col min-w-0 overflow-x-hidden min-h-screen bg-slate-50",
+                    className: "flex-1 flex flex-col min-w-0 overflow-x-hidden min-h-screen bg-[#FAF7F2]",
                     children: [
-                        // Top Navbar (Frosted Glass)
+                        // Top Navbar (Warm Frosted Glass)
                         _jsxs("header", {
                             className: "h-16 glass-navbar flex items-center justify-between px-5 sm:px-6 md:px-8 shrink-0 relative z-30 sticky top-0",
                             children: [
@@ -392,13 +392,13 @@ export const AppShell = ({ children }) => {
                                     children: [
                                         _jsx("button", {
                                             onClick: () => setSidebarOpen(true),
-                                            className: "md:hidden p-2 hover:bg-slate-100 rounded-xl text-slate-700 transition-colors cursor-pointer",
+                                            className: "md:hidden p-2 hover:bg-[#F4EFE6] rounded-xl text-[#1F150C] transition-colors cursor-pointer",
                                             children: _jsx(Menu, { className: "h-5 w-5" })
                                         }),
                                         _jsxs("div", {
-                                            className: "hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-[10px] font-bold text-slate-700 uppercase tracking-widest",
+                                            className: "hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F4EFE6] border border-[#E1DCC9] text-[10px] font-bold text-[#1F150C] uppercase tracking-widest",
                                             children: [
-                                                _jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" }),
+                                                _jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-[#412D15] animate-pulse shrink-0" }),
                                                 _jsx("span", { children: getRoleHeaderBadge() })
                                             ]
                                         })
@@ -408,15 +408,15 @@ export const AppShell = ({ children }) => {
                                 // Center: Quick Search Bar
                                 (isPlacementOfficer || isFaculty) && (
                                     _jsxs("div", {
-                                        className: "hidden lg:flex items-center gap-2 bg-slate-100/80 border border-slate-200/80 px-3.5 py-1.5 rounded-xl w-72 text-slate-600 focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all",
+                                        className: "hidden lg:flex items-center gap-2 bg-[#F4EFE6] border border-[#E1DCC9] px-3.5 py-1.5 rounded-xl w-72 text-[#1F150C] focus-within:border-[#412D15] focus-within:bg-white focus-within:ring-4 focus-within:ring-[#412D15]/10 transition-all",
                                         children: [
-                                            _jsx(Search, { className: "h-3.5 w-3.5 text-slate-400 shrink-0" }),
+                                            _jsx(Search, { className: "h-3.5 w-3.5 text-[#6B5336] shrink-0" }),
                                             _jsx("input", {
                                                 type: "text",
                                                 placeholder: "Search students, drives, skills...",
-                                                className: "bg-transparent border-none outline-none text-xs w-full text-slate-800 placeholder:text-slate-400"
+                                                className: "bg-transparent border-none outline-none text-xs w-full text-[#1F150C] placeholder:text-[#8F7554]"
                                             }),
-                                            _jsx("kbd", { className: "px-1.5 py-0.5 text-[9px] font-mono text-slate-400 bg-white border border-slate-200 rounded", children: "Ctrl K" })
+                                            _jsx("kbd", { className: "px-1.5 py-0.5 text-[9px] font-mono text-[#6B5336] bg-white border border-[#E1DCC9] rounded", children: "Ctrl K" })
                                         ]
                                     })
                                 ),
@@ -432,7 +432,7 @@ export const AppShell = ({ children }) => {
                                                 children: [
                                                     _jsxs("button", {
                                                         onClick: () => setShowQuickActions(!showQuickActions),
-                                                        className: "bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 text-xs shadow-sm hover:shadow-indigo-500/25 transition-all cursor-pointer",
+                                                        className: "bg-gradient-to-r from-[#1F150C] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] text-[#E1DCC9] border border-[#412D15] font-bold px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 text-xs shadow-sm transition-all cursor-pointer",
                                                         children: [
                                                             _jsx(Plus, { className: "h-3.5 w-3.5" }),
                                                             _jsx("span", { children: "Quick Action" })
@@ -443,24 +443,24 @@ export const AppShell = ({ children }) => {
                                                             children: [
                                                                 _jsx("div", { className: "fixed inset-0 z-40", onClick: () => setShowQuickActions(false) }),
                                                                 _jsxs("div", {
-                                                                    className: "absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-1.5 z-50 text-xs animate-fade-in",
+                                                                    className: "absolute right-0 mt-2 w-48 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-1.5 z-50 text-xs animate-fade-in",
                                                                     children: [
                                                                         _jsx(Link, {
                                                                             to: "/placement/drives",
                                                                             onClick: () => setShowQuickActions(false),
-                                                                            className: "block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold border-b border-slate-100",
+                                                                            className: "block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold border-b border-[#E1DCC9]/70",
                                                                             children: "+ Create Placement Drive"
                                                                         }),
                                                                         _jsx(Link, {
                                                                             to: "/placement/companies",
                                                                             onClick: () => setShowQuickActions(false),
-                                                                            className: "block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold border-b border-slate-100",
+                                                                            className: "block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold border-b border-[#E1DCC9]/70",
                                                                             children: "+ Add Company Profile"
                                                                         }),
                                                                         _jsx(Link, {
                                                                             to: "/placement/applications",
                                                                             onClick: () => setShowQuickActions(false),
-                                                                            className: "block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold",
+                                                                            className: "block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold",
                                                                             children: "Review Applications"
                                                                         })
                                                                     ]
@@ -478,12 +478,12 @@ export const AppShell = ({ children }) => {
                                             children: [
                                                 _jsxs("button", {
                                                     onClick: () => setShowNotifications(!showNotifications),
-                                                    className: "p-2 hover:bg-slate-100 rounded-xl relative transition-colors text-slate-600 hover:text-slate-900 cursor-pointer",
+                                                    className: "p-2 hover:bg-[#F4EFE6] rounded-xl relative transition-colors text-[#412D15] hover:text-[#000000] cursor-pointer",
                                                     children: [
                                                         _jsx(Bell, { className: "h-5 w-5" }),
                                                         unreadCount > 0 && (
                                                             _jsx("span", {
-                                                                className: "absolute top-1 right-1 bg-rose-500 text-white font-bold text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center ring-2 ring-white shadow-xs",
+                                                                className: "absolute top-1 right-1 bg-[#412D15] text-[#E1DCC9] font-bold text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center ring-2 ring-white shadow-xs",
                                                                 children: unreadCount > 9 ? '9+' : unreadCount
                                                             })
                                                         )
@@ -494,24 +494,24 @@ export const AppShell = ({ children }) => {
                                                         children: [
                                                             _jsx("div", { className: "fixed inset-0 z-40", onClick: () => setShowNotifications(false) }),
                                                             _jsxs("div", {
-                                                                className: "absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto animate-fade-in",
+                                                                className: "absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto animate-fade-in",
                                                                 children: [
                                                                     _jsxs("div", {
-                                                                        className: "px-4 py-2.5 border-b border-slate-100 flex items-center justify-between",
+                                                                        className: "px-4 py-2.5 border-b border-[#E1DCC9]/70 flex items-center justify-between",
                                                                         children: [
                                                                             _jsxs("div", {
                                                                                 className: "flex items-center gap-2",
                                                                                 children: [
-                                                                                    _jsx("span", { className: "font-bold text-slate-900 text-xs", children: "Notifications" }),
+                                                                                    _jsx("span", { className: "font-bold text-[#1F150C] text-xs", children: "Notifications" }),
                                                                                     unreadCount > 0 && (
-                                                                                        _jsxs("span", { className: "bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full", children: [unreadCount, " new"] })
+                                                                                        _jsxs("span", { className: "bg-[#F4EFE6] text-[#412D15] border border-[#E1DCC9] text-[10px] font-bold px-2 py-0.5 rounded-full", children: [unreadCount, " new"] })
                                                                                     )
                                                                                 ]
                                                                             }),
                                                                             unreadCount > 0 && (
                                                                                 _jsx("button", {
                                                                                     onClick: handleMarkAllRead,
-                                                                                    className: "text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer",
+                                                                                    className: "text-[11px] font-bold text-[#412D15] hover:text-[#000000] transition-colors cursor-pointer",
                                                                                     children: "Mark all read"
                                                                                 })
                                                                             )
@@ -519,28 +519,28 @@ export const AppShell = ({ children }) => {
                                                                     }),
                                                                     notifications.length === 0 ? (
                                                                         _jsxs("div", {
-                                                                            className: "px-4 py-8 text-center text-slate-400 space-y-1",
+                                                                            className: "px-4 py-8 text-center text-[#8F7554] space-y-1",
                                                                             children: [
-                                                                                _jsx(Bell, { className: "h-6 w-6 mx-auto text-slate-300 mb-2" }),
-                                                                                _jsx("p", { className: "text-xs font-semibold text-slate-600", children: "All caught up!" }),
-                                                                                _jsx("p", { className: "text-[11px] text-slate-400", children: "No new notifications right now." })
+                                                                                _jsx(Bell, { className: "h-6 w-6 mx-auto text-[#C9BF9F] mb-2" }),
+                                                                                _jsx("p", { className: "text-xs font-semibold text-[#1F150C]", children: "All caught up!" }),
+                                                                                _jsx("p", { className: "text-[11px] text-[#8F7554]", children: "No new notifications right now." })
                                                                             ]
                                                                         })
                                                                     ) : (
                                                                         notifications.slice(0, 5).map((n) => (
                                                                             _jsxs("div", {
-                                                                                className: `px-4 py-3 border-b border-slate-50 text-xs transition-colors hover:bg-slate-50/80 ${
-                                                                                    n.read ? 'opacity-60' : 'bg-indigo-50/30'
+                                                                                className: `px-4 py-3 border-b border-[#E1DCC9]/50 text-xs transition-colors hover:bg-[#FAF7F2] ${
+                                                                                    n.read ? 'opacity-60' : 'bg-[#FAF7F2]'
                                                                                 }`,
                                                                                 children: [
                                                                                     _jsxs("div", {
                                                                                         className: "flex justify-between items-start mb-0.5",
                                                                                         children: [
-                                                                                            _jsx("span", { className: "font-bold text-slate-900", children: n.title }),
-                                                                                            _jsx("span", { className: "text-[9.5px] text-slate-400 font-medium", children: new Date(n.createdAt).toLocaleDateString() })
+                                                                                            _jsx("span", { className: "font-bold text-[#1F150C]", children: n.title }),
+                                                                                            _jsx("span", { className: "text-[9.5px] text-[#8F7554] font-medium", children: new Date(n.createdAt).toLocaleDateString() })
                                                                                         ]
                                                                                     }),
-                                                                                    _jsx("p", { className: "text-slate-600 leading-relaxed text-[11px] line-clamp-2", children: n.message })
+                                                                                    _jsx("p", { className: "text-[#6B5336] leading-relaxed text-[11px] line-clamp-2", children: n.message })
                                                                                 ]
                                                                             }, n._id)
                                                                         ))
@@ -548,7 +548,7 @@ export const AppShell = ({ children }) => {
                                                                     _jsx(Link, {
                                                                         to: isFaculty ? "/faculty/notifications" : isPlacementOfficer ? "/placement/notifications" : "/notifications",
                                                                         onClick: () => setShowNotifications(false),
-                                                                        className: "block text-center py-2 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-colors border-t border-slate-100 mt-1",
+                                                                        className: "block text-center py-2 text-[11px] font-bold text-[#412D15] hover:text-[#000000] transition-colors border-t border-[#E1DCC9]/70 mt-1",
                                                                         children: "View all notifications →"
                                                                     })
                                                                 ]
@@ -565,14 +565,14 @@ export const AppShell = ({ children }) => {
                                             children: [
                                                 _jsxs("button", {
                                                     onClick: () => setShowProfileMenu(!showProfileMenu),
-                                                    className: "flex items-center gap-2 p-1.5 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer text-left",
+                                                    className: "flex items-center gap-2 p-1.5 hover:bg-[#F4EFE6] rounded-xl transition-colors cursor-pointer text-left",
                                                     children: [
                                                         _jsx("div", {
-                                                            className: "h-8 w-8 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-xl flex items-center justify-center font-black text-xs shadow-xs",
+                                                            className: "h-8 w-8 bg-gradient-to-br from-[#1F150C] to-[#000000] border border-[#412D15] text-[#E1DCC9] rounded-xl flex items-center justify-center font-black text-xs shadow-xs",
                                                             children: user?.name ? user.name.slice(0, 2).toUpperCase() : 'CG'
                                                         }),
                                                         _jsx("span", {
-                                                            className: "hidden md:inline font-bold text-slate-800 text-xs truncate max-w-[110px]",
+                                                            className: "hidden md:inline font-bold text-[#1F150C] text-xs truncate max-w-[110px]",
                                                             children: user?.name ? user.name.split(' ')[0] : 'Account'
                                                         })
                                                     ]
@@ -582,42 +582,42 @@ export const AppShell = ({ children }) => {
                                                         children: [
                                                             _jsx("div", { className: "fixed inset-0 z-40", onClick: () => setShowProfileMenu(false) }),
                                                             _jsxs("div", {
-                                                                className: "absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 animate-fade-in text-xs",
+                                                                className: "absolute right-0 mt-2 w-52 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 animate-fade-in text-xs",
                                                                 children: [
                                                                     _jsxs("div", {
-                                                                        className: "px-4 py-2 border-b border-slate-100",
+                                                                        className: "px-4 py-2 border-b border-[#E1DCC9]/70",
                                                                         children: [
-                                                                            _jsx("p", { className: "font-bold text-slate-900 truncate", children: user?.name }),
-                                                                            _jsx("p", { className: "text-[10px] text-slate-500 font-medium truncate", children: user?.email })
+                                                                            _jsx("p", { className: "font-bold text-[#1F150C] truncate", children: user?.name }),
+                                                                            _jsx("p", { className: "text-[10px] text-[#6B5336] font-medium truncate", children: user?.email })
                                                                         ]
                                                                     }),
                                                                     _jsxs(Link, {
                                                                         to: isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : "/profile",
                                                                         onClick: () => setShowProfileMenu(false),
-                                                                        className: "flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold transition-colors",
+                                                                        className: "flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors",
                                                                         children: [
-                                                                            _jsx(User, { className: "h-4 w-4 text-slate-400" }),
+                                                                            _jsx(User, { className: "h-4 w-4 text-[#6B5336]" }),
                                                                             _jsx("span", { children: "My Profile" })
                                                                         ]
                                                                     }),
                                                                     _jsxs(Link, {
                                                                         to: isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : "/settings",
                                                                         onClick: () => setShowProfileMenu(false),
-                                                                        className: "flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold transition-colors",
+                                                                        className: "flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors",
                                                                         children: [
-                                                                            _jsx(Settings, { className: "h-4 w-4 text-slate-400" }),
+                                                                            _jsx(Settings, { className: "h-4 w-4 text-[#6B5336]" }),
                                                                             _jsx("span", { children: "Settings" })
                                                                         ]
                                                                     }),
-                                                                    _jsx("div", { className: "border-t border-slate-100 my-1" }),
+                                                                    _jsx("div", { className: "border-t border-[#E1DCC9]/70 my-1" }),
                                                                     _jsxs("button", {
                                                                         onClick: () => {
                                                                             setShowProfileMenu(false);
                                                                             handleLogout();
                                                                         },
-                                                                        className: "w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-rose-50 text-rose-600 font-semibold transition-colors cursor-pointer",
+                                                                        className: "w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-rose-50 text-rose-700 font-semibold transition-colors cursor-pointer",
                                                                         children: [
-                                                                            _jsx(LogOut, { className: "h-4 w-4 text-rose-500" }),
+                                                                            _jsx(LogOut, { className: "h-4 w-4 text-rose-600" }),
                                                                             _jsx("span", { children: "Log Out" })
                                                                         ]
                                                                     })

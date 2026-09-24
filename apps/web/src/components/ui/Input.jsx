@@ -10,7 +10,7 @@ export const Input = forwardRef(({ className, label, error, helperText, icon: Ic
             children: [
                 label && (
                     _jsx("label", {
-                        className: "block text-xs font-semibold text-slate-700 tracking-wide",
+                        className: "block text-xs font-semibold text-[#1F150C] tracking-wide",
                         children: label
                     })
                 ),
@@ -19,7 +19,7 @@ export const Input = forwardRef(({ className, label, error, helperText, icon: Ic
                     children: [
                         Icon && (
                             _jsx("div", {
-                                className: "absolute left-3 text-slate-400 pointer-events-none flex items-center",
+                                className: "absolute left-3 text-[#6B5336] pointer-events-none flex items-center",
                                 children: _jsx(Icon, { className: "h-4 w-4" })
                             })
                         ),
@@ -28,11 +28,11 @@ export const Input = forwardRef(({ className, label, error, helperText, icon: Ic
                             type: type,
                             className: twMerge(
                                 clsx(
-                                    'w-full px-3.5 py-2.5 text-xs text-slate-900 bg-white border rounded-xl shadow-xs transition-all duration-150 placeholder:text-slate-400 focus:outline-none',
+                                    'w-full px-3.5 py-2.5 text-xs text-[#1F150C] bg-white border rounded-xl shadow-xs transition-all duration-150 placeholder:text-[#8F7554]/70 focus:outline-none',
                                     Icon && 'pl-9',
                                     error
-                                        ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10'
-                                        : 'border-slate-200 hover:border-slate-300 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/10'
+                                        ? 'border-rose-300 focus:border-rose-600 focus:ring-4 focus:ring-rose-500/10'
+                                        : 'border-[#E1DCC9] hover:border-[#C9BF9F] focus:border-[#412D15] focus:ring-4 focus:ring-[#412D15]/10'
                                 ),
                                 className
                             ),
@@ -47,7 +47,7 @@ export const Input = forwardRef(({ className, label, error, helperText, icon: Ic
                     })
                 ) : helperText ? (
                     _jsx("p", {
-                        className: "text-[11px] text-slate-500",
+                        className: "text-[11px] text-[#6B5336]",
                         children: helperText
                     })
                 ) : null

@@ -14,29 +14,31 @@ export const Badge = ({
     const baseStyles = 'inline-flex items-center font-semibold rounded-full tracking-wide transition-colors';
 
     const variants = {
-        neutral: 'bg-slate-100 text-slate-700 border border-slate-200/80',
-        secondary: 'bg-slate-100 text-slate-700 border border-slate-200/80',
-        success: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
-        warning: 'bg-amber-50 text-amber-800 border border-amber-200/80',
-        danger: 'bg-rose-50 text-rose-700 border border-rose-200/80',
-        info: 'bg-sky-50 text-sky-700 border border-sky-200/80',
-        indigo: 'bg-indigo-50 text-indigo-700 border border-indigo-200/80',
-        primary: 'bg-indigo-50 text-indigo-700 border border-indigo-200/80',
-        purple: 'bg-purple-50 text-purple-700 border border-purple-200/80',
-        dark: 'bg-slate-900 text-white border border-slate-800',
+        neutral: 'bg-[#F4EFE6] text-[#1F150C] border border-[#E1DCC9]',
+        secondary: 'bg-[#FAF7F2] text-[#412D15] border border-[#E1DCC9]',
+        bronze: 'bg-[#412D15]/10 text-[#412D15] border border-[#412D15]/30',
+        sandstone: 'bg-[#E1DCC9] text-[#1F150C] border border-[#C9BF9F]',
+        primary: 'bg-[#412D15]/10 text-[#412D15] border border-[#412D15]/30',
+        indigo: 'bg-[#412D15]/10 text-[#412D15] border border-[#412D15]/30',
+        success: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80',
+        warning: 'bg-amber-50 text-amber-900 border border-amber-200/80',
+        danger: 'bg-rose-50 text-rose-800 border border-rose-200/80',
+        info: 'bg-[#F4EFE6] text-[#412D15] border border-[#E1DCC9]',
+        dark: 'bg-[#1F150C] text-[#E1DCC9] border border-[#412D15]',
     };
 
     const dotColors = {
-        neutral: 'bg-slate-400',
-        secondary: 'bg-slate-400',
-        success: 'bg-emerald-500',
-        warning: 'bg-amber-500',
-        danger: 'bg-rose-500',
-        info: 'bg-sky-500',
-        indigo: 'bg-indigo-500',
-        primary: 'bg-indigo-500',
-        purple: 'bg-purple-500',
-        dark: 'bg-emerald-400',
+        neutral: 'bg-[#6B5336]',
+        secondary: 'bg-[#412D15]',
+        bronze: 'bg-[#412D15]',
+        sandstone: 'bg-[#1F150C]',
+        primary: 'bg-[#412D15]',
+        indigo: 'bg-[#412D15]',
+        success: 'bg-emerald-600',
+        warning: 'bg-amber-600',
+        danger: 'bg-rose-600',
+        info: 'bg-[#412D15]',
+        dark: 'bg-[#E1DCC9]',
     };
 
     const sizes = {
@@ -50,7 +52,7 @@ export const Badge = ({
             className: twMerge(clsx(baseStyles, variants[variant] || variants.neutral, sizes[size] || sizes.sm, className)),
             ...props,
             children: [
-                dot && _jsx("span", { className: clsx('h-1.5 w-1.5 rounded-full shrink-0', dotColors[variant] || 'bg-slate-400') }),
+                dot && _jsx("span", { className: clsx('h-1.5 w-1.5 rounded-full shrink-0', dotColors[variant] || 'bg-[#6B5336]') }),
                 children
             ]
         })
