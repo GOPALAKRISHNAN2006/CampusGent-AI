@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { RegisterSchema, LoginSchema, UserRole } from '@campusgent/shared';
 import { env } from '../config/env.js';
 import { User } from '../models/User.js';
@@ -17,7 +18,7 @@ const generateAccessToken = (user) => {
 };
 // Helper to generate and store refresh tokens
 const generateRefreshToken = async (userId) => {
-    const token = jwt.sign({ id: userId }, env.JWT_REFRESH_SECRET, {
+    const token = jwt.sign({ id: userId, jti: uuidv4() }, env.JWT_REFRESH_SECRET, {
         expiresIn: '7d',
     });
     const expiresAt = new Date();
@@ -165,6 +166,12 @@ export const refresh = async (req, res, next) => {
         if (!refreshToken) {
             throw new UnauthorizedError('Refresh token is missing', 'REFRESH_TOKEN_MISSING');
         }
+        try {
+            jwt.verify(refreshToken, env.JWT_REFRESH_SECRET);
+        } catch (jwtErr) {
+            res.clearCookie('refreshToken', { ...cookieOptions, maxAge: 0 });
+            throw new UnauthorizedError('Invalid or expired refresh token session', 'REFRESH_TOKEN_INVALID');
+        }
         const tokenDoc = await RefreshToken.findOne({ token: refreshToken });
         if (!tokenDoc) {
             // Security warning: possible replay attack. Clear cookie.
@@ -175,6 +182,7 @@ export const refresh = async (req, res, next) => {
         await RefreshToken.deleteOne({ _id: tokenDoc._id });
         const user = await User.findById(tokenDoc.user);
         if (!user) {
+            res.clearCookie('refreshToken', { ...cookieOptions, maxAge: 0 });
             throw new UnauthorizedError('User session not found', 'USER_NOT_FOUND');
         }
         const newAccessToken = generateAccessToken({

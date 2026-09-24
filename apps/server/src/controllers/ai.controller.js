@@ -3,7 +3,8 @@ import { AIInsight } from '../models/AIInsight.js';
 import { AIService } from '../services/ai.service.js';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../utils/errors.js';
 import mongoose from 'mongoose';
-const pdfParse = require('pdf-parse');
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
+import fs from 'fs';
 import { AIOrchestrator } from '../ai/orchestrator.js';
 // 1. Career Advisor Roadmap Generator
 export const getCareerAdvisor = async (req, res, next) => {
@@ -188,7 +189,7 @@ export const uploadResumeAnalyzer = async (req, res, next) => {
         catch (e) {
             console.error('PDF parsing error:', e);
             const errAny = e;
-            require('fs').writeFileSync('pdf-error.log', errAny ? errAny.toString() + (errAny.stack ? '\n' + errAny.stack : '') : 'Unknown Error');
+            fs.writeFileSync('pdf-error.log', errAny ? errAny.toString() + (errAny.stack ? '\n' + errAny.stack : '') : 'Unknown Error');
             throw new BadRequestError('Failed to parse PDF file');
         }
         if (!resumeText || typeof resumeText !== 'string' || resumeText.trim().length === 0) {

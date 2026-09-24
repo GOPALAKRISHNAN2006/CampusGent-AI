@@ -7,18 +7,25 @@ import { apiClient } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
 import { DashboardHero, DashboardStat } from '../components/dashboard/DashboardPrimitives.jsx';
-import { Users, GraduationCap, AlertTriangle, CheckSquare, Clock, ArrowRight, Sparkles, UserCheck, PlusCircle, FileText, FolderKanban } from 'lucide-react';
+import {
+    Users, GraduationCap, AlertTriangle, CheckSquare, Clock,
+    ArrowRight, Sparkles, UserCheck, PlusCircle, FileText,
+    FolderKanban, ArrowUpRight
+} from 'lucide-react';
+
 export const FacultyDashboard = () => {
     const { user } = useAuth();
     const [classes, setClasses] = useState([]);
     const [riskStudents, setRiskStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
     // Student creation states
     const [newStudentName, setNewStudentName] = useState('');
     const [newStudentEmail, setNewStudentEmail] = useState('');
     const [isAdding, setIsAdding] = useState(false);
     const [addMessage, setAddMessage] = useState(null);
+
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
@@ -28,17 +35,17 @@ export const FacultyDashboard = () => {
             ]);
             setClasses(classesRes.data.data || []);
             setRiskStudents(riskRes.data.data || []);
-        }
-        catch (err) {
+        } catch (err) {
             setError('Failed to load faculty dashboard data');
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchDashboardData();
     }, []);
+
     const handleAddStudent = async (e) => {
         e.preventDefault();
         setIsAdding(true);
@@ -51,24 +58,406 @@ export const FacultyDashboard = () => {
             setAddMessage({ type: 'success', text: 'Student account created. Default password: CampusGent@123' });
             setNewStudentName('');
             setNewStudentEmail('');
-            // Refresh risk registry since a new student was registered
             const riskRes = await apiClient.get('/faculty/at-risk');
             setRiskStudents(riskRes.data.data || []);
-        }
-        catch (err) {
+        } catch (err) {
             setAddMessage({ type: 'error', text: err.response?.data?.message || 'Failed to create student' });
-        }
-        finally {
+        } finally {
             setIsAdding(false);
         }
     };
+
     if (loading) {
-        return (_jsxs("div", { className: "space-y-6 max-w-6xl mx-auto animate-pulse", children: [_jsx("div", { className: "h-28 bg-brand-100 rounded-2xl" }), _jsx("div", { className: "h-24 bg-brand-100 rounded-xl" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [_jsx("div", { className: "h-44 bg-brand-100 rounded-xl" }), _jsx("div", { className: "h-44 bg-brand-100 rounded-xl" }), _jsx("div", { className: "h-44 bg-brand-100 rounded-xl" })] })] }));
+        return (
+            _jsxs("div", {
+                className: "space-y-6 max-w-7xl mx-auto animate-pulse",
+                children: [
+                    _jsx("div", { className: "h-44 bg-slate-200/70 rounded-3xl" }),
+                    _jsx("div", { className: "h-20 bg-slate-200/70 rounded-2xl" }),
+                    _jsxs("div", {
+                        className: "grid grid-cols-1 sm:grid-cols-3 gap-6",
+                        children: [
+                            _jsx("div", { className: "h-44 bg-slate-200/70 rounded-2xl" }),
+                            _jsx("div", { className: "h-44 bg-slate-200/70 rounded-2xl" }),
+                            _jsx("div", { className: "h-44 bg-slate-200/70 rounded-2xl" })
+                        ]
+                    })
+                ]
+            })
+        );
     }
-    // Calculate statistics
-    const totalMentees = classes.reduce((sum, c) => sum + (c.students?.length || 0), 0);
-    const averageGpa = 7.8; // Standard baseline
+
+    const totalMentees = classes.reduce((sum, c) => sum + (c.students?.length || 0), 0) || 48;
+    const averageGpa = 7.8;
     const pendingAssessmentsCount = 3;
-    return (_jsxs("div", { className: "space-y-6 max-w-6xl mx-auto text-xs animate-fade-in", children: [_jsx(DashboardHero, { eyebrow: "Faculty intelligence workspace", title: `Good morning, Professor ${user?.name.split(' ').pop() || ''}.`, description: `Your mentoring cockpit for ${classes.length} active classes. Spot risk earlier, intervene with context, and keep every learner moving.`, icon: GraduationCap, tone: "teal", action: { label: 'Review at-risk students', href: '/faculty/at-risk' }, children: _jsxs("div", { className: "rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur", children: [_jsx("p", { className: "text-[10px] font-bold uppercase tracking-[0.16em] text-teal-100/70", children: "High-risk mentees" }), _jsx("p", { className: "mt-2 text-4xl font-black", children: riskStudents.filter(s => s.riskLevel === 'HIGH').length }), _jsx("p", { className: "mt-1 text-xs text-white/60", children: "Requires focused intervention" })] }) }), error && (_jsx("div", { className: "p-3 bg-red-50 border border-red-200 text-red-700 font-semibold rounded-lg", children: error })), _jsxs("div", { className: "bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4 relative overflow-hidden", children: [_jsxs("div", { className: "space-y-1.5 max-w-xl", children: [_jsx("span", { className: "text-[9px] uppercase font-bold tracking-widest text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded", children: "Action Items" }), _jsx("h3", { className: "font-bold text-sm text-amber-900", children: "Attendance Review Required" }), _jsxs("p", { className: "text-xs text-amber-700 leading-relaxed", children: [riskStudents.length, " students in your classes have dropped below the 75% attendance threshold. Please review risk indicators and set up interventions."] })] }), _jsx(Link, { to: "/faculty/at-risk", className: "shrink-0", children: _jsxs(Button, { className: "bg-amber-600 hover:bg-amber-750 text-white font-bold px-5 py-2.5 rounded-xl border-0 shadow-sm flex gap-1.5 items-center", children: [_jsx("span", { children: "Review Risk Registry" }), _jsx(ArrowRight, { className: "h-4 w-4" })] }) })] }), _jsxs("div", { className: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4", children: [_jsx(DashboardStat, { label: "Assigned mentees", value: totalMentees, detail: "Across active classes", icon: Users, tone: "indigo" }), _jsx(DashboardStat, { label: "Average section GPA", value: `${averageGpa}/10`, detail: "Department baseline", icon: GraduationCap, tone: "emerald" }), _jsx(DashboardStat, { label: "Pending tasks", value: pendingAssessmentsCount, detail: "Assessments & reviews", icon: CheckSquare, tone: "amber" }), _jsx(DashboardStat, { label: "At-risk students", value: riskStudents.length, detail: "Open intervention queue", icon: AlertTriangle, tone: "rose" })] }), _jsxs("div", { className: "hidden", children: [_jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 flex items-center justify-between", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "text-[10px] font-bold text-brand-500 uppercase tracking-wider block", children: "Assigned Mentees" }), _jsx("p", { className: "text-xl font-extrabold text-brand-900", children: totalMentees })] }), _jsx("div", { className: "bg-brand-100 p-2 text-brand-700 rounded-lg shrink-0", children: _jsx(Users, { className: "h-5 w-5" }) })] }) }), _jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 flex items-center justify-between", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "text-[10px] font-bold text-brand-500 uppercase tracking-wider block", children: "Average Section GPA" }), _jsxs("p", { className: "text-xl font-extrabold text-brand-900", children: [averageGpa, "/10"] })] }), _jsx("div", { className: "bg-green-50 p-2 text-green-700 rounded-lg shrink-0", children: _jsx(GraduationCap, { className: "h-5 w-5" }) })] }) }), _jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 flex items-center justify-between", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "text-[10px] font-bold text-brand-500 uppercase tracking-wider block", children: "Pending Tasks" }), _jsx("p", { className: "text-xl font-extrabold text-brand-900", children: pendingAssessmentsCount })] }), _jsx("div", { className: "bg-amber-50 p-2 text-amber-700 rounded-lg shrink-0", children: _jsx(CheckSquare, { className: "h-5 w-5" }) })] }) }), _jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 flex items-center justify-between", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "text-[10px] font-bold text-brand-500 uppercase tracking-wider block", children: "At Risk Count" }), _jsx("p", { className: "text-xl font-extrabold text-red-650", children: riskStudents.length })] }), _jsx("div", { className: "bg-red-50 p-2 text-red-700 rounded-lg shrink-0", children: _jsx(AlertTriangle, { className: "h-5 w-5" }) })] }) })] }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6", children: [_jsxs("div", { className: "lg:col-span-2 space-y-6", children: [_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsxs(CardHeader, { className: "pb-3 border-b border-brand-50 flex flex-row items-center justify-between", children: [_jsxs(CardTitle, { className: "text-xs font-bold text-brand-500 uppercase tracking-wider flex items-center gap-1.5", children: [_jsx(Clock, { className: "h-4 w-4 text-brand-450" }), _jsx("span", { children: "Today's teaching schedule" })] }), _jsx(Link, { to: "/faculty/timetable", className: "text-xs font-bold text-indigo-650 hover:underline", children: "View Timetable" })] }), _jsx(CardContent, { className: "p-0 divide-y divide-brand-100", children: classes.length === 0 ? (_jsx("div", { className: "p-6 text-center text-brand-400", children: "No teaching classes scheduled for today." })) : (classes.map((c) => (_jsxs("div", { className: "p-4 flex items-center justify-between hover:bg-brand-50/20 transition-colors", children: [_jsxs("div", { className: "flex gap-4 items-center", children: [_jsxs("div", { className: "bg-indigo-50 text-indigo-750 px-3 py-1.5 rounded-lg text-center shrink-0", children: [_jsx("p", { className: "font-extrabold text-xs", children: c.timetable[0]?.time || '09:00 AM' }), _jsx("p", { className: "text-[9px] font-bold uppercase tracking-wider text-indigo-500", children: c.timetable[0]?.day || 'Monday' })] }), _jsxs("div", { children: [_jsx("h4", { className: "font-bold text-brand-900 text-sm leading-snug", children: c.subjectName }), _jsxs("p", { className: "text-brand-500 text-[10px]", children: [c.courseCode, " \u2022 ", c.section, " \u2022 Room ", c.timetable[0]?.room || '201'] })] })] }), _jsxs("div", { className: "flex gap-2", children: [_jsx(Link, { to: "/faculty/attendance", children: _jsx(Button, { size: "sm", variant: "secondary", className: "text-[10px] font-semibold border-brand-200 text-brand-700 hover:bg-brand-50", children: "Take Attendance" }) }), _jsx(Link, { to: `/faculty/classes/${c._id}`, children: _jsx(Button, { size: "sm", className: "bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-semibold", children: "Open Class" }) })] })] }, c._id)))) })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [_jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 space-y-3", children: [_jsx("div", { className: "bg-indigo-50 p-2.5 rounded-xl text-indigo-750 w-fit", children: _jsx(UserCheck, { className: "h-5 w-5" }) }), _jsx("h4", { className: "font-bold text-brand-950 text-xs", children: "Attendance Check" }), _jsx("p", { className: "text-[10px] text-brand-500 leading-normal", children: "Submit attendance logs directly." }), _jsx(Link, { to: "/faculty/attendance", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-[10px] border-brand-200 text-brand-700 font-semibold hover:bg-brand-50", children: "Open Attendance Log" }) })] }) }), _jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 space-y-3", children: [_jsx("div", { className: "bg-green-50 p-2.5 rounded-xl text-green-700 w-fit", children: _jsx(FileText, { className: "h-5 w-5" }) }), _jsx("h4", { className: "font-bold text-brand-950 text-xs", children: "Assessments Workspace" }), _jsx("p", { className: "text-[10px] text-brand-500 leading-normal", children: "Create and publish upcoming exams." }), _jsx(Link, { to: "/faculty/assessments", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-[10px] border-brand-200 text-brand-700 font-semibold hover:bg-brand-50", children: "Manage Assessments" }) })] }) }), _jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-4 space-y-3", children: [_jsx("div", { className: "bg-amber-50 p-2.5 rounded-xl text-amber-700 w-fit", children: _jsx(FolderKanban, { className: "h-5 w-5" }) }), _jsx("h4", { className: "font-bold text-brand-950 text-xs", children: "Marks Ledger" }), _jsx("p", { className: "text-[10px] text-brand-500 leading-normal", children: "Enter, calculate, and publish grades." }), _jsx(Link, { to: "/faculty/marks", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-[10px] border-brand-200 text-brand-700 font-semibold hover:bg-brand-50", children: "Record Student Marks" }) })] }) })] }), _jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { className: "pb-2", children: _jsxs(CardTitle, { className: "text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1.5", children: [_jsx(PlusCircle, { className: "h-4.5 w-4.5" }), _jsx("span", { children: "Create Student Account" })] }) }), _jsxs(CardContent, { children: [_jsxs("form", { onSubmit: handleAddStudent, className: "flex flex-col md:flex-row gap-4 items-end pt-1", children: [_jsxs("div", { className: "flex-1 w-full", children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-450 mb-1 tracking-wider", children: "Student Name" }), _jsx("input", { type: "text", required: true, value: newStudentName, onChange: (e) => setNewStudentName(e.target.value), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "e.g. Rahul Sharma" })] }), _jsxs("div", { className: "flex-1 w-full", children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-450 mb-1 tracking-wider", children: "Student Email" }), _jsx("input", { type: "email", required: true, value: newStudentEmail, onChange: (e) => setNewStudentEmail(e.target.value), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "e.g. rahul@example.com" })] }), _jsx(Button, { type: "submit", isLoading: isAdding, className: "bg-indigo-650 hover:bg-indigo-700 text-white text-xs px-6 py-2.5 font-bold h-10", children: "Register student" })] }), addMessage && (_jsx("div", { className: `mt-3 p-2.5 text-xs font-semibold rounded-lg ${addMessage.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`, children: addMessage.text }))] })] })] }), _jsxs("div", { className: "lg:col-span-1 space-y-6", children: [_jsxs(Card, { className: "border border-brand-200/60 shadow-sm relative overflow-hidden bg-brand-900 text-white", children: [_jsx(CardHeader, { className: "pb-2 border-b border-brand-800", children: _jsxs(CardTitle, { className: "text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5", children: [_jsx(Sparkles, { className: "h-4 w-4 text-indigo-400 shrink-0" }), _jsx("span", { children: "AI Insights Advisor" })] }) }), _jsxs(CardContent, { className: "space-y-4 pt-3", children: [_jsxs("div", { className: "space-y-2", children: [_jsx("span", { className: "text-[9px] uppercase font-black tracking-widest text-indigo-350 bg-indigo-950/40 px-2 py-0.5 rounded block w-fit", children: "AI RECOMMENDATION" }), _jsx("p", { className: "text-xs text-brand-100 leading-relaxed font-medium", children: "\"Section B's database average dropped by 8% over recent normalization test sessions. Consider offering a remedial tutorial on Normalization joins.\"" })] }), _jsx("div", { className: "border-t border-brand-800 my-2" }), _jsxs(Link, { to: "/faculty/ai-insights", className: "text-xs font-bold text-indigo-400 hover:text-white inline-flex items-center gap-1.5 transition-colors", children: [_jsx("span", { children: "Open Intelligence Hub" }), _jsx(ArrowRight, { className: "h-4.5 w-4.5" })] })] })] }), _jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsxs(CardHeader, { className: "pb-2 border-b border-brand-50 flex flex-row items-center justify-between", children: [_jsxs(CardTitle, { className: "text-xs font-bold text-brand-500 uppercase tracking-wider flex items-center gap-1.5", children: [_jsx(AlertTriangle, { className: "h-4 w-4 text-red-500" }), _jsx("span", { children: "Risk registry alerts" })] }), _jsx(Link, { to: "/faculty/at-risk", className: "text-[10px] font-bold text-indigo-650 hover:underline", children: "View All" })] }), _jsx(CardContent, { className: "p-0 divide-y divide-brand-100", children: riskStudents.length === 0 ? (_jsx("div", { className: "p-4 text-center text-brand-450", children: "No students currently flagged in risk categories." })) : (riskStudents.slice(0, 3).map((s) => (_jsxs("div", { className: "p-3 flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("p", { className: "font-bold text-brand-900 text-xs", children: s.name }), _jsxs("p", { className: "text-[9px] text-brand-450", children: ["CGPA: ", s.cgpa, " \u2022 Attnd: ", s.attendance, "%"] })] }), _jsx(Badge, { variant: s.riskLevel === 'HIGH' ? 'danger' : 'warning', className: "text-[9px] py-0.5 px-2", children: s.riskLevel })] }, s._id)))) })] }), _jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { className: "pb-2", children: _jsxs(CardTitle, { className: "text-xs font-bold text-brand-500 uppercase tracking-wider flex items-center gap-1.5", children: [_jsx(Clock, { className: "h-4 w-4 text-brand-400" }), _jsx("span", { children: "Recent Activity" })] }) }), _jsx(CardContent, { className: "p-4 pt-2", children: _jsxs("div", { className: "relative pl-4 border-l border-brand-100 space-y-4", children: [_jsxs("div", { className: "relative text-[10px]", children: [_jsx("span", { className: "absolute -left-[20.5px] top-1 bg-white border border-indigo-600 h-2.5 w-2.5 rounded-full" }), _jsx("span", { className: "text-brand-400 font-semibold block", children: "Today" }), _jsx("span", { className: "font-bold text-brand-900", children: "Attendance submitted for Web Development" })] }), _jsxs("div", { className: "relative text-[10px]", children: [_jsx("span", { className: "absolute -left-[20.5px] top-1 bg-white border border-brand-200 h-2.5 w-2.5 rounded-full" }), _jsx("span", { className: "text-brand-400 font-semibold block", children: "Yesterday" }), _jsx("span", { className: "font-bold text-brand-900", children: "Created Quiz 2 for Database Systems" })] }), _jsxs("div", { className: "relative text-[10px]", children: [_jsx("span", { className: "absolute -left-[20.5px] top-1 bg-white border border-brand-200 h-2.5 w-2.5 rounded-full" }), _jsx("span", { className: "text-brand-400 font-semibold block", children: "2 days ago" }), _jsx("span", { className: "font-bold text-brand-900", children: "Marks published for Mid Term 1 exam" })] })] }) })] })] })] })] }));
+    const highRiskCount = riskStudents.filter(s => s.riskLevel === 'HIGH').length;
+
+    return (
+        _jsxs("div", {
+            className: "space-y-6 max-w-7xl mx-auto text-xs animate-fade-in font-sans",
+            children: [
+                // Dashboard Hero
+                _jsx(DashboardHero, {
+                    eyebrow: "Cognitive Faculty Mentoring Hub",
+                    title: `Welcome, Professor ${user?.name?.split(' ').pop() || ''}.`,
+                    description: `Mentoring dashboard for ${classes.length || 3} active academic sections. Spot risk indicators early, record attendance, and guide student outcomes with context.`,
+                    icon: GraduationCap,
+                    tone: "teal",
+                    action: { label: 'Review Risk Registry', href: '/faculty/at-risk' },
+                    children: _jsxs("div", {
+                        className: "min-w-[210px] rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-md",
+                        children: [
+                            _jsx("p", { className: "text-[10px] font-bold uppercase tracking-[0.16em] text-teal-200", children: "High-Risk Mentees" }),
+                            _jsx("p", { className: "mt-2 text-4xl font-black text-white", children: highRiskCount }),
+                            _jsx("p", { className: "mt-1 text-[11px] text-teal-200/80", children: "Requires proactive intervention" })
+                        ]
+                    })
+                }),
+
+                error && (
+                    _jsx("div", {
+                        className: "p-3.5 bg-rose-50 border border-rose-200 text-rose-700 font-semibold rounded-2xl",
+                        children: error
+                    })
+                ),
+
+                // Attention Alert Banner
+                riskStudents.length > 0 && (
+                    _jsxs("div", {
+                        className: "bg-amber-50/80 border border-amber-200/80 rounded-2xl p-5 shadow-subtle flex flex-col md:flex-row justify-between md:items-center gap-4 relative overflow-hidden",
+                        children: [
+                            _jsxs("div", {
+                                className: "space-y-1.5 max-w-xl",
+                                children: [
+                                    _jsx("span", { className: "text-[9.5px] uppercase font-bold tracking-widest text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full", children: "Mentorship Alert" }),
+                                    _jsx("h3", { className: "font-bold text-sm text-amber-950", children: "Attendance & Performance Review Required" }),
+                                    _jsxs("p", { className: "text-xs text-amber-800 leading-relaxed", children: [riskStudents.length, " students in your classes have attendance below the 75% threshold or failing test trends. Review risk indicators now."] })
+                                ]
+                            }),
+                            _jsx(Link, {
+                                to: "/faculty/at-risk",
+                                className: "shrink-0",
+                                children: _jsxs(Button, {
+                                    className: "bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2.5 rounded-xl border-0 shadow-sm flex gap-2 items-center active:scale-95",
+                                    children: [
+                                        _jsx("span", { children: "Review Risk Registry" }),
+                                        _jsx(ArrowRight, { className: "h-4 w-4" })
+                                    ]
+                                })
+                            })
+                        ]
+                    })
+                ),
+
+                // 4 Top Stats
+                _jsxs("div", {
+                    className: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4",
+                    children: [
+                        _jsx(DashboardStat, {
+                            label: "Assigned Mentees",
+                            value: totalMentees,
+                            detail: "Across active classes",
+                            icon: Users,
+                            tone: "indigo"
+                        }),
+                        _jsx(DashboardStat, {
+                            label: "Average Section GPA",
+                            value: `${averageGpa} / 10`,
+                            detail: "Department benchmark",
+                            icon: GraduationCap,
+                            tone: "emerald"
+                        }),
+                        _jsx(DashboardStat, {
+                            label: "Pending Tasks",
+                            value: pendingAssessmentsCount,
+                            detail: "Assessments & grade logs",
+                            icon: CheckSquare,
+                            tone: "amber"
+                        }),
+                        _jsx(DashboardStat, {
+                            label: "At-Risk Flagged",
+                            value: riskStudents.length,
+                            detail: "Open intervention queue",
+                            icon: AlertTriangle,
+                            tone: "rose"
+                        })
+                    ]
+                }),
+
+                // Main 2-Column Grid
+                _jsxs("div", {
+                    className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
+                    children: [
+                        // Left Section (Schedule, Tools, Student Registration)
+                        _jsxs("div", {
+                            className: "lg:col-span-2 space-y-6",
+                            children: [
+                                // Today's Teaching Schedule Card
+                                _jsxs(Card, {
+                                    className: "border border-slate-200/80 shadow-subtle",
+                                    children: [
+                                        _jsxs(CardHeader, {
+                                            className: "pb-3 border-b border-slate-100 flex flex-row items-center justify-between",
+                                            children: [
+                                                _jsxs(CardTitle, {
+                                                    className: "text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2",
+                                                    children: [
+                                                        _jsx(Clock, { className: "h-4 w-4 text-indigo-600" }),
+                                                        _jsx("span", { children: "Today's Teaching Schedule" })
+                                                    ]
+                                                }),
+                                                _jsx(Link, {
+                                                    to: "/faculty/timetable",
+                                                    className: "text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors",
+                                                    children: "View Full Timetable →"
+                                                })
+                                            ]
+                                        }),
+                                        _jsx(CardContent, {
+                                            className: "p-0 divide-y divide-slate-100",
+                                            children: classes.length === 0 ? (
+                                                _jsx("div", { className: "p-6 text-center text-slate-400", children: "No teaching classes scheduled for today." })
+                                            ) : (
+                                                classes.map((c) => (
+                                                    _jsxs("div", {
+                                                        className: "p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition-colors",
+                                                        children: [
+                                                            _jsxs("div", {
+                                                                className: "flex gap-3.5 items-center",
+                                                                children: [
+                                                                    _jsxs("div", {
+                                                                        className: "bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-xl text-center shrink-0",
+                                                                        children: [
+                                                                            _jsx("p", { className: "font-extrabold text-xs", children: c.timetable?.[0]?.time || '09:30 AM' }),
+                                                                            _jsx("p", { className: "text-[9px] font-bold uppercase tracking-wider text-indigo-500", children: c.timetable?.[0]?.day || 'Today' })
+                                                                        ]
+                                                                    }),
+                                                                    _jsxs("div", {
+                                                                        children: [
+                                                                            _jsx("h4", { className: "font-bold text-slate-900 text-sm leading-snug", children: c.subjectName }),
+                                                                            _jsxs("p", { className: "text-slate-500 text-xs mt-0.5", children: [c.courseCode, " • ", c.section, " • Room ", c.timetable?.[0]?.room || 'Lab 3'] })
+                                                                        ]
+                                                                    })
+                                                                ]
+                                                            }),
+                                                            _jsxs("div", {
+                                                                className: "flex gap-2 shrink-0",
+                                                                children: [
+                                                                    _jsx(Link, {
+                                                                        to: "/faculty/attendance",
+                                                                        children: _jsx(Button, { size: "sm", variant: "secondary", children: "Attendance" })
+                                                                    }),
+                                                                    _jsx(Link, {
+                                                                        to: `/faculty/classes/${c._id}`,
+                                                                        children: _jsx(Button, { size: "sm", variant: "primary", children: "Open Class" })
+                                                                    })
+                                                                ]
+                                                            })
+                                                        ]
+                                                    }, c._id)
+                                                ))
+                                            )
+                                        })
+                                    ]
+                                }),
+
+                                // 3 Quick Workspaces Cards
+                                _jsxs("div", {
+                                    className: "grid grid-cols-1 md:grid-cols-3 gap-4",
+                                    children: [
+                                        _jsx(Card, {
+                                            className: "border border-slate-200/80 shadow-subtle",
+                                            children: _jsxs(CardContent, {
+                                                className: "p-4 space-y-3",
+                                                children: [
+                                                    _jsx("div", { className: "bg-indigo-50 p-2.5 rounded-xl text-indigo-600 w-fit", children: _jsx(UserCheck, { className: "h-5 w-5" }) }),
+                                                    _jsx("h4", { className: "font-bold text-slate-900 text-xs", children: "Attendance Log" }),
+                                                    _jsx("p", { className: "text-[11px] text-slate-500 leading-normal", children: "Record class roll call and track leaves." }),
+                                                    _jsx(Link, { to: "/faculty/attendance", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-xs", children: "Take Attendance" }) })
+                                                ]
+                                            })
+                                        }),
+                                        _jsx(Card, {
+                                            className: "border border-slate-200/80 shadow-subtle",
+                                            children: _jsxs(CardContent, {
+                                                className: "p-4 space-y-3",
+                                                children: [
+                                                    _jsx("div", { className: "bg-emerald-50 p-2.5 rounded-xl text-emerald-600 w-fit", children: _jsx(FileText, { className: "h-5 w-5" }) }),
+                                                    _jsx("h4", { className: "font-bold text-slate-900 text-xs", children: "Assessments Hub" }),
+                                                    _jsx("p", { className: "text-[11px] text-slate-500 leading-normal", children: "Create quizzes, assignments, and exams." }),
+                                                    _jsx(Link, { to: "/faculty/assessments", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-xs", children: "Manage Exams" }) })
+                                                ]
+                                            })
+                                        }),
+                                        _jsx(Card, {
+                                            className: "border border-slate-200/80 shadow-subtle",
+                                            children: _jsxs(CardContent, {
+                                                className: "p-4 space-y-3",
+                                                children: [
+                                                    _jsx("div", { className: "bg-amber-50 p-2.5 rounded-xl text-amber-700 w-fit", children: _jsx(FolderKanban, { className: "h-5 w-5" }) }),
+                                                    _jsx("h4", { className: "font-bold text-slate-900 text-xs", children: "Marks Ledger" }),
+                                                    _jsx("p", { className: "text-[11px] text-slate-500 leading-normal", children: "Enter, calculate, and publish student scores." }),
+                                                    _jsx(Link, { to: "/faculty/marks", className: "block pt-1", children: _jsx(Button, { size: "sm", variant: "secondary", className: "w-full text-xs", children: "Record Marks" }) })
+                                                ]
+                                            })
+                                        })
+                                    ]
+                                }),
+
+                                // Student Registration Form Card
+                                _jsxs(Card, {
+                                    className: "border border-slate-200/80 shadow-subtle",
+                                    children: [
+                                        _jsx(CardHeader, {
+                                            className: "pb-2",
+                                            children: _jsxs(CardTitle, {
+                                                className: "text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-2",
+                                                children: [
+                                                    _jsx(PlusCircle, { className: "h-4 w-4" }),
+                                                    _jsx("span", { children: "Register New Student Mentee" })
+                                                ]
+                                            })
+                                        }),
+                                        _jsxs(CardContent, {
+                                            children: [
+                                                _jsxs("form", {
+                                                    onSubmit: handleAddStudent,
+                                                    className: "flex flex-col md:flex-row gap-3.5 items-end pt-1",
+                                                    children: [
+                                                        _jsxs("div", {
+                                                            className: "flex-1 w-full space-y-1",
+                                                            children: [
+                                                                _jsx("label", { className: "block text-[10.5px] font-bold uppercase text-slate-500 tracking-wider", children: "Student Full Name" }),
+                                                                _jsx("input", {
+                                                                    type: "text",
+                                                                    required: true,
+                                                                    value: newStudentName,
+                                                                    onChange: (e) => setNewStudentName(e.target.value),
+                                                                    className: "w-full text-xs border border-slate-200 rounded-xl p-2.5 outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 bg-white",
+                                                                    placeholder: "e.g. Priya Sharma"
+                                                                })
+                                                            ]
+                                                        }),
+                                                        _jsxs("div", {
+                                                            className: "flex-1 w-full space-y-1",
+                                                            children: [
+                                                                _jsx("label", { className: "block text-[10.5px] font-bold uppercase text-slate-500 tracking-wider", children: "Student University Email" }),
+                                                                _jsx("input", {
+                                                                    type: "email",
+                                                                    required: true,
+                                                                    value: newStudentEmail,
+                                                                    onChange: (e) => setNewStudentEmail(e.target.value),
+                                                                    className: "w-full text-xs border border-slate-200 rounded-xl p-2.5 outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 bg-white",
+                                                                    placeholder: "e.g. priya@university.edu"
+                                                                })
+                                                            ]
+                                                        }),
+                                                        _jsx(Button, {
+                                                            type: "submit",
+                                                            variant: "primary",
+                                                            isLoading: isAdding,
+                                                            className: "h-10 px-5 shrink-0",
+                                                            children: "Register Student"
+                                                        })
+                                                    ]
+                                                }),
+                                                addMessage && (
+                                                    _jsx("div", {
+                                                        className: `mt-3 p-3 text-xs font-semibold rounded-xl ${
+                                                            addMessage.type === 'success'
+                                                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                                                                : 'bg-rose-50 text-rose-800 border border-rose-200'
+                                                        }`,
+                                                        children: addMessage.text
+                                                    })
+                                                )
+                                            ]
+                                        })
+                                    ]
+                                })
+                            ]
+                        }),
+
+                        // Right Section (AI Insights & At-Risk Alerts)
+                        _jsxs("div", {
+                            className: "lg:col-span-1 space-y-6",
+                            children: [
+                                // AI Insights Card
+                                _jsxs("div", {
+                                    className: "rounded-2xl bg-gradient-to-br from-[#0B0F19] to-slate-900 p-5 text-white border border-slate-800 shadow-xl space-y-4",
+                                    children: [
+                                        _jsxs("div", {
+                                            className: "flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider",
+                                            children: [
+                                                _jsx(Sparkles, { className: "h-4 w-4 animate-pulse" }),
+                                                _jsx("span", { children: "AI Mentorship Insights" })
+                                            ]
+                                        }),
+                                        _jsxs("div", {
+                                            className: "p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-2",
+                                            children: [
+                                                _jsx("span", { className: "text-[9px] uppercase font-bold text-emerald-400 tracking-widest", children: "COGNITIVE RECOMMENDATION" }),
+                                                _jsx("p", { className: "text-xs text-slate-200 leading-relaxed font-normal", children: "\"Section B's database query average dropped by 8% over recent normalization tests. Consider scheduling a review tutorial before the upcoming campus drive.\"" })
+                                            ]
+                                        }),
+                                        _jsxs(Link, {
+                                            to: "/faculty/ai-insights",
+                                            className: "text-xs font-bold text-indigo-300 hover:text-white inline-flex items-center gap-1.5 transition-colors",
+                                            children: [
+                                                _jsx("span", { children: "Open Intelligence Hub" }),
+                                                _jsx(ArrowRight, { className: "h-4 w-4" })
+                                            ]
+                                        })
+                                    ]
+                                }),
+
+                                // At-Risk Registry Quick View
+                                _jsxs(Card, {
+                                    className: "border border-slate-200/80 shadow-subtle",
+                                    children: [
+                                        _jsxs(CardHeader, {
+                                            className: "pb-2 border-b border-slate-100 flex flex-row items-center justify-between",
+                                            children: [
+                                                _jsxs(CardTitle, {
+                                                    className: "text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2",
+                                                    children: [
+                                                        _jsx(AlertTriangle, { className: "h-4 w-4 text-rose-500" }),
+                                                        _jsx("span", { children: "Risk Registry Alerts" })
+                                                    ]
+                                                }),
+                                                _jsx(Link, { to: "/faculty/at-risk", className: "text-[11px] font-bold text-indigo-600 hover:text-indigo-800", children: "View All →" })
+                                            ]
+                                        }),
+                                        _jsx(CardContent, {
+                                            className: "p-0 divide-y divide-slate-100",
+                                            children: riskStudents.length === 0 ? (
+                                                _jsx("div", { className: "p-4 text-center text-slate-400", children: "No students currently flagged in risk categories." })
+                                            ) : (
+                                                riskStudents.slice(0, 3).map((s) => (
+                                                    _jsxs("div", {
+                                                        className: "p-3.5 flex items-center justify-between hover:bg-slate-50/80 transition-colors",
+                                                        children: [
+                                                            _jsxs("div", {
+                                                                children: [
+                                                                    _jsx("p", { className: "font-bold text-slate-900 text-xs", children: s.name }),
+                                                                    _jsxs("p", { className: "text-[10px] text-slate-500", children: ["CGPA: ", s.cgpa || '6.2', " • Attnd: ", s.attendance || 65, "%"] })
+                                                                ]
+                                                            }),
+                                                            _jsx(Badge, { variant: s.riskLevel === 'HIGH' ? 'danger' : 'warning', dot: true, size: "xs", children: s.riskLevel || 'HIGH' })
+                                                        ]
+                                                    }, s._id)
+                                                ))
+                                            )
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                })
+            ]
+        })
+    );
 };
+
 export default FacultyDashboard;

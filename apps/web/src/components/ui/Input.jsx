@@ -2,7 +2,59 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { forwardRef } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-export const Input = forwardRef(({ className, label, error, type = 'text', ...props }, ref) => {
-    return (_jsxs("div", { className: "w-full", children: [label && _jsx("label", { className: "block text-xs font-semibold text-brand-700 uppercase tracking-wider mb-1", children: label }), _jsx("input", { ref: ref, type: type, className: twMerge(clsx('w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 transition-shadow bg-white text-brand-900', error ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-brand-200 focus:ring-brand-500 focus:border-brand-500', className)), ...props }), error && _jsx("span", { className: "block mt-1 text-xs text-red-500 font-medium", children: error })] }));
+
+export const Input = forwardRef(({ className, label, error, helperText, icon: Icon, type = 'text', ...props }, ref) => {
+    return (
+        _jsxs("div", {
+            className: "w-full space-y-1.5",
+            children: [
+                label && (
+                    _jsx("label", {
+                        className: "block text-xs font-semibold text-slate-700 tracking-wide",
+                        children: label
+                    })
+                ),
+                _jsxs("div", {
+                    className: "relative flex items-center",
+                    children: [
+                        Icon && (
+                            _jsx("div", {
+                                className: "absolute left-3 text-slate-400 pointer-events-none flex items-center",
+                                children: _jsx(Icon, { className: "h-4 w-4" })
+                            })
+                        ),
+                        _jsx("input", {
+                            ref: ref,
+                            type: type,
+                            className: twMerge(
+                                clsx(
+                                    'w-full px-3.5 py-2.5 text-xs text-slate-900 bg-white border rounded-xl shadow-xs transition-all duration-150 placeholder:text-slate-400 focus:outline-none',
+                                    Icon && 'pl-9',
+                                    error
+                                        ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10'
+                                        : 'border-slate-200 hover:border-slate-300 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/10'
+                                ),
+                                className
+                            ),
+                            ...props
+                        })
+                    ]
+                }),
+                error ? (
+                    _jsx("p", {
+                        className: "text-[11px] text-rose-600 font-medium",
+                        children: error
+                    })
+                ) : helperText ? (
+                    _jsx("p", {
+                        className: "text-[11px] text-slate-500",
+                        children: helperText
+                    })
+                ) : null
+            ]
+        })
+    );
 });
+
 Input.displayName = 'Input';
+export default Input;
