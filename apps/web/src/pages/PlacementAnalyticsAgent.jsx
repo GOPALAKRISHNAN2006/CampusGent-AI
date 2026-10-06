@@ -1,6 +1,12 @@
-import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
 import { GenericAgentViewer } from '../components/GenericAgentViewer.jsx';
+
 export const PlacementAnalyticsAgent = () => {
-    return (_jsx(GenericAgentViewer, { agentName: "placement_analytics", title: "Placement Analytics Agent", description: "Institutional analytics: deterministic aggregate statistics interpreted by AI." }));
+  return (
+    <GenericAgentViewer
+      agentName="placement_analytics"
+      title="Placement Analytics Agent"
+      description="Provides macro placement insights, department offer rates, CTC distributions, and recruitment funnel bottlenecks."
+    />
+  );
 };

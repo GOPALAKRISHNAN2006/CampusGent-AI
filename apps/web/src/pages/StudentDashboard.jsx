@@ -1,4 +1,3 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../api/client.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -6,6 +5,19 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card.
 import { Badge } from '../components/ui/Badge.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { motion } from 'framer-motion';
+import {
+    FadeIn,
+    SlideIn,
+    ScaleIn,
+    StaggerContainer,
+    StaggerItem,
+    AnimatedProgress,
+    BlurFadeIn,
+    HoverLift,
+    EASE_APPLE,
+    EASE_SPRING,
+} from '../components/ui/AnimationPrimitives.jsx';
 import {
     Sparkles, Trophy, Calendar, CheckSquare, TrendingUp,
     ArrowRight, User, Briefcase, BookOpen, Clock, ChevronRight,
@@ -66,22 +78,22 @@ export const StudentDashboard = () => {
 
     if (loading) {
         return (
-            _jsxs("div", {
-                className: "space-y-6 max-w-7xl mx-auto animate-pulse",
-                children: [
-                    _jsx("div", { className: "h-44 bg-[#E1DCC9]/40 rounded-3xl" }),
-                    _jsx("div", { className: "h-20 bg-[#E1DCC9]/40 rounded-2xl" }),
-                    _jsxs("div", {
-                        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
-                        children: [
-                            _jsx("div", { className: "h-28 bg-[#E1DCC9]/40 rounded-2xl" }),
-                            _jsx("div", { className: "h-28 bg-[#E1DCC9]/40 rounded-2xl" }),
-                            _jsx("div", { className: "h-28 bg-[#E1DCC9]/40 rounded-2xl" }),
-                            _jsx("div", { className: "h-28 bg-[#E1DCC9]/40 rounded-2xl" })
-                        ]
-                    })
-                ]
-            })
+            <div className="space-y-6 max-w-7xl mx-auto">
+                {/* Animated skeleton loading */}
+                <div className="h-44 skeleton-shimmer rounded-3xl" />
+                <div className="h-20 skeleton-shimmer rounded-2xl" style={{ animationDelay: '0.15s' }} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[0, 1, 2, 3].map((i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.1 + i * 0.08, ease: EASE_APPLE }}
+                            className="h-28 skeleton-shimmer rounded-2xl"
+                        />
+                    ))}
+                </div>
+            </div>
         );
     }
 
@@ -120,444 +132,339 @@ export const StudentDashboard = () => {
     const readinessScore = stats?.readinessScore || profile?.placementReadinessScore || 78;
 
     return (
-        _jsxs("div", {
-            className: "space-y-6 max-w-7xl mx-auto text-xs animate-fade-in font-sans text-[#1F150C]",
-            children: [
-                // Top Hero Banner (Obsidian, Espresso & Bronze)
-                _jsx(DashboardHero, {
-                    eyebrow: "Autonomous Student Success Center",
-                    title: `Welcome back, ${user?.name?.split(' ')[0] || 'Student'}.`,
-                    description: `${profile?.department?.name || 'Computer Science & Engineering'} · Semester ${profile?.semester || 6}. CampusGent transforms your academic progress into a clear, recruiter-ready placement trajectory.`,
-                    icon: Sparkles,
-                    action: { label: 'Open Placement Plan', href: '/placements' },
-                    children: _jsxs("div", {
-                        className: "min-w-[220px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-5 backdrop-blur-md",
-                        children: [
-                            _jsxs("div", {
-                                className: "flex items-center justify-between",
-                                children: [
-                                    _jsx("p", { className: "text-[10px] font-bold uppercase tracking-[0.16em] text-[#E1DCC9]", children: "Placement Readiness" }),
-                                    _jsx("span", { className: "text-[10px] font-bold text-[#E1DCC9]/80", children: "Top Tier" })
-                                ]
-                            }),
-                            _jsxs("p", {
-                                className: "mt-2 text-4xl font-black text-white",
-                                children: [readinessScore, "%"]
-                            }),
-                            _jsx("div", {
-                                className: "mt-3 h-2 overflow-hidden rounded-full bg-[#1F150C]",
-                                children: _jsx("div", {
-                                    className: "h-full rounded-full bg-gradient-to-r from-[#412D15] to-[#E1DCC9]",
-                                    style: { width: `${readinessScore}%` }
-                                })
-                            })
-                        ]
-                    })
-                }),
+        <div className="space-y-6 max-w-7xl mx-auto text-xs font-sans text-[#1F150C]">
+            {/* Top Hero Banner (Obsidian, Espresso & Bronze) */}
+            <DashboardHero
+                eyebrow="Autonomous Student Success Center"
+                title={`Welcome back, ${user?.name?.split(' ')[0] || 'Student'}.`}
+                description={`${profile?.department?.name || 'Computer Science & Engineering'} · Semester ${profile?.semester || 6}. CampusGent transforms your academic progress into a clear, recruiter-ready placement trajectory.`}
+                icon={Sparkles}
+                action={{ label: 'Open Placement Plan', href: '/placements' }}
+            >
+                <div className="min-w-[220px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-5 backdrop-blur-md shadow-bezel-dark">
+                    <div className="flex items-center justify-between">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#E1DCC9]">Placement Readiness</p>
+                        <span className="text-[10px] font-bold text-[#E1DCC9]/80">Top Tier</span>
+                    </div>
+                    <motion.p
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: 0.5, ease: EASE_SPRING }}
+                        className="mt-2 text-4xl font-black text-white tabular-nums"
+                    >
+                        {readinessScore}%
+                    </motion.p>
+                    <div className="mt-3">
+                        <AnimatedProgress value={readinessScore} delay={0.7} barClassName="bg-gradient-to-r from-[#412D15] to-[#E1DCC9]" className="bg-[#1F150C] border-none" />
+                    </div>
+                </div>
+            </DashboardHero>
 
-                // Error Message if any
-                error && (
-                    _jsx("div", {
-                        className: "p-3.5 bg-rose-50 border border-rose-200 text-rose-800 font-semibold rounded-2xl",
-                        children: error
-                    })
-                ),
+            {/* Error Message if any */}
+            {error && (
+                <FadeIn>
+                    <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 font-semibold rounded-2xl shadow-sm">
+                        {error}
+                    </div>
+                </FadeIn>
+            )}
 
-                // Attention / Next Best Action Banner
-                _jsxs("div", {
-                    className: "relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1F150C] via-[#31210F] to-[#412D15] p-5 text-white shadow-md border border-[#412D15]/80 flex flex-col md:flex-row justify-between md:items-center gap-4",
-                    children: [
-                        _jsx("div", { className: "absolute -right-10 -top-10 h-32 w-32 bg-[#E1DCC9]/10 rounded-full blur-2xl pointer-events-none" }),
-                        _jsxs("div", {
-                            className: "space-y-1.5 max-w-xl relative",
-                            children: [
-                                _jsxs("div", {
-                                    className: "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E1DCC9]/15 border border-[#E1DCC9]/30 text-[9.5px] font-bold uppercase tracking-wider text-[#E1DCC9]",
-                                    children: [
-                                        _jsx(Zap, { className: "h-3 w-3 text-[#E1DCC9] animate-pulse" }),
-                                        "Recommended Action"
-                                    ]
-                                }),
-                                _jsx("h3", { className: "font-bold text-sm text-white", children: nextAction.title }),
-                                _jsx("p", { className: "text-xs text-[#E1DCC9]/80 leading-relaxed font-normal", children: nextAction.description })
-                            ]
-                        }),
-                        _jsx(Link, {
-                            to: nextAction.link,
-                            className: "shrink-0 relative",
-                            children: _jsxs(Button, {
-                                className: "bg-[#E1DCC9] text-[#1F150C] hover:bg-white font-bold px-5 py-2.5 rounded-xl border-0 shadow-md flex gap-2 items-center active:scale-95",
-                                children: [
-                                    _jsx("span", { children: nextAction.cta }),
-                                    _jsx(ArrowRight, { className: "h-4 w-4 text-[#412D15]" })
-                                ]
-                            })
-                        })
-                    ]
-                }),
+            {/* Attention / Next Best Action Banner */}
+            <FadeIn delay={0.15}>
+                <div className="double-bezel p-1">
+                    <div className="double-bezel-inner relative overflow-hidden bg-gradient-to-r from-[#1F150C] via-[#31210F] to-[#412D15] p-6 text-white flex flex-col md:flex-row justify-between md:items-center gap-4">
+                        <motion.div
+                            className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 bg-[#E1DCC9]/10 rounded-full blur-2xl"
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                        <div className="space-y-1.5 max-w-xl relative">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#E1DCC9]/15 border border-[#E1DCC9]/30 text-[9.5px] font-bold uppercase tracking-[0.16em] text-[#E1DCC9]">
+                                <Zap className="h-3 w-3 text-[#E1DCC9] status-pulse" />
+                                <span>Recommended Next Step</span>
+                            </div>
+                            <h3 className="font-black text-sm sm:text-base text-white">{nextAction.title}</h3>
+                            <p className="text-xs text-[#E1DCC9]/85 leading-relaxed font-normal">{nextAction.description}</p>
+                        </div>
+                        <Link to={nextAction.link} className="shrink-0 relative">
+                            <Button
+                                variant="sandstone"
+                                trailingIcon={ArrowRight}
+                                className="font-bold px-5 py-2.5 shadow-bezel-inner"
+                            >
+                                {nextAction.cta}
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </FadeIn>
 
-                // 4 Top Stats
-                _jsxs("div", {
-                    className: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4",
-                    children: [
-                        _jsx(DashboardStat, {
-                            label: "Cumulative GPA",
-                            value: `${stats?.cgpa || '8.40'} / 10`,
-                            detail: "Academic Momentum",
-                            icon: Trophy,
-                            tone: "bronze",
-                            trend: "+0.3 vs Sem 3",
-                            trendUp: true
-                        }),
-                        _jsx(DashboardStat, {
-                            label: "Class Attendance",
-                            value: `${stats?.attendance || 88}%`,
-                            detail: "Min. requirement 75%",
-                            icon: Calendar,
-                            tone: "sandstone",
-                            trend: "Safe Status",
-                            trendUp: true
-                        }),
-                        _jsx(DashboardStat, {
-                            label: "Skills Endorsed",
-                            value: stats?.skillsCount || (profile?.skills?.length || 8),
-                            detail: "Verified Portfolio Proof",
-                            icon: CheckSquare,
-                            tone: "espresso"
-                        }),
-                        _jsx(DashboardStat, {
-                            label: "Profile Strength",
-                            value: `${completionPercent}%`,
-                            detail: "Unlock verified drives",
-                            icon: User,
-                            tone: "bronze"
-                        })
-                    ]
-                }),
+            {/* 4 Top Stats with staggered entrance */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <DashboardStat
+                    label="Cumulative GPA"
+                    value={`${stats?.cgpa || '8.40'} / 10`}
+                    detail="Academic Momentum"
+                    icon={Trophy}
+                    tone="bronze"
+                    trend="+0.3 vs Sem 3"
+                    trendUp={true}
+                    index={0}
+                />
+                <DashboardStat
+                    label="Class Attendance"
+                    value={`${stats?.attendance || 88}%`}
+                    detail="Min. requirement 75%"
+                    icon={Calendar}
+                    tone="sandstone"
+                    trend="Safe Status"
+                    trendUp={true}
+                    index={1}
+                />
+                <DashboardStat
+                    label="Skills Endorsed"
+                    value={stats?.skillsCount || (profile?.skills?.length || 8)}
+                    detail="Verified Portfolio Proof"
+                    icon={CheckSquare}
+                    tone="espresso"
+                    index={2}
+                />
+                <DashboardStat
+                    label="Profile Strength"
+                    value={`${completionPercent}%`}
+                    detail="Unlock verified drives"
+                    icon={User}
+                    tone="bronze"
+                    index={3}
+                />
+            </div>
 
-                // Grid: 2 Cols Left, 1 Col Right
-                _jsxs("div", {
-                    className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
-                    children: [
-                        // Left Column (Charts & Progress)
-                        _jsxs("div", {
-                            className: "lg:col-span-2 space-y-6",
-                            children: [
-                                // CGPA Progression Card
-                                _jsxs(Card, {
-                                    className: "border border-[#E1DCC9] shadow-subtle",
-                                    children: [
-                                        _jsxs(CardHeader, {
-                                            className: "pb-3 flex flex-row items-center justify-between border-b border-[#E1DCC9]/70",
-                                            children: [
-                                                _jsxs(CardTitle, {
-                                                    className: "text-xs font-bold text-[#1F150C] uppercase tracking-wider flex items-center gap-2",
-                                                    children: [
-                                                        _jsx(TrendingUp, { className: "h-4 w-4 text-[#412D15]" }),
-                                                        _jsx("span", { children: "Academic CGPA Progression" })
-                                                    ]
-                                                }),
-                                                _jsxs(Link, {
-                                                    to: "/academics",
-                                                    className: "text-[#412D15] hover:text-[#000000] font-bold flex items-center gap-1 transition-colors underline",
-                                                    children: [
-                                                        _jsx("span", { children: "View Full Transcript" }),
-                                                        _jsx(ChevronRight, { className: "h-3.5 w-3.5" })
-                                                    ]
-                                                })
-                                            ]
-                                        }),
-                                        _jsx(CardContent, {
-                                            className: "h-64 pt-4",
-                                            children: _jsx(ResponsiveContainer, {
-                                                width: "100%",
-                                                height: "100%",
-                                                children: _jsxs(AreaChart, {
-                                                    data: gpaData,
-                                                    margin: { top: 10, right: 20, left: -25, bottom: 0 },
-                                                    children: [
-                                                        _jsxs("defs", {
-                                                            children: [
-                                                                _jsxs("linearGradient", {
-                                                                    id: "colorGpaBronze",
-                                                                    x1: "0",
-                                                                    y1: "0",
-                                                                    x2: "0",
-                                                                    y2: "1",
-                                                                    children: [
-                                                                        _jsx("stop", { offset: "5%", stopColor: "#412D15", stopOpacity: 0.35 }),
-                                                                        _jsx("stop", { offset: "95%", stopColor: "#412D15", stopOpacity: 0 })
-                                                                    ]
-                                                                })
-                                                            ]
-                                                        }),
-                                                        _jsx(CartesianGrid, { strokeDasharray: "3 3", stroke: "#E1DCC9" }),
-                                                        _jsx(XAxis, { dataKey: "semester", stroke: "#8F7554", fontSize: 11 }),
-                                                        _jsx(YAxis, { domain: [0, 10], stroke: "#8F7554", fontSize: 11 }),
-                                                        _jsx(Tooltip, {
-                                                            contentStyle: {
-                                                                backgroundColor: '#1F150C',
-                                                                borderRadius: '12px',
-                                                                color: '#E1DCC9',
-                                                                fontSize: '11px',
-                                                                border: '1px solid #412D15'
-                                                            }
-                                                        }),
-                                                        _jsx(Area, {
-                                                            type: "monotone",
-                                                            dataKey: "gpa",
-                                                            stroke: "#412D15",
-                                                            strokeWidth: 2.5,
-                                                            fillOpacity: 1,
-                                                            fill: "url(#colorGpaBronze)"
-                                                        })
-                                                    ]
-                                                })
-                                            })
-                                        })
-                                    ]
-                                }),
+            {/* Grid: 2 Cols Left, 1 Col Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left Column (Charts & Progress) */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* CGPA Progression Card */}
+                    <FadeIn delay={0.1}>
+                        <Card bezel={true} className="bg-white/95">
+                            <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-[#E1DCC9]/70">
+                                <CardTitle className="text-xs font-bold text-[#1F150C] uppercase tracking-wider flex items-center gap-2">
+                                    <TrendingUp className="h-4 w-4 text-[#412D15]" />
+                                    <span>Academic CGPA Progression</span>
+                                </CardTitle>
+                                <Link
+                                    to="/academics"
+                                    className="text-[#412D15] hover:text-[#000000] font-bold flex items-center gap-1 transition-colors underline text-xs"
+                                >
+                                    <span>View Transcript</span>
+                                    <ChevronRight className="h-3.5 w-3.5" />
+                                </Link>
+                            </CardHeader>
+                            <CardContent className="h-64 pt-4">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={gpaData} margin={{ top: 10, right: 20, left: -25, bottom: 0 }}>
+                                        <defs>
+                                            <linearGradient id="colorGpaBronze" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#412D15" stopOpacity={0.35} />
+                                                <stop offset="95%" stopColor="#412D15" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#E1DCC9" />
+                                        <XAxis dataKey="semester" stroke="#8F7554" fontSize={11} />
+                                        <YAxis domain={[0, 10]} stroke="#8F7554" fontSize={11} />
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#1F150C',
+                                                borderRadius: '12px',
+                                                color: '#E1DCC9',
+                                                fontSize: '11px',
+                                                border: '1px solid #412D15'
+                                            }}
+                                        />
+                                        <Area
+                                            type="monotone"
+                                            dataKey="gpa"
+                                            stroke="#412D15"
+                                            strokeWidth={2.5}
+                                            fillOpacity={1}
+                                            fill="url(#colorGpaBronze)"
+                                            animationDuration={1500}
+                                            animationEasing="ease-out"
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </FadeIn>
 
-                                // 2 Split Sub-Cards (Learning Roadmap & Target Role)
-                                _jsxs("div", {
-                                    className: "grid grid-cols-1 md:grid-cols-2 gap-6",
-                                    children: [
-                                        // Learning Roadmap Card
-                                        _jsxs(Card, {
-                                            className: "border border-[#E1DCC9] shadow-subtle flex flex-col justify-between",
-                                            children: [
-                                                _jsx(CardHeader, {
-                                                    className: "pb-2",
-                                                    children: _jsxs(CardTitle, {
-                                                        className: "text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2",
-                                                        children: [
-                                                            _jsx(BookOpen, { className: "h-4 w-4 text-[#412D15]" }),
-                                                            _jsx("span", { children: "Learning Roadmap" })
-                                                        ]
-                                                    })
-                                                }),
-                                                _jsxs(CardContent, {
-                                                    className: "space-y-4",
-                                                    children: [
-                                                        _jsxs("div", {
-                                                            className: "space-y-1.5",
-                                                            children: [
-                                                                _jsx("span", { className: "font-bold text-[#1F150C] block text-sm", children: "Full Stack Development Track" }),
-                                                                _jsxs("div", {
-                                                                    className: "flex items-center justify-between text-[11px] text-[#6B5336]",
-                                                                    children: [
-                                                                        _jsx("span", { children: "Progress" }),
-                                                                        _jsx("span", { className: "font-bold text-[#412D15]", children: "68% Complete" })
-                                                                    ]
-                                                                }),
-                                                                _jsx("div", {
-                                                                    className: "h-2 w-full rounded-full bg-[#FAF7F2] border border-[#E1DCC9] overflow-hidden",
-                                                                    children: _jsx("div", { className: "h-full w-[68%] rounded-full bg-gradient-to-r from-[#412D15] to-[#8F7554]" })
-                                                                })
-                                                            ]
-                                                        }),
-                                                        _jsxs("div", {
-                                                            className: "p-3 border border-[#E1DCC9] rounded-xl bg-[#FAF7F2] space-y-1",
-                                                            children: [
-                                                                _jsx("span", { className: "text-[9.5px] uppercase font-bold text-[#6B5336]", children: "Next Up:" }),
-                                                                _jsx("p", { className: "font-bold text-[#1F150C] text-xs", children: "Advanced React State & Async Patterns" })
-                                                            ]
-                                                        }),
-                                                        _jsx(Link, {
-                                                            to: "/learning",
-                                                            className: "inline-block pt-1 w-full",
-                                                            children: _jsx(Button, {
-                                                                variant: "secondary",
-                                                                className: "w-full text-xs py-2",
-                                                                children: "Continue Learning"
-                                                            })
-                                                        })
-                                                    ]
-                                                })
-                                            ]
-                                        }),
+                    {/* 2 Split Sub-Cards (Learning Roadmap & Target Role) */}
+                    <StaggerContainer staggerDelay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Learning Roadmap Card */}
+                        <StaggerItem>
+                            <HoverLift>
+                                <Card bezel={true} className="bg-white/95 flex flex-col justify-between h-full">
+                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
+                                        <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
+                                            <BookOpen className="h-4 w-4 text-[#412D15]" />
+                                            <span>Learning Roadmap</span>
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4 pt-4">
+                                        <div className="space-y-1.5">
+                                            <span className="font-bold text-[#1F150C] block text-sm">Full Stack Development Track</span>
+                                            <div className="flex items-center justify-between text-[11px] text-[#6B5336]">
+                                                <span>Progress</span>
+                                                <span className="font-bold text-[#412D15] tabular-nums">68% Complete</span>
+                                            </div>
+                                            <AnimatedProgress value={68} delay={0.3} />
+                                        </div>
+                                        <div className="p-3 border border-[#E1DCC9] rounded-xl bg-[#FAF7F2] space-y-1">
+                                            <span className="text-[9.5px] uppercase font-bold text-[#6B5336] tracking-wider">Next Up:</span>
+                                            <p className="font-bold text-[#1F150C] text-xs">Advanced React State & Async Patterns</p>
+                                        </div>
+                                        <Link to="/learning" className="inline-block pt-1 w-full">
+                                            <Button variant="secondary" trailingIcon={ArrowRight} className="w-full text-xs py-2 justify-center">
+                                                Continue Learning
+                                            </Button>
+                                        </Link>
+                                    </CardContent>
+                                </Card>
+                            </HoverLift>
+                        </StaggerItem>
 
-                                        // Target Role Alignment Card
-                                        _jsxs(Card, {
-                                            className: "border border-[#E1DCC9] shadow-subtle flex flex-col justify-between",
-                                            children: [
-                                                _jsx(CardHeader, {
-                                                    className: "pb-2",
-                                                    children: _jsxs(CardTitle, {
-                                                        className: "text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2",
-                                                        children: [
-                                                            _jsx(Briefcase, { className: "h-4 w-4 text-[#412D15]" }),
-                                                            _jsx("span", { children: "Target Role Alignment" })
-                                                        ]
-                                                    })
-                                                }),
-                                                _jsxs(CardContent, {
-                                                    className: "space-y-4",
-                                                    children: [
-                                                        _jsxs("div", {
-                                                            className: "space-y-1",
-                                                            children: [
-                                                                _jsx("span", { className: "font-bold text-[#1F150C] block text-sm", children: profile?.careerInterests?.[0] || 'Software Development Engineer' }),
-                                                                _jsx("span", { className: "text-[11px] text-[#6B5336] font-medium", children: "Skill Match Benchmark: 92%" })
-                                                            ]
-                                                        }),
-                                                        _jsxs("div", {
-                                                            className: "flex gap-1.5 flex-wrap",
-                                                            children: [
-                                                                (profile?.skills || [{ name: 'React' }, { name: 'Node.js' }, { name: 'TypeScript' }]).slice(0, 3).map((s) => (
-                                                                    _jsx(Badge, { variant: "bronze", size: "xs", children: s.name }, s.name)
-                                                                )),
-                                                                (profile?.skills || []).length > 3 && (
-                                                                    _jsxs("span", {
-                                                                        className: "text-[10px] text-[#6B5336] font-semibold self-center",
-                                                                        children: ["+", profile.skills.length - 3, " more"]
-                                                                    })
-                                                                )
-                                                            ]
-                                                        }),
-                                                        _jsx(Link, {
-                                                            to: "/career",
-                                                            className: "inline-block pt-1 w-full",
-                                                            children: _jsx(Button, {
-                                                                variant: "secondary",
-                                                                className: "w-full text-xs py-2",
-                                                                children: "Open Career Roadmap"
-                                                            })
-                                                        })
-                                                    ]
-                                                })
-                                            ]
-                                        })
-                                    ]
-                                })
-                            ]
-                        }),
+                        {/* Target Role Alignment Card */}
+                        <StaggerItem>
+                            <HoverLift>
+                                <Card bezel={true} className="bg-white/95 flex flex-col justify-between h-full">
+                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
+                                        <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
+                                            <Briefcase className="h-4 w-4 text-[#412D15]" />
+                                            <span>Target Role Alignment</span>
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4 pt-4">
+                                        <div className="space-y-1">
+                                            <span className="font-bold text-[#1F150C] block text-sm">
+                                                {profile?.careerInterests?.[0] || 'Software Development Engineer'}
+                                            </span>
+                                            <span className="text-[11px] text-[#6B5336] font-medium">Skill Match Benchmark: 92%</span>
+                                        </div>
+                                        <div className="flex gap-1.5 flex-wrap">
+                                            {(profile?.skills || [{ name: 'React' }, { name: 'Node.js' }, { name: 'TypeScript' }]).slice(0, 3).map((s) => (
+                                                <Badge key={s.name} variant="bronze" size="xs">{s.name}</Badge>
+                                            ))}
+                                            {(profile?.skills || []).length > 3 && (
+                                                <span className="text-[10px] text-[#6B5336] font-semibold self-center">
+                                                    +{profile.skills.length - 3} more
+                                                </span>
+                                            )}
+                                        </div>
+                                        <Link to="/career" className="inline-block pt-1 w-full">
+                                            <Button variant="secondary" trailingIcon={ArrowRight} className="w-full text-xs py-2 justify-center">
+                                                Open Career Roadmap
+                                            </Button>
+                                        </Link>
+                                    </CardContent>
+                                </Card>
+                            </HoverLift>
+                        </StaggerItem>
+                    </StaggerContainer>
+                </div>
 
-                        // Right Column (Recommended & Recent Activity)
-                        _jsxs("div", {
-                            className: "lg:col-span-1 space-y-6",
-                            children: [
-                                // AI Recommendations Card
-                                _jsxs(Card, {
-                                    className: "border border-[#E1DCC9] shadow-subtle",
-                                    children: [
-                                        _jsx(CardHeader, {
-                                            className: "pb-2",
-                                            children: _jsxs(CardTitle, {
-                                                className: "text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2",
-                                                children: [
-                                                    _jsx(Sparkles, { className: "h-4 w-4 text-[#412D15]" }),
-                                                    _jsx("span", { children: "AI Recommendations" })
-                                                ]
-                                            })
-                                        }),
-                                        _jsxs(CardContent, {
-                                            className: "space-y-3 pt-2",
-                                            children: [
-                                                _jsxs("div", {
-                                                    className: "p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E1DCC9] hover:bg-[#F4EFE6] transition-colors space-y-1 group",
-                                                    children: [
-                                                        _jsx("h4", { className: "font-bold text-[#1F150C] text-xs", children: "Audit Database & SQL Skills" }),
-                                                        _jsx("p", { className: "text-[11px] text-[#6B5336] leading-relaxed", children: "Your placement audit reports a database query knowledge gap." }),
-                                                        _jsx(Link, {
-                                                            to: "/skills-projects",
-                                                            className: "text-[11px] font-bold text-[#412D15] group-hover:text-[#000000] inline-flex items-center gap-1 pt-1 underline",
-                                                            children: [
-                                                                "Add Skill Proof",
-                                                                _jsx(ArrowUpRight, { className: "h-3.5 w-3.5" })
-                                                            ]
-                                                        })
-                                                    ]
-                                                }),
-                                                _jsxs("div", {
-                                                    className: "p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E1DCC9] hover:bg-[#F4EFE6] transition-colors space-y-1 group",
-                                                    children: [
-                                                        _jsx("h4", { className: "font-bold text-[#1F150C] text-xs", children: "ATS Resume Optimizer" }),
-                                                        _jsx("p", { className: "text-[11px] text-[#6B5336] leading-relaxed", children: "Scan your resume formatting against top recruiter benchmarks." }),
-                                                        _jsx(Link, {
-                                                            to: "/resume",
-                                                            className: "text-[11px] font-bold text-[#412D15] group-hover:text-[#000000] inline-flex items-center gap-1 pt-1 underline",
-                                                            children: [
-                                                                "Scan Resume PDF",
-                                                                _jsx(ArrowUpRight, { className: "h-3.5 w-3.5" })
-                                                            ]
-                                                        })
-                                                    ]
-                                                }),
-                                                _jsxs("div", {
-                                                    className: "p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E1DCC9] hover:bg-[#F4EFE6] transition-colors space-y-1 group",
-                                                    children: [
-                                                        _jsx("h4", { className: "font-bold text-[#1F150C] text-xs", children: "Simulate Technical Round" }),
-                                                        _jsx("p", { className: "text-[11px] text-[#6B5336] leading-relaxed", children: "Practice live coding & HR questions with instant AI feedback." }),
-                                                        _jsx(Link, {
-                                                            to: "/ai-interview",
-                                                            className: "text-[11px] font-bold text-[#412D15] group-hover:text-[#000000] inline-flex items-center gap-1 pt-1 underline",
-                                                            children: [
-                                                                "Launch Simulator",
-                                                                _jsx(ArrowUpRight, { className: "h-3.5 w-3.5" })
-                                                            ]
-                                                        })
-                                                    ]
-                                                })
-                                            ]
-                                        })
-                                    ]
-                                }),
+                {/* Right Column (Recommended & Recent Activity) */}
+                <div className="lg:col-span-1 space-y-6">
+                    {/* AI Recommendations Card */}
+                    <SlideIn direction="right" delay={0.15}>
+                        <Card bezel={true} className="bg-white/95">
+                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
+                                <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
+                                    <Sparkles className="h-4 w-4 text-[#412D15]" />
+                                    <span>AI Recommendations</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 pt-3">
+                                {[
+                                    {
+                                        title: 'Audit Database & SQL Skills',
+                                        desc: 'Your placement audit reports a database query knowledge gap.',
+                                        cta: 'Add Skill Proof',
+                                        link: '/skills-projects'
+                                    },
+                                    {
+                                        title: 'ATS Resume Optimizer',
+                                        desc: 'Scan your resume formatting against top recruiter benchmarks.',
+                                        cta: 'Scan Resume PDF',
+                                        link: '/resume'
+                                    },
+                                    {
+                                        title: 'Simulate Technical Round',
+                                        desc: 'Practice live coding & HR questions with instant AI feedback.',
+                                        cta: 'Launch Simulator',
+                                        link: '/ai-interview'
+                                    },
+                                ].map((rec, i) => (
+                                    <motion.div
+                                        key={rec.title}
+                                        initial={{ opacity: 0, x: 16 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.4, delay: 0.2 + i * 0.1, ease: EASE_APPLE }}
+                                        whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+                                        className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E1DCC9] hover:bg-[#F4EFE6] transition-colors space-y-1 group cursor-default"
+                                    >
+                                        <h4 className="font-bold text-[#1F150C] text-xs">{rec.title}</h4>
+                                        <p className="text-[11px] text-[#6B5336] leading-relaxed">{rec.desc}</p>
+                                        <Link to={rec.link} className="text-[11px] font-bold text-[#412D15] group-hover:text-[#000000] inline-flex items-center gap-1 pt-1 underline">
+                                            <span>{rec.cta}</span>
+                                            <ArrowUpRight className="h-3.5 w-3.5" />
+                                        </Link>
+                                    </motion.div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </SlideIn>
 
-                                // Recent Activity Timeline
-                                _jsxs(Card, {
-                                    className: "border border-[#E1DCC9] shadow-subtle",
-                                    children: [
-                                        _jsx(CardHeader, {
-                                            className: "pb-2",
-                                            children: _jsxs(CardTitle, {
-                                                className: "text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2",
-                                                children: [
-                                                    _jsx(Clock, { className: "h-4 w-4 text-[#412D15]" }),
-                                                    _jsx("span", { children: "Recent Activity" })
-                                                ]
-                                            })
-                                        }),
-                                        _jsx(CardContent, {
-                                            className: "p-5",
-                                            children: _jsxs("div", {
-                                                className: "relative pl-4 border-l border-[#E1DCC9] space-y-4 text-xs",
-                                                children: [
-                                                    _jsxs("div", {
-                                                        className: "relative",
-                                                        children: [
-                                                            _jsx("span", { className: "absolute -left-[21px] top-1 bg-[#412D15] h-2.5 w-2.5 rounded-full ring-4 ring-white shadow-xs" }),
-                                                            _jsx("span", { className: "text-[10px] text-[#8F7554] font-semibold block", children: "Today" }),
-                                                            _jsx("span", { className: "font-bold text-[#1F150C] text-xs", children: "Cumulative GPA Context Refreshed" })
-                                                        ]
-                                                    }),
-                                                    _jsxs("div", {
-                                                        className: "relative",
-                                                        children: [
-                                                            _jsx("span", { className: "absolute -left-[21px] top-1 bg-[#6B5336] h-2.5 w-2.5 rounded-full ring-4 ring-white shadow-xs" }),
-                                                            _jsx("span", { className: "text-[10px] text-[#8F7554] font-semibold block", children: "Yesterday" }),
-                                                            _jsx("span", { className: "font-bold text-[#1F150C] text-xs", children: "Applied to Amazon SDE-1 Drive" })
-                                                        ]
-                                                    }),
-                                                    _jsxs("div", {
-                                                        className: "relative",
-                                                        children: [
-                                                            _jsx("span", { className: "absolute -left-[21px] top-1 bg-[#C9BF9F] h-2.5 w-2.5 rounded-full ring-4 ring-white shadow-xs" }),
-                                                            _jsx("span", { className: "text-[10px] text-[#8F7554] font-semibold block", children: "3 days ago" }),
-                                                            _jsx("span", { className: "font-bold text-[#1F150C] text-xs", children: "Completed AI Career Readiness Audit" })
-                                                        ]
-                                                    })
-                                                ]
-                                            })
-                                        })
-                                    ]
-                                })
-                            ]
-                        })
-                    ]
-                })
-            ]
-        })
+                    {/* Recent Activity Timeline */}
+                    <SlideIn direction="right" delay={0.25}>
+                        <Card bezel={true} className="bg-white/95">
+                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
+                                <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
+                                    <Clock className="h-4 w-4 text-[#412D15]" />
+                                    <span>Recent Activity</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-5">
+                                <div className="relative pl-4 border-l border-[#E1DCC9] space-y-4 text-xs">
+                                    {[
+                                        { time: 'Today', text: 'Cumulative GPA Context Refreshed', color: 'bg-[#412D15]' },
+                                        { time: 'Yesterday', text: 'Applied to Amazon SDE-1 Drive', color: 'bg-[#6B5336]' },
+                                        { time: '3 days ago', text: 'Completed AI Career Readiness Audit', color: 'bg-[#C9BF9F]' },
+                                    ].map((item, i) => (
+                                        <motion.div
+                                            key={item.time}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ duration: 0.4, delay: 0.3 + i * 0.12, ease: EASE_APPLE }}
+                                            className="relative"
+                                        >
+                                            <motion.span
+                                                initial={{ scale: 0 }}
+                                                whileInView={{ scale: 1 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 0.3, delay: 0.35 + i * 0.12, ease: EASE_SPRING }}
+                                                className={`absolute -left-[21px] top-1 ${item.color} h-2.5 w-2.5 rounded-full ring-4 ring-white shadow-xs`}
+                                            />
+                                            <span className="text-[10px] text-[#8F7554] font-semibold block">{item.time}</span>
+                                            <span className="font-bold text-[#1F150C] text-xs">{item.text}</span>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </SlideIn>
+                </div>
+            </div>
+        </div>
     );
 };
 

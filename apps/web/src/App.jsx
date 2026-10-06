@@ -1,15 +1,17 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { ToastProvider } from './components/ui/Toast.jsx';
 import { AppShell } from './components/layout/AppShell.jsx';
 import { Home } from './pages/Home.jsx';
 import { Login } from './pages/Login.jsx';
 import { Register } from './pages/Register.jsx';
+import { NotFoundPage } from './pages/NotFoundPage.jsx';
 
 const lazyPage = (loader, exportName) =>
-    React.lazy(() => loader().then((module) => ({ default: module[exportName] })));
+  React.lazy(() => loader().then((module) => ({ default: module[exportName] })));
 
+// Lazy-loaded pages
 const AICareerAdvisor = lazyPage(() => import('./pages/AICareerAdvisor.jsx'), 'AICareerAdvisor');
 const AIResumeAnalyzer = lazyPage(() => import('./pages/AIResumeAnalyzer.jsx'), 'AIResumeAnalyzer');
 const AIMockInterview = lazyPage(() => import('./pages/AIMockInterview.jsx'), 'AIMockInterview');
@@ -28,6 +30,8 @@ const JobMatchingAgent = lazyPage(() => import('./pages/JobMatchingAgent.jsx'), 
 const ApplicationStrategyAgent = lazyPage(() => import('./pages/ApplicationStrategyAgent.jsx'), 'ApplicationStrategyAgent');
 const SkillGapAgent = lazyPage(() => import('./pages/SkillGapAgent.jsx'), 'SkillGapAgent');
 const CareerGrowthAgent = lazyPage(() => import('./pages/CareerGrowthAgent.jsx'), 'CareerGrowthAgent');
+
+// Placement pages
 const PlacementDrives = lazyPage(() => import('./pages/PlacementDrives.jsx'), 'PlacementDrives');
 const PlacementDriveDetail = lazyPage(() => import('./pages/PlacementDriveDetail.jsx'), 'PlacementDriveDetail');
 const PlacementApplications = lazyPage(() => import('./pages/PlacementApplications.jsx'), 'PlacementApplications');
@@ -44,6 +48,8 @@ const PlacementCalendar = lazyPage(() => import('./pages/PlacementCalendar.jsx')
 const PlacementNotifications = lazyPage(() => import('./pages/PlacementNotifications.jsx'), 'PlacementNotifications');
 const PlacementReports = lazyPage(() => import('./pages/PlacementReports.jsx'), 'PlacementReports');
 const PlacementSettings = lazyPage(() => import('./pages/PlacementSettings.jsx'), 'PlacementSettings');
+
+// Student pages
 const StudentProfile = lazyPage(() => import('./pages/StudentProfile.jsx'), 'StudentProfile');
 const StudentAcademics = lazyPage(() => import('./pages/StudentAcademics.jsx'), 'StudentAcademics');
 const StudentLearning = lazyPage(() => import('./pages/StudentLearning.jsx'), 'StudentLearning');
@@ -54,6 +60,8 @@ const StudentSkillsProjects = lazyPage(() => import('./pages/StudentSkillsProjec
 const StudentApplications = lazyPage(() => import('./pages/StudentApplications.jsx'), 'StudentApplications');
 const StudentNotifications = lazyPage(() => import('./pages/StudentNotifications.jsx'), 'StudentNotifications');
 const StudentSettings = lazyPage(() => import('./pages/StudentSettings.jsx'), 'StudentSettings');
+
+// Faculty pages
 const FacultyClasses = lazyPage(() => import('./pages/FacultyClasses.jsx'), 'FacultyClasses');
 const FacultyClassDetail = lazyPage(() => import('./pages/FacultyClassDetail.jsx'), 'FacultyClassDetail');
 const FacultyStudents = lazyPage(() => import('./pages/FacultyStudents.jsx'), 'FacultyStudents');
@@ -69,38 +77,146 @@ const FacultyCalendar = lazyPage(() => import('./pages/FacultyCalendar.jsx'), 'F
 const FacultyNotifications = lazyPage(() => import('./pages/FacultyNotifications.jsx'), 'FacultyNotifications');
 const FacultySettings = lazyPage(() => import('./pages/FacultySettings.jsx'), 'FacultySettings');
 const FacultyAnnouncements = lazyPage(() => import('./pages/FacultyAnnouncements.jsx'), 'FacultyAnnouncements');
+
 const DashboardSwitch = () => {
-    const { user } = useAuth();
-    if (user?.role === 'STUDENT')
-        return _jsx(StudentDashboard, {});
-    if (user?.role === 'FACULTY')
-        return _jsx(FacultyDashboard, {});
-    if (user?.role === 'PLACEMENT_OFFICER')
-        return _jsx(PlacementDashboard, {});
-    return _jsx(AdminDashboard, {});
+  const { user } = useAuth();
+  if (user?.role === 'STUDENT') return <StudentDashboard />;
+  if (user?.role === 'FACULTY') return <FacultyDashboard />;
+  if (user?.role === 'PLACEMENT_OFFICER') return <PlacementDashboard />;
+  return <AdminDashboard />;
 };
-// Protected Route Guard Wrapper
+
 const ProtectedRoute = ({ children, allowedRoles }) => {
-    const { user, isLoading } = useAuth();
-    if (isLoading) {
-        return (_jsx("div", { className: "min-h-screen flex items-center justify-center bg-brand-50", children: _jsx("div", { className: "animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600" }) }));
-    }
-    if (!user) {
-        return _jsx(Navigate, { to: "/login", replace: true });
-    }
-    if (allowedRoles && !allowedRoles.includes(user.role)) {
-        return _jsx(Navigate, { to: "/dashboard", replace: true });
-    }
-    return _jsx(AppShell, { children: children });
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <AppShell>{children}</AppShell>;
 };
+
 const RouteFallback = () => {
-    const { user, isLoading } = useAuth();
-    if (isLoading) {
-        return (_jsx("div", { className: "min-h-screen flex items-center justify-center bg-brand-50", children: _jsx("div", { className: "animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600" }) }));
-    }
-    return _jsx(Navigate, { to: user ? '/dashboard' : '/', replace: true });
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600" />
+      </div>
+    );
+  }
+
+  return <Navigate to={user ? '/dashboard' : '/'} replace />;
 };
+
 function App() {
-    return (_jsx(AuthProvider, { children: _jsx(Router, { future: { v7_startTransition: true, v7_relativeSplatPath: true }, children: _jsx(Suspense, { fallback: _jsx("div", { role: "status", "aria-live": "polite", className: "min-h-screen flex items-center justify-center bg-brand-50", children: _jsx("div", { className: "animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600", "aria-label": "Loading page" }) }), children: _jsxs(Routes, { children: [_jsx(Route, { path: "/login", element: _jsx(Login, {}) }), _jsx(Route, { path: "/register", element: _jsx(Register, {}) }), _jsx(Route, { path: "/", element: _jsx(Home, {}) }), _jsx(Route, { path: "/dashboard", element: _jsx(ProtectedRoute, { children: _jsx(DashboardSwitch, {}) }) }), _jsx(Route, { path: "/profile", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentProfile, {}) }) }), _jsx(Route, { path: "/academics", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentAcademics, {}) }) }), _jsx(Route, { path: "/learning", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentLearning, {}) }) }), _jsx(Route, { path: "/career", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentCareer, {}) }) }), _jsx(Route, { path: "/placements", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentPlacements, {}) }) }), _jsx(Route, { path: "/resume", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentResume, {}) }) }), _jsx(Route, { path: "/skills-projects", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentSkillsProjects, {}) }) }), _jsx(Route, { path: "/applications", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentApplications, {}) }) }), _jsx(Route, { path: "/notifications", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentNotifications, {}) }) }), _jsx(Route, { path: "/settings", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentSettings, {}) }) }), _jsx(Route, { path: "/faculty/classes", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyClasses, {}) }) }), _jsx(Route, { path: "/faculty/classes/:classId", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyClassDetail, {}) }) }), _jsx(Route, { path: "/faculty/students", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyStudents, {}) }) }), _jsx(Route, { path: "/faculty/attendance", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyAttendance, {}) }) }), _jsx(Route, { path: "/faculty/assessments", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyAssessments, {}) }) }), _jsx(Route, { path: "/faculty/marks", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyMarks, {}) }) }), _jsx(Route, { path: "/faculty/performance", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyPerformance, {}) }) }), _jsx(Route, { path: "/faculty/at-risk", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyAtRisk, {}) }) }), _jsx(Route, { path: "/faculty/ai-insights", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyAIInsights, {}) }) }), _jsx(Route, { path: "/faculty/courses", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyCourses, {}) }) }), _jsx(Route, { path: "/faculty/timetable", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyTimetable, {}) }) }), _jsx(Route, { path: "/faculty/calendar", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyCalendar, {}) }) }), _jsx(Route, { path: "/faculty/notifications", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyNotifications, {}) }) }), _jsx(Route, { path: "/faculty/settings", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultySettings, {}) }) }), _jsx(Route, { path: "/faculty/announcements", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyAnnouncements, {}) }) }), _jsx(Route, { path: "/jobs", element: _jsx(ProtectedRoute, { children: _jsxs("div", { className: "space-y-6", children: [_jsx("h1", { className: "text-2xl font-bold text-brand-900", children: "Job Board" }), _jsx("p", { className: "text-brand-500", children: "Explore career opportunities and track active vacancy lists." })] }) }) }), _jsx(Route, { path: "/ai-career", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(AICareerAdvisor, {}) }) }), _jsx(Route, { path: "/ai-resume", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(AIResumeAnalyzer, {}) }) }), _jsx(Route, { path: "/ai-interview", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(AIMockInterview, {}) }) }), _jsx(Route, { path: "/student/ai", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(AIInsightsDashboard, {}) }) }), _jsx(Route, { path: "/admin/agents", element: _jsx(ProtectedRoute, { allowedRoles: ['ADMIN', 'SUPER_ADMIN'], children: _jsx(AgentHealthDashboard, {}) }) }), _jsx(Route, { path: "/student/success-agent", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(StudentSuccessAgent, {}) }) }), _jsx(Route, { path: "/student/placement-readiness", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(PlacementReadinessAgent, {}) }) }), _jsx(Route, { path: "/student/learning-path", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(LearningPathAgent, {}) }) }), _jsx(Route, { path: "/faculty/insights-agent", element: _jsx(ProtectedRoute, { allowedRoles: ['FACULTY', 'ADMIN'], children: _jsx(FacultyInsightsAgent, {}) }) }), _jsx(Route, { path: "/placement/analytics-agent", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementAnalyticsAgent, {}) }) }), _jsx(Route, { path: "/placement/drives", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementDrives, {}) }) }), _jsx(Route, { path: "/placement/drives/:driveId", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementDriveDetail, {}) }) }), _jsx(Route, { path: "/placement/applications", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementApplications, {}) }) }), _jsx(Route, { path: "/placement/interviews", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementInterviews, {}) }) }), _jsx(Route, { path: "/placement/offers", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementOffers, {}) }) }), _jsx(Route, { path: "/placement/placements", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementOutcomes, {}) }) }), _jsx(Route, { path: "/placement/companies", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementCompanies, {}) }) }), _jsx(Route, { path: "/placement/students", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementStudents, {}) }) }), _jsx(Route, { path: "/placement/readiness", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementReadiness, {}) }) }), _jsx(Route, { path: "/placement/at-risk", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementAtRisk, {}) }) }), _jsx(Route, { path: "/placement/analytics", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementAnalytics, {}) }) }), _jsx(Route, { path: "/placement/ai-insights", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementAIInsights, {}) }) }), _jsx(Route, { path: "/placement/calendar", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementCalendar, {}) }) }), _jsx(Route, { path: "/placement/notifications", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementNotifications, {}) }) }), _jsx(Route, { path: "/placement/reports", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementReports, {}) }) }), _jsx(Route, { path: "/placement/settings", element: _jsx(ProtectedRoute, { allowedRoles: ['PLACEMENT_OFFICER', 'ADMIN'], children: _jsx(PlacementSettings, {}) }) }), _jsx(Route, { path: "/student/job-matching", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(JobMatchingAgent, {}) }) }), _jsx(Route, { path: "/student/application-strategy", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(ApplicationStrategyAgent, {}) }) }), _jsx(Route, { path: "/student/skill-gap", element: _jsx(ProtectedRoute, { allowedRoles: ['STUDENT'], children: _jsx(SkillGapAgent, {}) }) }), _jsx(Route, { path: "/student/career-growth", element: _jsx(ProtectedRoute, { allowedRoles:     ['STUDENT'], children: _jsx(CareerGrowthAgent, {}) }) }), _jsx(Route, { path: "*", element: _jsx(RouteFallback, {}) })] }) }) }) }));
+  return (
+    <AuthProvider>
+      <ToastProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Suspense
+            fallback={
+              <div role="status" aria-live="polite" className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-600" aria-label="Loading page" />
+              </div>
+            }
+          >
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Home />} />
+
+              {/* Protected Dashboard Route */}
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardSwitch /></ProtectedRoute>} />
+
+              {/* Student Routes */}
+              <Route path="/profile" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentProfile /></ProtectedRoute>} />
+              <Route path="/academics" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentAcademics /></ProtectedRoute>} />
+              <Route path="/learning" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentLearning /></ProtectedRoute>} />
+              <Route path="/career" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentCareer /></ProtectedRoute>} />
+              <Route path="/placements" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentPlacements /></ProtectedRoute>} />
+              <Route path="/resume" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentResume /></ProtectedRoute>} />
+              <Route path="/skills-projects" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentSkillsProjects /></ProtectedRoute>} />
+              <Route path="/applications" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentApplications /></ProtectedRoute>} />
+              <Route path="/notifications" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentNotifications /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentSettings /></ProtectedRoute>} />
+              <Route path="/jobs" element={<ProtectedRoute allowedRoles={['STUDENT', 'PLACEMENT_OFFICER']}><StudentPlacements /></ProtectedRoute>} />
+
+              {/* AI Agent Tools */}
+              <Route path="/ai-career" element={<ProtectedRoute allowedRoles={['STUDENT']}><AICareerAdvisor /></ProtectedRoute>} />
+              <Route path="/ai-resume" element={<ProtectedRoute allowedRoles={['STUDENT']}><AIResumeAnalyzer /></ProtectedRoute>} />
+              <Route path="/ai-interview" element={<ProtectedRoute allowedRoles={['STUDENT']}><AIMockInterview /></ProtectedRoute>} />
+              <Route path="/student/ai" element={<ProtectedRoute allowedRoles={['STUDENT']}><AIInsightsDashboard /></ProtectedRoute>} />
+              <Route path="/student/success-agent" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentSuccessAgent /></ProtectedRoute>} />
+              <Route path="/student/placement-readiness" element={<ProtectedRoute allowedRoles={['STUDENT']}><PlacementReadinessAgent /></ProtectedRoute>} />
+              <Route path="/student/learning-path" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPathAgent /></ProtectedRoute>} />
+              <Route path="/student/job-matching" element={<ProtectedRoute allowedRoles={['STUDENT']}><JobMatchingAgent /></ProtectedRoute>} />
+              <Route path="/student/application-strategy" element={<ProtectedRoute allowedRoles={['STUDENT']}><ApplicationStrategyAgent /></ProtectedRoute>} />
+              <Route path="/student/skill-gap" element={<ProtectedRoute allowedRoles={['STUDENT']}><SkillGapAgent /></ProtectedRoute>} />
+              <Route path="/student/career-growth" element={<ProtectedRoute allowedRoles={['STUDENT']}><CareerGrowthAgent /></ProtectedRoute>} />
+
+              {/* Faculty Routes */}
+              <Route path="/faculty/classes" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyClasses /></ProtectedRoute>} />
+              <Route path="/faculty/classes/:classId" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyClassDetail /></ProtectedRoute>} />
+              <Route path="/faculty/students" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyStudents /></ProtectedRoute>} />
+              <Route path="/faculty/attendance" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyAttendance /></ProtectedRoute>} />
+              <Route path="/faculty/assessments" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyAssessments /></ProtectedRoute>} />
+              <Route path="/faculty/marks" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyMarks /></ProtectedRoute>} />
+              <Route path="/faculty/performance" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyPerformance /></ProtectedRoute>} />
+              <Route path="/faculty/at-risk" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyAtRisk /></ProtectedRoute>} />
+              <Route path="/faculty/ai-insights" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyAIInsights /></ProtectedRoute>} />
+              <Route path="/faculty/courses" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyCourses /></ProtectedRoute>} />
+              <Route path="/faculty/timetable" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyTimetable /></ProtectedRoute>} />
+              <Route path="/faculty/calendar" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyCalendar /></ProtectedRoute>} />
+              <Route path="/faculty/notifications" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyNotifications /></ProtectedRoute>} />
+              <Route path="/faculty/settings" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultySettings /></ProtectedRoute>} />
+              <Route path="/faculty/announcements" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyAnnouncements /></ProtectedRoute>} />
+              <Route path="/faculty/insights-agent" element={<ProtectedRoute allowedRoles={['FACULTY', 'ADMIN']}><FacultyInsightsAgent /></ProtectedRoute>} />
+
+              {/* Placement Officer Routes */}
+              <Route path="/placement/drives" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementDrives /></ProtectedRoute>} />
+              <Route path="/placement/drives/:driveId" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementDriveDetail /></ProtectedRoute>} />
+              <Route path="/placement/applications" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementApplications /></ProtectedRoute>} />
+              <Route path="/placement/interviews" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementInterviews /></ProtectedRoute>} />
+              <Route path="/placement/offers" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementOffers /></ProtectedRoute>} />
+              <Route path="/placement/placements" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementOutcomes /></ProtectedRoute>} />
+              <Route path="/placement/companies" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementCompanies /></ProtectedRoute>} />
+              <Route path="/placement/students" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementStudents /></ProtectedRoute>} />
+              <Route path="/placement/readiness" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementReadiness /></ProtectedRoute>} />
+              <Route path="/placement/at-risk" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementAtRisk /></ProtectedRoute>} />
+              <Route path="/placement/analytics" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementAnalytics /></ProtectedRoute>} />
+              <Route path="/placement/ai-insights" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementAIInsights /></ProtectedRoute>} />
+              <Route path="/placement/calendar" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementCalendar /></ProtectedRoute>} />
+              <Route path="/placement/notifications" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementNotifications /></ProtectedRoute>} />
+              <Route path="/placement/reports" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementReports /></ProtectedRoute>} />
+              <Route path="/placement/settings" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementSettings /></ProtectedRoute>} />
+              <Route path="/placement/analytics-agent" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementAnalyticsAgent /></ProtectedRoute>} />
+
+              {/* Admin Routes */}
+              <Route path="/admin/agents" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AgentHealthDashboard /></ProtectedRoute>} />
+
+              {/* Fallback 404 Route */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ToastProvider>
+    </AuthProvider>
+  );
 }
+
 export default App;

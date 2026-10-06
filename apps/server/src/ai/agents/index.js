@@ -11,6 +11,24 @@ import { AuditLog } from '../../models/AuditLog.js';
 import { Notification } from '../../models/Notification.js';
 import { Department } from '../../models/Department.js';
 import { Types } from 'mongoose';
+
+export class AgentRegistry {
+    static registerAgent(name, agent) {
+        AIOrchestrator.registerAgent(name, agent);
+        this.agentsRegistry.set(name, agent);
+    }
+
+    static getAgent(name) {
+        return AIOrchestrator.getAgent(name) ?? this.agentsRegistry.get(name);
+    }
+
+    static getAllAgents() {
+        return Array.from(AIOrchestrator.agentsRegistry.values());
+    }
+}
+
+AgentRegistry.agentsRegistry = new Map();
+
 // Helper to auto-generate standard executions
 const generateAgentCompletion = async (agentName, studentId, snapshot, customParams) => {
     const { system } = PromptRegistry.getPrompt(agentName);
@@ -1144,30 +1162,30 @@ export class FacultyAssistantAgent {
 }
 // Auto-register agents on initialization
 export const initializeAgentEcosystem = () => {
-    AIOrchestrator.registerAgent('student_success', new StudentSuccessAgent());
-    AIOrchestrator.registerAgent('placement_readiness', new PlacementReadinessAgent());
-    AIOrchestrator.registerAgent('learning_path', new LearningPathAgent());
-    AIOrchestrator.registerAgent('faculty_insights', new FacultyInsightsAgent());
-    AIOrchestrator.registerAgent('placement_analytics', new PlacementAnalyticsAgent());
-    AIOrchestrator.registerAgent('career_recommendation', new CareerRecommendationAgent());
-    AIOrchestrator.registerAgent('mock_interview', new MockInterviewAgent());
-    AIOrchestrator.registerAgent('resume_intelligence', new ResumeIntelligenceAgent());
-    AIOrchestrator.registerAgent('job_matching', new JobMatchingAgent());
-    AIOrchestrator.registerAgent('application_strategy', new ApplicationStrategyAgent());
-    AIOrchestrator.registerAgent('skill_gap', new SkillGapAgent());
-    AIOrchestrator.registerAgent('career_growth', new CareerGrowthAgent());
-    AIOrchestrator.registerAgent('student_risk', new StudentRiskAgent());
-    AIOrchestrator.registerAgent('opportunity', new OpportunityAgent());
-    AIOrchestrator.registerAgent('student_engagement', new StudentEngagementAgent());
-    AIOrchestrator.registerAgent('placement_preparation', new PlacementPreparationAgent());
-    AIOrchestrator.registerAgent('faculty_intervention', new FacultyInterventionAgent());
-    AIOrchestrator.registerAgent('placement_officer_copilot', new PlacementOfficerCopilot());
-    AIOrchestrator.registerAgent('admin_intelligence', new AdminIntelligenceAgent());
-    AIOrchestrator.registerAgent('data_quality', new DataQualityAgent());
-    AIOrchestrator.registerAgent('ai_governance', new AIGovernanceAgent());
+    AgentRegistry.registerAgent('student_success', new StudentSuccessAgent());
+    AgentRegistry.registerAgent('placement_readiness', new PlacementReadinessAgent());
+    AgentRegistry.registerAgent('learning_path', new LearningPathAgent());
+    AgentRegistry.registerAgent('faculty_insights', new FacultyInsightsAgent());
+    AgentRegistry.registerAgent('placement_analytics', new PlacementAnalyticsAgent());
+    AgentRegistry.registerAgent('career_recommendation', new CareerRecommendationAgent());
+    AgentRegistry.registerAgent('mock_interview', new MockInterviewAgent());
+    AgentRegistry.registerAgent('resume_intelligence', new ResumeIntelligenceAgent());
+    AgentRegistry.registerAgent('job_matching', new JobMatchingAgent());
+    AgentRegistry.registerAgent('application_strategy', new ApplicationStrategyAgent());
+    AgentRegistry.registerAgent('skill_gap', new SkillGapAgent());
+    AgentRegistry.registerAgent('career_growth', new CareerGrowthAgent());
+    AgentRegistry.registerAgent('student_risk', new StudentRiskAgent());
+    AgentRegistry.registerAgent('opportunity', new OpportunityAgent());
+    AgentRegistry.registerAgent('student_engagement', new StudentEngagementAgent());
+    AgentRegistry.registerAgent('placement_preparation', new PlacementPreparationAgent());
+    AgentRegistry.registerAgent('faculty_intervention', new FacultyInterventionAgent());
+    AgentRegistry.registerAgent('placement_officer_copilot', new PlacementOfficerCopilot());
+    AgentRegistry.registerAgent('admin_intelligence', new AdminIntelligenceAgent());
+    AgentRegistry.registerAgent('data_quality', new DataQualityAgent());
+    AgentRegistry.registerAgent('ai_governance', new AIGovernanceAgent());
     // Custom Accelerator Registry
-    AIOrchestrator.registerAgent('placement_agent', new PlacementAgent());
-    AIOrchestrator.registerAgent('attendance_agent', new AttendanceAgent());
-    AIOrchestrator.registerAgent('query_agent', new QueryAgent());
-    AIOrchestrator.registerAgent('faculty_assistant', new FacultyAssistantAgent());
+    AgentRegistry.registerAgent('placement_agent', new PlacementAgent());
+    AgentRegistry.registerAgent('attendance_agent', new AttendanceAgent());
+    AgentRegistry.registerAgent('query_agent', new QueryAgent());
+    AgentRegistry.registerAgent('faculty_assistant', new FacultyAssistantAgent());
 };

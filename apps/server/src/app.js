@@ -12,6 +12,7 @@ import { apiLimiter } from './middleware/rateLimiter.js';
 import { logger } from './utils/logger.js';
 import { initializeAgentEcosystem } from './ai/agents/index.js';
 import './models/index.js';
+import { sanitizeNoSql } from './middleware/sanitize.js';
 const app = express();
 // Initialize the 21 AI agents ecosystem registry
 initializeAgentEcosystem();
@@ -28,9 +29,10 @@ app.use(cors({
 }));
 // 4. Content compression
 app.use(compression());
-// 5. Request Parsers
+// 5. Request Parsers & Sanitization
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: false, limit: '256kb' }));
+app.use(sanitizeNoSql);
 app.use(cookieParser());
 // 6. Request ID middleware for tracing
 app.use((req, res, next) => {

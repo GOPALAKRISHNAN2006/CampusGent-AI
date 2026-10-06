@@ -196,9 +196,8 @@ export const submitAttendance = async (req, res, next) => {
 export const getAttendanceLogs = async (req, res, next) => {
     try {
         const { classId } = req.query;
-        if (!classId)
-            throw new BadRequestError('classId parameter is required');
-        const logs = await AttendanceRecord.find({ classId: String(classId) }).sort({ date: -1 });
+        const query = classId ? { classId: String(classId) } : {};
+        const logs = await AttendanceRecord.find(query).sort({ date: -1 });
         res.status(200).json({
             success: true,
             data: logs
@@ -236,9 +235,8 @@ export const createAssessment = async (req, res, next) => {
 export const getAssessments = async (req, res, next) => {
     try {
         const { classId } = req.query;
-        if (!classId)
-            throw new BadRequestError('classId is required');
-        const assessments = await Assessment.find({ classId: String(classId) }).sort({ date: -1 });
+        const query = classId ? { classId: String(classId) } : {};
+        const assessments = await Assessment.find(query).sort({ date: -1 });
         res.status(200).json({
             success: true,
             data: assessments
