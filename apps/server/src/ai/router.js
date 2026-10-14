@@ -140,13 +140,13 @@ export class AIRouter {
             let score = 0;
             for (const keyword of def.keywords) {
                 if (text.includes(keyword)) {
-                    score += keyword.length > 5 ? 3 : 2;
+                    score += keyword.length > 12 ? 5 : (keyword.length > 5 ? 3 : 2);
                 }
             }
 
             if (score > 0) {
-                // query_agent is a broad generic fallback, do not let it overtake specialized agents
-                if (agentId === 'query_agent') {
+                // query_agent is a broad generic fallback, do not let it overtake specialized agents unless specific policy/rules are queried
+                if (agentId === 'query_agent' && !text.includes('policy') && !text.includes('rule') && !text.includes('procedure')) {
                     score = Math.min(score, 2);
                 }
                 agentScores.push({ agentId, score, name: def.name });

@@ -231,6 +231,46 @@ describe('🧪 Post-Audit Implementation Verification Suite', () => {
       expect(companyEntry.activeDrivesCount).toBeDefined();
       expect(companyEntry.totalDrivesCount).toBeDefined();
     });
+
+    it('should allow placement officer to update company details', async () => {
+      const companyEntry = await Company.findOne({ name: testCompanyName });
+      expect(companyEntry).not.toBeNull();
+
+      const res = await request(app)
+        .put(`/api/v1/companies/${companyEntry._id}`)
+        .set('Authorization', `Bearer ${placementToken}`)
+        .send({
+          recruiterPhone: '+91 99999 88888',
+          notes: 'Updated recruitment notes for upcoming drive season',
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+
+      const updated = await Company.findById(companyEntry._id);
+      expect(updated.recruiterPhone).toBe('+91 99999 88888');
+      expect(updated.notes).toBe('Updated recruitment notes for upcoming drive season');
+    });
+  });
+
+  describe('4. Cross-User Isolation in Agent Execution', () => {
+    it('should clamp student execution to their own profile even if another studentId is passed', async () => {
+      // Student A sends Student B's ID in the payload
+      const otherStudentId = adminUser._id.toString();
+      const res = await request(app)
+        .post('/api/v1/agents/execute/student_success')
+        .set('Authorization', `Bearer ${studentToken}`)
+        .send({
+          studentId: otherStudentId,
+          query: 'What is my current semester progress?',
+        });
+
+      // Response should be successful but insight record must belong to studentUser, not otherStudentId
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.user.toString()).toBe(studentUser._id.toString());
+      expect(res.body.data.user.toString()).not.toBe(otherStudentId);
+    });
   });
 
   afterAll(async () => {
