@@ -21,8 +21,16 @@ app.set('trust proxy', 1);
 // 2. HTTP Security Headers
 app.use(helmet());
 // 3. CORS configuration
+const allowedOrigins = env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/$/, ''));
 app.use(cors({
-    origin: env.CLIENT_URL,
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const cleanOrigin = origin.replace(/\/$/, '');
+        if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes('*')) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

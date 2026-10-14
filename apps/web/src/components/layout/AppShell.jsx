@@ -8,7 +8,7 @@ import {
     Bell, GraduationCap, Settings, ShieldAlert, BookOpen, FileText,
     ChevronLeft, ChevronRight, FolderKanban, User,
     ListTodo, Calendar, TrendingUp, AlertCircle, CheckSquare, Users,
-    Search, Plus, X, ExternalLink
+    Search, Plus, X, ExternalLink, BrainCircuit
 } from 'lucide-react';
 
 const EASE_APPLE = [0.16, 1, 0.3, 1];
@@ -86,7 +86,8 @@ export const AppShell = ({ children }) => {
             links: [
                 { label: 'Career Roadmap', path: '/career', icon: Sparkles },
                 { label: 'Placements & Jobs', path: '/placements', icon: Briefcase },
-                { label: 'Resume Optimizer', path: '/resume', icon: FileText }
+                { label: 'Resume Optimizer', path: '/resume', icon: FileText },
+                { label: 'AI Mock Interview', path: '/ai-interview', icon: BrainCircuit }
             ]
         },
         {

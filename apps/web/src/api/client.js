@@ -6,8 +6,10 @@ export const setAccessToken = (token) => {
     accessToken = token;
 };
 export const getAccessToken = () => accessToken;
+const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
+
 export const apiClient = axios.create({
-    baseURL: '/api/v1',
+    baseURL: API_BASE,
     timeout: 15000,
     headers: {
         'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ apiClient.interceptors.response.use((response) => response, async (error) => {
             isRefreshing = true;
             try {
                 // Trigger refresh rotation endpoint
-                const response = await axios.post('/api/v1/auth/refresh', {}, { withCredentials: true });
+                const response = await axios.post(`${API_BASE}/auth/refresh`, {}, { withCredentials: true });
                 const newAccessToken = response.data.data.accessToken;
                 setAccessToken(newAccessToken);
                 isRefreshing = false;

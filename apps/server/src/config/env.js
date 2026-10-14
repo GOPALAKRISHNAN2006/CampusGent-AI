@@ -19,7 +19,7 @@ const envSchema = z.object({
     AI_API_KEY: z.string().optional(),
     AI_API_URL: z.string().url().default('https://generativelanguage.googleapis.com/v1beta/openai'),
     AI_MODEL: z.string().default('gemini-1.5-flash'),
-    CLIENT_URL: z.string().url().default('http://localhost:5173'),
+    CLIENT_URL: z.string().default('http://localhost:5173'),
 });
 const parseResult = envSchema.safeParse(process.env);
 if (!parseResult.success) {
