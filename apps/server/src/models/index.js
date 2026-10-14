@@ -15,3 +15,4 @@ import './CourseClass.js';
 import './AttendanceRecord.js';
 import './Assessment.js';
 import './StudentMark.js';
+import './Company.js';

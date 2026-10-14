@@ -37,6 +37,10 @@ const UserSchema = new Schema({
     lastLoginAt: {
         type: Date,
     },
+    preferences: {
+        type: Schema.Types.Mixed,
+        default: {},
+    },
 }, {
     timestamps: true,
 });

@@ -5,6 +5,7 @@ import { AuditLog } from '../models/AuditLog.js';
 import { Job } from '../models/Job.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { AgentRegistry } from '../ai/agents/index.js';
+import { AIOrchestrator } from '../ai/orchestrator.js';
 import { NotFoundError, BadRequestError } from '../utils/errors.js';
 import { cacheService } from '../services/cache.service.js';
 
@@ -29,6 +30,22 @@ export const getSystemHealth = async (req, res, next) => {
 
     const activeAgentCount = AgentRegistry.getAllAgents ? AgentRegistry.getAllAgents().length : 21;
 
+    const registeredAgents = Array.from(AIOrchestrator.agentsRegistry ? AIOrchestrator.agentsRegistry.keys() : []).map((name) => {
+      const category = name.includes('placement') || name.includes('job') || name.includes('interview') || name.includes('resume') || name.includes('opportunity')
+        ? 'Placement'
+        : name.includes('faculty')
+        ? 'Faculty'
+        : name.includes('admin') || name.includes('governance') || name.includes('quality')
+        ? 'Admin'
+        : 'Academic';
+      return {
+        name,
+        category,
+        status: dbState === 1 ? 'HEALTHY' : 'DEGRADED',
+        policy: 'v1.0.0',
+      };
+    });
+
     res.status(200).json({
       success: true,
       data: {
@@ -49,6 +66,9 @@ export const getSystemHealth = async (req, res, next) => {
           totalApplications,
           activeAgents: activeAgentCount,
         },
+        activeAgents: activeAgentCount,
+        registeredAgents,
+        agents: registeredAgents,
         nodeVersion: process.version,
         timestamp: new Date().toISOString(),
       },
@@ -171,6 +191,7 @@ export const getAuditLogs = async (req, res, next) => {
       success: true,
       data: {
         logs,
+        auditLogs: logs,
         pagination: {
           total,
           page,

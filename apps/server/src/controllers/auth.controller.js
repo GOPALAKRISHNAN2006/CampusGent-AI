@@ -7,7 +7,7 @@ import { User } from '../models/User.js';
 import { RefreshToken } from '../models/RefreshToken.js';
 import { StudentProfile } from '../models/StudentProfile.js';
 import { FacultyProfile } from '../models/FacultyProfile.js';
-import { UnauthorizedError, ConflictError, ForbiddenError } from '../utils/errors.js';
+import { UnauthorizedError, ConflictError, ForbiddenError, BadRequestError } from '../utils/errors.js';
 import { AuditLog } from '../models/AuditLog.js';
 import mongoose from 'mongoose';
 // Helper to generate access tokens
@@ -227,3 +227,85 @@ export const me = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getSettings = async (req, res, next) => {
+    try {
+        if (!req.user) {
+            throw new UnauthorizedError('Authentication context missing');
+        }
+        const user = await User.findById(req.user.id || req.user._id).select('name email role status preferences');
+        if (!user) {
+            throw new UnauthorizedError('User not found');
+        }
+        res.status(200).json({
+            success: true,
+            data: {
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    status: user.status,
+                    preferences: user.preferences || {},
+                },
+                preferences: user.preferences || {},
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateSettings = async (req, res, next) => {
+    try {
+        if (!req.user) {
+            throw new UnauthorizedError('Authentication context missing');
+        }
+        const { name, preferences, currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.user.id || req.user._id);
+        if (!user) {
+            throw new UnauthorizedError('User not found');
+        }
+        if (name && typeof name === 'string' && name.trim()) {
+            user.name = name.trim();
+        }
+
+        // If password update requested, verify current password
+        if (newPassword) {
+            if (!currentPassword) {
+                throw new BadRequestError('Current password is required to set a new password');
+            }
+            const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+            if (!isMatch) {
+                throw new BadRequestError('Current password does not match');
+            }
+            if (newPassword.length < 8) {
+                throw new BadRequestError('New password must be at least 8 characters long');
+            }
+            const salt = await bcrypt.genSalt(12);
+            user.passwordHash = await bcrypt.hash(newPassword, salt);
+        }
+
+        // Merge preferences
+        if (preferences && typeof preferences === 'object') {
+            user.preferences = {
+                ...(user.preferences || {}),
+                ...preferences,
+            };
+            user.markModified('preferences');
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Settings updated successfully',
+            data: {
+                preferences: user.preferences,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+

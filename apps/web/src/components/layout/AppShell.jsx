@@ -84,6 +84,7 @@ export const AppShell = ({ children }) => {
         {
             group: 'CAREER & AI',
             links: [
+                { label: 'AI Agent Hub', path: '/student/ai', icon: BrainCircuit },
                 { label: 'Career Roadmap', path: '/career', icon: Sparkles },
                 { label: 'Placements & Jobs', path: '/placements', icon: Briefcase },
                 { label: 'Resume Optimizer', path: '/resume', icon: FileText },
@@ -137,7 +138,8 @@ export const AppShell = ({ children }) => {
             links: [
                 { label: 'Performance', path: '/faculty/performance', icon: TrendingUp },
                 { label: 'At-Risk Students', path: '/faculty/at-risk', icon: AlertCircle },
-                { label: 'AI Insights', path: '/faculty/ai-insights', icon: Sparkles }
+                { label: 'AI Insights', path: '/faculty/ai-insights', icon: Sparkles },
+                { label: 'Faculty AI Agent', path: '/faculty/insights-agent', icon: BrainCircuit }
             ]
         },
         {
@@ -182,6 +184,7 @@ export const AppShell = ({ children }) => {
             links: [
                 { label: 'Placement Analytics', path: '/placement/analytics', icon: TrendingUp },
                 { label: 'AI Insights', path: '/placement/ai-insights', icon: Sparkles },
+                { label: 'Analytics Agent', path: '/placement/analytics-agent', icon: BrainCircuit },
                 { label: 'Calendar', path: '/placement/calendar', icon: Calendar },
                 { label: 'Reports', path: '/placement/reports', icon: FileText }
             ]
@@ -195,18 +198,45 @@ export const AppShell = ({ children }) => {
         }
     ];
 
-    // Admin Navigation
-    const adminNavLinks = [
-        { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { label: 'AI Observability', path: '/admin/agents', icon: Settings },
-        { label: 'Placement Oversight', path: '/placement/students', icon: Users },
-        { label: 'Analytics & Reports', path: '/placement/analytics', icon: ShieldAlert },
+    // Admin Navigation Groups
+    const adminNavGroups = [
+        {
+            group: 'OVERVIEW',
+            links: [
+                { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+                { label: 'AI Telemetry & Health', path: '/admin/agents', icon: BrainCircuit }
+            ]
+        },
+        {
+            group: 'GOVERNANCE & DIRECTORY',
+            links: [
+                { label: 'User Management', path: '/admin/users', icon: Users },
+                { label: 'Departments', path: '/admin/departments', icon: FolderKanban },
+                { label: 'Audit Logs', path: '/admin/audit-logs', icon: ShieldAlert }
+            ]
+        },
+        {
+            group: 'ACADEMIC & PLACEMENT',
+            links: [
+                { label: 'Placement Oversight', path: '/placement/students', icon: UserCircle },
+                { label: 'Placement Analytics', path: '/placement/analytics', icon: TrendingUp }
+            ]
+        },
+        {
+            group: 'SYSTEM',
+            links: [
+                { label: 'Admin Settings', path: '/admin/settings', icon: Settings }
+            ]
+        }
     ];
+
+    const adminNavLinks = adminNavGroups.flatMap((g) => g.links);
 
     const isStudent = user?.role === 'STUDENT';
     const isFaculty = user?.role === 'FACULTY';
     const isPlacementOfficer = user?.role === 'PLACEMENT_OFFICER';
-    const canCollapse = isStudent || isFaculty || isPlacementOfficer;
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+    const canCollapse = isStudent || isFaculty || isPlacementOfficer || isAdmin;
 
     const isActive = (path) => {
         if (path.includes('?')) {
@@ -219,6 +249,7 @@ export const AppShell = ({ children }) => {
         if (isStudent) return studentNavGroups;
         if (isFaculty) return facultyNavGroups;
         if (isPlacementOfficer) return placementNavGroups;
+        if (isAdmin) return adminNavGroups;
         return null;
     };
 
@@ -228,6 +259,7 @@ export const AppShell = ({ children }) => {
         if (isStudent) return 'Autonomous Student Success Platform';
         if (isFaculty) return 'Cognitive Faculty Shell';
         if (isPlacementOfficer) return 'Placement Command Center';
+        if (isAdmin) return 'Platform Administration & AI Governance';
         return 'CampusGent Intelligence Platform';
     };
 
@@ -596,15 +628,15 @@ export const AppShell = ({ children }) => {
                                             <p className="text-[10px] text-[#6B5336] font-medium truncate">{user?.email}</p>
                                         </div>
                                         <Link
-                                            to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : "/profile"}
+                                            to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : isAdmin ? "/admin/settings" : "/profile"}
                                             onClick={() => setShowProfileMenu(false)}
                                             className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors"
                                         >
                                             <User className="h-4 w-4 text-[#6B5336]" />
-                                            <span>My Profile</span>
+                                            <span>{isAdmin ? "Admin Profile" : "My Profile"}</span>
                                         </Link>
                                         <Link
-                                            to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : "/settings"}
+                                            to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : isAdmin ? "/admin/settings" : "/settings"}
                                             onClick={() => setShowProfileMenu(false)}
                                             className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors"
                                         >

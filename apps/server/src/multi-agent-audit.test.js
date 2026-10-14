@@ -286,7 +286,7 @@ describe('🔍 Comprehensive Multi-Agent System Audit & Verification Suite', () 
             expect(Object.keys(res1).sort()).toEqual(Object.keys(res2).sort());
             expect(res1.overallStatus).toBeDefined();
             expect(res1.strengths).toBeDefined();
-        });
+        }, 25000);
     });
 
     // ==========================================

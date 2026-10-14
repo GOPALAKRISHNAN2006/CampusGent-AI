@@ -19,6 +19,10 @@ const StudentDashboard = lazyPage(() => import('./pages/StudentDashboard.jsx'), 
 const FacultyDashboard = lazyPage(() => import('./pages/FacultyDashboard.jsx'), 'FacultyDashboard');
 const PlacementDashboard = lazyPage(() => import('./pages/PlacementDashboard.jsx'), 'PlacementDashboard');
 const AdminDashboard = lazyPage(() => import('./pages/AdminDashboard.jsx'), 'AdminDashboard');
+const AdminUsers = lazyPage(() => import('./pages/AdminUsers.jsx'), 'AdminUsers');
+const AdminDepartments = lazyPage(() => import('./pages/AdminDepartments.jsx'), 'AdminDepartments');
+const AdminAuditLogs = lazyPage(() => import('./pages/AdminAuditLogs.jsx'), 'AdminAuditLogs');
+const AdminSettings = lazyPage(() => import('./pages/AdminSettings.jsx'), 'AdminSettings');
 const AIInsightsDashboard = lazyPage(() => import('./pages/AIInsightsDashboard.jsx'), 'AIInsightsDashboard');
 const AgentHealthDashboard = lazyPage(() => import('./pages/AgentHealthDashboard.jsx'), 'AgentHealthDashboard');
 const StudentSuccessAgent = lazyPage(() => import('./pages/StudentSuccessAgent.jsx'), 'StudentSuccessAgent');
@@ -212,7 +216,11 @@ function App() {
               <Route path="/placement/analytics-agent" element={<ProtectedRoute allowedRoles={['PLACEMENT_OFFICER', 'ADMIN']}><PlacementAnalyticsAgent /></ProtectedRoute>} />
 
               {/* Admin Routes */}
+              <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AdminUsers /></ProtectedRoute>} />
+              <Route path="/admin/departments" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AdminDepartments /></ProtectedRoute>} />
+              <Route path="/admin/audit-logs" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AdminAuditLogs /></ProtectedRoute>} />
               <Route path="/admin/agents" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AgentHealthDashboard /></ProtectedRoute>} />
+              <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}><AdminSettings /></ProtectedRoute>} />
 
               {/* Fallback 404 Route */}
               <Route path="*" element={<NotFoundPage />} />
