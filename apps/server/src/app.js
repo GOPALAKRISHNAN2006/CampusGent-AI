@@ -12,14 +12,22 @@ import { apiLimiter } from './middleware/rateLimiter.js';
 import { logger } from './utils/logger.js';
 import { initializeAgentEcosystem } from './ai/agents/index.js';
 import './models/index.js';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { sanitizeNoSql } from './middleware/sanitize.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const webDistPath = path.resolve(__dirname, '../../web/dist');
+
 const app = express();
 // Initialize the 21 AI agents ecosystem registry
 initializeAgentEcosystem();
 // 1. Trust Proxy (for accurate rate-limiting through reverse proxies)
 app.set('trust proxy', 1);
 // 2. HTTP Security Headers
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 // 3. CORS configuration
 const allowedOrigins = env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/$/, ''));
 app.use(cors({
@@ -56,7 +64,7 @@ app.use(morgan(morganFormat, {
         write: (message) => logger.info(message.trim()),
     },
 }));
-// 8. Basic Health Check Endpoint
+// 8. Health Check Endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         success: true,
@@ -67,8 +75,31 @@ app.get('/api/health', (req, res) => {
         },
     });
 });
+
 // 9. API Routes & Rate Limiting
 app.use('/api/v1', apiLimiter, apiRoutes);
-// 10. Centralized Error Handler (Must be registered last)
+
+// 10. Static Frontend SPA Serving (Full-Stack Support)
+if (fs.existsSync(webDistPath)) {
+    app.use(express.static(webDistPath));
+    app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api')) return next();
+        res.sendFile(path.join(webDistPath, 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.status(200).json({
+            name: 'CampusGent AI API Server',
+            status: 'online',
+            version: '1.0.0',
+            endpoints: {
+                health: '/api/health',
+                api: '/api/v1',
+            },
+        });
+    });
+}
+
+// 11. Centralized Error Handler (Must be registered last)
 app.use(errorHandler);
 export default app;
