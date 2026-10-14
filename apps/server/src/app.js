@@ -102,9 +102,12 @@ app.all('/api/v1/system/seed', async (req, res, next) => {
 // 9. API Routes & Rate Limiting
 app.use('/api/v1', apiLimiter, apiRoutes);
 
-// 10. Static Frontend SPA Serving (Full-Stack Support)
+// 10. Static Frontend SPA Serving (Full-Stack Support with caching headers)
 if (fs.existsSync(webDistPath)) {
-    app.use(express.static(webDistPath));
+    app.use(express.static(webDistPath, {
+        maxAge: '1d',
+        etag: true,
+    }));
     app.get('*', (req, res, next) => {
         if (req.path.startsWith('/api')) return next();
         res.sendFile(path.join(webDistPath, 'index.html'));

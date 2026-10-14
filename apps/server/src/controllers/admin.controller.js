@@ -6,6 +6,7 @@ import { Job } from '../models/Job.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { AgentRegistry } from '../ai/agents/index.js';
 import { NotFoundError, BadRequestError } from '../utils/errors.js';
+import { cacheService } from '../services/cache.service.js';
 
 export const getSystemHealth = async (req, res, next) => {
   try {
@@ -68,8 +69,7 @@ export const getUsers = async (req, res, next) => {
     if (role) filter.role = role;
     if (search) {
       filter.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
       ];
     }
@@ -159,7 +159,7 @@ export const getAuditLogs = async (req, res, next) => {
     const skip = (page - 1) * limit;
     const [logs, total] = await Promise.all([
       AuditLog.find()
-        .populate('user', 'firstName lastName email role')
+        .populate('user', 'name email role')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -213,6 +213,9 @@ export const createDepartment = async (req, res, next) => {
       code: code.toUpperCase(),
       description,
     });
+
+    // Invalidate cached departments
+    await cacheService.delByPrefix('admin:departments');
 
     res.status(201).json({
       success: true,

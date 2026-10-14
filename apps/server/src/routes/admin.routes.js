@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth.js';
 import { requireRole } from '../middleware/rbac.js';
 import { UserRole } from '@campusgent/shared';
+import { cacheRoute } from '../services/cache.service.js';
 import {
   getSystemHealth,
   getUsers,
@@ -20,7 +21,7 @@ router.get('/health', getSystemHealth);
 router.get('/users', getUsers);
 router.put('/users/:userId/role', updateUserRole);
 router.get('/audit-logs', getAuditLogs);
-router.get('/departments', getDepartments);
+router.get('/departments', cacheRoute(300), getDepartments);
 router.post('/departments', createDepartment);
 
 export default router;

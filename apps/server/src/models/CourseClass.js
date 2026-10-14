@@ -40,4 +40,7 @@ const CourseClassSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance indexes for faculty assigned classes and semester schedule queries
+CourseClassSchema.index({ faculty: 1 });
+CourseClassSchema.index({ semester: 1, courseCode: 1 });
 export const CourseClass = model('CourseClass', CourseClassSchema);

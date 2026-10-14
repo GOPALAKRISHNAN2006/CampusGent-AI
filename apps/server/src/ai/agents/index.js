@@ -32,13 +32,40 @@ AgentRegistry.agentsRegistry = new Map();
 // Helper to auto-generate standard executions
 const generateAgentCompletion = async (agentName, studentId, snapshot, customParams) => {
     const { system } = PromptRegistry.getPrompt(agentName);
-    const userPrompt = `
-    Student Snapshot context:
-    ${JSON.stringify(snapshot, null, 2)}
-    
-    Custom parameters details:
-    ${JSON.stringify(customParams || {}, null, 2)}
-  `;
+
+    // Unnest customParams if wrapped
+    let params = customParams || {};
+    while (params && typeof params === 'object' && params.customParams && typeof params.customParams === 'object') {
+        params = { ...params, ...params.customParams };
+        delete params.customParams;
+    }
+
+    const userQuery = params.query || params.question || params.prompt || params.instruction || snapshot?.userQuery || '';
+    const targetRole = params.targetRole || params.role || snapshot?.requestedTargetRole || '';
+    const focusArea = params.focusArea || '';
+
+    const sections = [];
+    if (userQuery) {
+        sections.push(`=== USER SPECIFIC QUERY / DIRECTIVE ===\n"${userQuery}"\n(Address this query directly with personalized recommendations based on the student profile)`);
+    }
+    if (targetRole) {
+        sections.push(`=== TARGET ROLE ===\n${targetRole}`);
+    }
+    if (focusArea) {
+        sections.push(`=== FOCUS AREA ===\n${focusArea}`);
+    }
+    if (snapshot?.conversationHistory && Array.isArray(snapshot.conversationHistory) && snapshot.conversationHistory.length > 0) {
+        sections.push(`=== PREVIOUS CONVERSATION HISTORY ===\n${JSON.stringify(snapshot.conversationHistory.slice(-4), null, 2)}`);
+    }
+    if (snapshot?.recentInsights && Array.isArray(snapshot.recentInsights) && snapshot.recentInsights.length > 0) {
+        sections.push(`=== PREVIOUS AGENT INSIGHTS (DO NOT DUPLICATE) ===\n${JSON.stringify(snapshot.recentInsights, null, 2)}`);
+    }
+    sections.push(`=== STUDENT CONTEXT SNAPSHOT ===\n${JSON.stringify(snapshot, null, 2)}`);
+    if (params && Object.keys(params).length > 0) {
+        sections.push(`=== CUSTOM PARAMETERS ===\n${JSON.stringify(params, null, 2)}`);
+    }
+
+    const userPrompt = sections.join('\n\n');
     return AIService.generateCompletion(studentId, agentName, system, userPrompt);
 };
 // 1. Student Success Agent
@@ -52,8 +79,8 @@ export class StudentSuccessAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 2. Placement Readiness Agent
@@ -67,8 +94,8 @@ export class PlacementReadinessAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 3. Learning Path Agent
@@ -82,8 +109,8 @@ export class LearningPathAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 4. Faculty Insights Agent
@@ -97,8 +124,8 @@ export class FacultyInsightsAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 5. Placement Analytics Agent (Institutional — deterministic stats + AI interpretation)
@@ -113,11 +140,18 @@ export class PlacementAnalyticsAgent {
         };
     }
     async execute(snapshot, customParams) {
+        let params = customParams || {};
+        while (params && typeof params === 'object' && params.customParams && typeof params.customParams === 'object') {
+            params = { ...params, ...params.customParams };
+            delete params.customParams;
+        }
+        const query = params.query || params.question || params.prompt || '';
         // 1. Compute verified deterministic statistics from the database
         const statistics = await PlacementAnalyticsService.computeStatistics();
         // 2. Build a prompt that passes ONLY verified numbers to the AI
         const { system } = PromptRegistry.getPrompt(this.metadata.name);
         const userPrompt = `
+      ${query ? `Placement Query: "${query}"\n` : ''}
       IMPORTANT: The following statistics are VERIFIED from the database.
       You must ONLY interpret and analyze these numbers.
       Do NOT invent, estimate, or hallucinate any numbers beyond what is provided.
@@ -613,8 +647,8 @@ export class OpportunityAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 15. Student Engagement Agent
@@ -823,7 +857,12 @@ export class PlacementOfficerCopilot {
     }
     async execute(snapshot, customParams) {
         const { system } = PromptRegistry.getPrompt(this.metadata.name);
-        const query = customParams?.query || 'Show placement overview statistics';
+        let params = customParams || {};
+        while (params && typeof params === 'object' && params.customParams && typeof params.customParams === 'object') {
+            params = { ...params, ...params.customParams };
+            delete params.customParams;
+        }
+        const query = params.query || params.question || params.prompt || params.input || 'Show placement overview statistics';
         // 1. Fetch deterministic statistical aggregates
         const stats = await PlacementAnalyticsService.computeStatistics();
         // 2. Fetch all student profiles with names and skills for query filtering
@@ -882,8 +921,8 @@ export class AdminIntelligenceAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 20. Data Quality Agent
@@ -1111,8 +1150,8 @@ export class PlacementAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 23. Custom Attendance Agent
@@ -1126,8 +1165,8 @@ export class AttendanceAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // 24. Custom Query Agent
@@ -1156,8 +1195,8 @@ export class FacultyAssistantAgent {
             promptVersion: '1.0.0',
         };
     }
-    async execute(snapshot) {
-        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot);
+    async execute(snapshot, customParams) {
+        return generateAgentCompletion(this.metadata.name, snapshot.studentId, snapshot, customParams);
     }
 }
 // Auto-register agents on initialization

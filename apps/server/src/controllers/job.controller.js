@@ -6,6 +6,7 @@ import { Notification } from '../models/Notification.js';
 import { AuditLog } from '../models/AuditLog.js';
 import { Interview } from '../models/Interview.js';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../utils/errors.js';
+import { cacheService } from '../services/cache.service.js';
 import mongoose from 'mongoose';
 // 1. Create Job Listing (Placement Officer / Admin)
 export const createJob = async (req, res, next) => {
@@ -35,6 +36,10 @@ export const createJob = async (req, res, next) => {
             action: 'CREATE_JOB',
             details: { jobId: job._id, title: job.title, company: job.companyName },
         });
+        // Invalidate cached jobs and analytics
+        await cacheService.delByPrefix('jobs:');
+        await cacheService.delByPrefix('analytics:');
+
         res.status(201).json({
             success: true,
             data: job,
@@ -98,7 +103,8 @@ export const getJobs = async (req, res, next) => {
 export const getJobById = async (req, res, next) => {
     try {
         const job = await Job.findById(req.params.id)
-            .populate('eligibilityCriteria.allowedDepartments', 'name code');
+            .populate('eligibilityCriteria.allowedDepartments', 'name code')
+            .lean();
         if (!job) {
             throw new NotFoundError('Job posting not found');
         }
@@ -124,6 +130,10 @@ export const updateJob = async (req, res, next) => {
             action: 'UPDATE_JOB',
             details: { jobId: job._id },
         });
+        // Invalidate cached jobs
+        await cacheService.delByPrefix('jobs:');
+        await cacheService.delByPrefix('analytics:');
+
         res.status(200).json({
             success: true,
             data: job,
@@ -199,6 +209,9 @@ export const applyJob = async (req, res, next) => {
             title: 'Application Submitted',
             message: `You applied successfully for ${job.title} at ${job.companyName}.`,
         });
+        // Invalidate analytics cache
+        await cacheService.delByPrefix('analytics:');
+
         res.status(201).json({
             success: true,
             data: application,
@@ -214,7 +227,8 @@ export const getStudentApplications = async (req, res, next) => {
         const userId = req.user?.id;
         const applications = await JobApplication.find({ student: userId })
             .populate('job', 'title companyName location employmentType status')
-            .sort({ appliedAt: -1 });
+            .sort({ appliedAt: -1 })
+            .lean();
         res.status(200).json({
             success: true,
             data: applications,
@@ -230,7 +244,8 @@ export const getJobApplications = async (req, res, next) => {
         const { jobId } = req.params;
         const applications = await JobApplication.find({ job: jobId })
             .populate('student', 'name email')
-            .sort({ appliedAt: -1 });
+            .sort({ appliedAt: -1 })
+            .lean();
         res.status(200).json({
             success: true,
             data: applications,
@@ -286,7 +301,8 @@ export const getAllApplications = async (req, res, next) => {
         const applications = await JobApplication.find()
             .populate('student', 'name email')
             .populate('job', 'title companyName location employmentType status salaryMin salaryMax requiredSkills')
-            .sort({ appliedAt: -1 });
+            .sort({ appliedAt: -1 })
+            .lean();
         res.status(200).json({
             success: true,
             data: applications,
@@ -305,7 +321,8 @@ export const getAllInterviews = async (req, res, next) => {
         const interviews = await Interview.find()
             .populate('student', 'name email')
             .populate('job', 'title companyName location')
-            .sort({ date: 1 });
+            .sort({ date: 1 })
+            .lean();
         res.status(200).json({
             success: true,
             data: interviews,

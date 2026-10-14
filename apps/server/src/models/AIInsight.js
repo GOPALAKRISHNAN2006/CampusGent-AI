@@ -47,4 +47,6 @@ const AIInsightSchema = new Schema({
 }, {
     timestamps: { createdAt: true, updatedAt: false },
 });
+// Performance index for active student insight queries without in-memory sorting
+AIInsightSchema.index({ user: 1, type: 1, status: 1, createdAt: -1 });
 export const AIInsight = model('AIInsight', AIInsightSchema);

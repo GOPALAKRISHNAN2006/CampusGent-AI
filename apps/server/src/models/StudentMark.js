@@ -22,4 +22,7 @@ const StudentMarkSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance indexes for class assessment score lookups and student grade history
+StudentMarkSchema.index({ assessmentId: 1, student: 1 });
+StudentMarkSchema.index({ student: 1 });
 export const StudentMark = model('StudentMark', StudentMarkSchema);

@@ -82,4 +82,8 @@ const StudentProfileSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance indexes for class rosters, at-risk queries, and placement readiness ranking
+StudentProfileSchema.index({ department: 1, semester: 1 });
+StudentProfileSchema.index({ cgpa: -1 });
+StudentProfileSchema.index({ placementReadinessScore: -1 });
 export const StudentProfile = model('StudentProfile', StudentProfileSchema);

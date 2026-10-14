@@ -22,4 +22,7 @@ const AuditLogSchema = new Schema({
 }, {
     timestamps: { createdAt: true, updatedAt: false },
 });
+// Performance index for admin audit log pagination and chronological inspection
+AuditLogSchema.index({ createdAt: -1 });
+AuditLogSchema.index({ user: 1, createdAt: -1 });
 export const AuditLog = model('AuditLog', AuditLogSchema);

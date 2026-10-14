@@ -40,4 +40,8 @@ const UserSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance indexes for admin user lists, role filtering, and department lookups
+UserSchema.index({ role: 1, createdAt: -1 });
+UserSchema.index({ department: 1 });
+UserSchema.index({ createdAt: -1 });
 export const User = model('User', UserSchema);

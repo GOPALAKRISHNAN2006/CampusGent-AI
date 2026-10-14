@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { createJob, getJobs, getJobById, updateJob, applyJob, getStudentApplications, getJobApplications, updateApplicationStatus, getAllApplications, getAllInterviews, scheduleInterview, updateInterviewStatus, } from '../controllers/job.controller.js';
 import { authenticate } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/rbac.js';
+import { cacheRoute } from '../services/cache.service.js';
 const router = Router();
-// Public routes for authenticated users
-router.get('/', authenticate, getJobs);
+// Public routes for authenticated users (cached for performance)
+router.get('/', authenticate, cacheRoute(60, 'jobs:list'), getJobs);
 router.get('/all-applications', authenticate, requirePermission('applications:read'), getAllApplications);
 router.get('/all-interviews', authenticate, requirePermission('applications:read'), getAllInterviews);
-router.get('/:id', authenticate, getJobById);
+router.get('/:id', authenticate, cacheRoute(120, 'jobs:detail'), getJobById);
 // Job Posting operations (Placement Officer / Admin)
 router.post('/', authenticate, requirePermission('jobs:write'), createJob);
 router.put('/:id', authenticate, requirePermission('jobs:write'), updateJob);

@@ -1,10 +1,14 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../api/client.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
-import { User, GraduationCap, Award, Link as LinkIcon, Github, Linkedin, Globe, Plus, Trash2, Edit2, CheckCircle, Briefcase, AlertCircle, Mail, Shield, BookOpen } from 'lucide-react';
+import {
+    User, GraduationCap, Award, Link as LinkIcon, Github, Linkedin,
+    Globe, Plus, Trash2, Edit2, CheckCircle, Briefcase, AlertCircle,
+    Mail, Shield, BookOpen, X
+} from 'lucide-react';
+
 export const StudentProfile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -12,6 +16,7 @@ export const StudentProfile = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const [isEditing, setIsEditing] = useState(false);
     const [editTab, setEditTab] = useState('personal');
+
     // Form states
     const [formData, setFormData] = useState({
         rollNumber: '',
@@ -26,9 +31,11 @@ export const StudentProfile = () => {
         careerInterests: [],
         careerGoals: []
     });
+
     // Dynamic Skill input state
     const [newSkillName, setNewSkillName] = useState('');
     const [newSkillProficiency, setNewSkillProficiency] = useState('BEGINNER');
+
     // Dynamic Project input state
     const [newProject, setNewProject] = useState({
         title: '',
@@ -37,6 +44,7 @@ export const StudentProfile = () => {
         githubUrl: '',
         demoUrl: ''
     });
+
     // Dynamic Certification input state
     const [newCert, setNewCert] = useState({
         name: '',
@@ -44,7 +52,9 @@ export const StudentProfile = () => {
         issueDate: '',
         credentialUrl: ''
     });
+
     const [saving, setSaving] = useState(false);
+
     const fetchProfile = async () => {
         try {
             setLoading(true);
@@ -64,42 +74,33 @@ export const StudentProfile = () => {
                 careerInterests: data.careerInterests || [],
                 careerGoals: data.careerGoals || []
             });
-        }
-        catch (err) {
+        } catch (err) {
             setError(err.response?.data?.error?.message || 'Failed to retrieve student profile information.');
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchProfile();
     }, []);
+
     const calculateCompletion = () => {
-        if (!profile)
-            return 0;
+        if (!profile) return 0;
         let score = 0;
         let total = 9;
-        if (profile.rollNumber)
-            score++;
-        if (profile.semester)
-            score++;
-        if (profile.cgpa > 0)
-            score++;
-        if (profile.githubProfile || profile.linkedinProfile)
-            score++;
-        if (profile.skills && profile.skills.length > 0)
-            score++;
-        if (profile.projects && profile.projects.length > 0)
-            score++;
-        if (profile.certifications && profile.certifications.length > 0)
-            score++;
-        if (profile.careerInterests && profile.careerInterests.length > 0)
-            score++;
-        if (profile.careerGoals && profile.careerGoals.length > 0)
-            score++;
+        if (profile.rollNumber) score++;
+        if (profile.semester) score++;
+        if (profile.cgpa > 0) score++;
+        if (profile.githubProfile || profile.linkedinProfile) score++;
+        if (profile.skills && profile.skills.length > 0) score++;
+        if (profile.projects && profile.projects.length > 0) score++;
+        if (profile.certifications && profile.certifications.length > 0) score++;
+        if (profile.careerInterests && profile.careerInterests.length > 0) score++;
+        if (profile.careerGoals && profile.careerGoals.length > 0) score++;
         return Math.round((score / total) * 100);
     };
+
     const handleSave = async () => {
         try {
             setSaving(true);
@@ -120,18 +121,16 @@ export const StudentProfile = () => {
             await apiClient.put('/students/profile', payload);
             await fetchProfile();
             setIsEditing(false);
-        }
-        catch (err) {
+        } catch (err) {
             setError(err.response?.data?.error?.message || 'Failed to save student profile information.');
-        }
-        finally {
+        } finally {
             setSaving(false);
         }
     };
+
     // Skill Handlers
     const addSkill = () => {
-        if (!newSkillName.trim())
-            return;
+        if (!newSkillName.trim()) return;
         const name = newSkillName.trim();
         if (formData.skills.some((s) => s.name.toLowerCase() === name.toLowerCase())) {
             setNewSkillName('');
@@ -143,15 +142,16 @@ export const StudentProfile = () => {
         });
         setNewSkillName('');
     };
+
     const removeSkill = (index) => {
         const updated = [...formData.skills];
         updated.splice(index, 1);
         setFormData({ ...formData, skills: updated });
     };
+
     // Project Handlers
     const addProject = () => {
-        if (!newProject.title.trim())
-            return;
+        if (!newProject.title.trim()) return;
         const techs = newProject.technologies
             .split(',')
             .map((t) => t.trim())
@@ -171,15 +171,16 @@ export const StudentProfile = () => {
         });
         setNewProject({ title: '', description: '', technologies: '', githubUrl: '', demoUrl: '' });
     };
+
     const removeProject = (index) => {
         const updated = [...formData.projects];
         updated.splice(index, 1);
         setFormData({ ...formData, projects: updated });
     };
+
     // Certification Handlers
     const addCertification = () => {
-        if (!newCert.name.trim() || !newCert.issuingOrg.trim() || !newCert.issueDate)
-            return;
+        if (!newCert.name.trim() || !newCert.issuingOrg.trim() || !newCert.issueDate) return;
         setFormData({
             ...formData,
             certifications: [
@@ -194,21 +195,1027 @@ export const StudentProfile = () => {
         });
         setNewCert({ name: '', issuingOrg: '', issueDate: '', credentialUrl: '' });
     };
+
     const removeCertification = (index) => {
         const updated = [...formData.certifications];
         updated.splice(index, 1);
         setFormData({ ...formData, certifications: updated });
     };
+
     if (loading) {
-        return (_jsxs("div", { className: "space-y-6 max-w-6xl mx-auto animate-pulse", children: [_jsx("div", { className: "h-40 bg-brand-100 rounded-2xl" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-6", children: [_jsx("div", { className: "h-48 bg-brand-100 rounded-xl md:col-span-1" }), _jsx("div", { className: "h-96 bg-brand-100 rounded-xl md:col-span-3" })] })] }));
+        return (
+            <div className="space-y-6 max-w-6xl mx-auto animate-pulse">
+                <div className="h-40 bg-[#FAF7F2] border border-[#E1DCC9] rounded-2xl" />
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="h-48 bg-[#FAF7F2] border border-[#E1DCC9] rounded-xl md:col-span-1" />
+                    <div className="h-96 bg-[#FAF7F2] border border-[#E1DCC9] rounded-xl md:col-span-3" />
+                </div>
+            </div>
+        );
     }
+
     const completionPercent = calculateCompletion();
-    return (_jsxs("div", { className: "space-y-6 max-w-6xl mx-auto", children: [_jsxs("div", { className: "bg-white border border-brand-200/60 rounded-2xl shadow-sm overflow-hidden relative", children: [_jsx("div", { className: "h-24 bg-gradient-to-r from-brand-900 via-brand-800 to-indigo-950 opacity-90 relative", children: _jsxs("div", { className: "absolute right-6 bottom-4 text-xs font-medium text-brand-300", children: ["Student ID: ", profile?.rollNumber || 'Not set'] }) }), _jsxs("div", { className: "p-6 pt-0 flex flex-col md:flex-row md:items-end gap-6 relative -mt-10", children: [_jsx("div", { className: "h-24 w-24 bg-brand-900 border-4 border-white text-white rounded-2xl flex items-center justify-center font-bold text-3xl shadow-md shrink-0", children: profile?.user?.name ? profile.user.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() : 'ST' }), _jsxs("div", { className: "flex-1 space-y-1", children: [_jsxs("div", { className: "flex flex-col md:flex-row md:items-center justify-between gap-4", children: [_jsxs("div", { children: [_jsx("h1", { className: "text-2xl font-bold text-brand-900 leading-none", children: profile?.user?.name }), _jsxs("p", { className: "text-sm text-brand-500 mt-1 flex items-center gap-2", children: [_jsx(GraduationCap, { className: "h-4 w-4 text-brand-400" }), _jsx("span", { children: profile?.department?.name || 'Department not initialized' }), _jsx("span", { children: "\u2022" }), _jsxs("span", { children: ["B.Tech / Semester ", profile?.semester] })] })] }), _jsx("div", { className: "flex items-center gap-3 self-start md:self-end", children: _jsxs(Button, { onClick: () => setIsEditing(true), variant: "secondary", className: "text-xs flex gap-2 border-brand-200 hover:border-brand-300", children: [_jsx(Edit2, { className: "h-3.5 w-3.5 text-brand-600" }), _jsx("span", { children: "Edit Profile" })] }) })] }), _jsxs("div", { className: "pt-3 flex items-center gap-3", children: [_jsx("div", { className: "flex-1 bg-brand-100 h-2 rounded-full overflow-hidden", children: _jsx("div", { className: "bg-indigo-600 h-full transition-all duration-500", style: { width: `${completionPercent}%` } }) }), _jsxs("span", { className: "text-xs font-semibold text-brand-700 whitespace-nowrap", children: [completionPercent, "% Completed"] })] })] })] })] }), error && (_jsxs("div", { className: "p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl flex gap-2", children: [_jsx(AlertCircle, { className: "h-5 w-5 shrink-0" }), _jsx("p", { children: error })] })), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-6 items-start", children: [_jsxs("div", { className: "md:col-span-1 bg-white border border-brand-200/60 rounded-xl p-3 shadow-sm space-y-1", children: [_jsxs("button", { onClick: () => setActiveTab('overview'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(User, { className: "h-4 w-4" }), _jsx("span", { children: "Profile Overview" })] }), _jsxs("button", { onClick: () => setActiveTab('academic'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'academic' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(GraduationCap, { className: "h-4 w-4" }), _jsx("span", { children: "Academic Performance" })] }), _jsxs("button", { onClick: () => setActiveTab('skills'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'skills' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(BookOpen, { className: "h-4 w-4" }), _jsx("span", { children: "Verified Skills" })] }), _jsxs("button", { onClick: () => setActiveTab('projects'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'projects' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(Briefcase, { className: "h-4 w-4" }), _jsx("span", { children: "Featured Projects" })] }), _jsxs("button", { onClick: () => setActiveTab('certifications'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'certifications' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(Award, { className: "h-4 w-4" }), _jsx("span", { children: "Certifications" })] }), _jsxs("button", { onClick: () => setActiveTab('career'), className: `w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'career' ? 'bg-indigo-50 text-indigo-700' : 'text-brand-600 hover:bg-brand-50 hover:text-brand-900'}`, children: [_jsx(Award, { className: "h-4 w-4" }), _jsx("span", { children: "Career Goals" })] })] }), _jsxs("div", { className: "md:col-span-3 space-y-6", children: [activeTab === 'overview' && (_jsxs("div", { className: "space-y-6", children: [_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsxs(CardTitle, { className: "text-sm font-bold flex items-center gap-2 text-brand-900", children: [_jsx(User, { className: "h-4 w-4 text-brand-500" }), _jsx("span", { children: "Bio & Contact Information" })] }) }), _jsxs(CardContent, { className: "space-y-4", children: [_jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4 text-xs", children: [_jsxs("div", { className: "p-3 bg-brand-50/50 rounded-lg space-y-1", children: [_jsx("span", { className: "text-brand-400 font-medium", children: "Email Address" }), _jsxs("p", { className: "font-semibold text-brand-900 flex items-center gap-1.5 mt-0.5", children: [_jsx(Mail, { className: "h-3.5 w-3.5 text-brand-500" }), profile?.user?.email] })] }), _jsxs("div", { className: "p-3 bg-brand-50/50 rounded-lg space-y-1", children: [_jsx("span", { className: "text-brand-400 font-medium", children: "Roll / Registration Number" }), _jsxs("p", { className: "font-semibold text-brand-900 flex items-center gap-1.5 mt-0.5", children: [_jsx(Shield, { className: "h-3.5 w-3.5 text-brand-500" }), profile?.rollNumber || 'Not configured'] })] })] }), _jsxs("div", { className: "space-y-2 pt-2", children: [_jsx("span", { className: "text-xs font-semibold text-brand-500", children: "Professional Handles" }), _jsxs("div", { className: "flex flex-wrap gap-3", children: [profile?.githubProfile ? (_jsxs("a", { href: profile.githubProfile, target: "_blank", rel: "noopener noreferrer", className: "flex items-center gap-1.5 text-xs text-indigo-600 hover:underline", children: [_jsx(Github, { className: "h-4 w-4" }), _jsx("span", { children: "GitHub" })] })) : (_jsxs("span", { className: "text-xs text-brand-400 flex items-center gap-1.5", children: [_jsx(Github, { className: "h-4 w-4" }), " Github not linked"] })), profile?.linkedinProfile ? (_jsxs("a", { href: profile.linkedinProfile, target: "_blank", rel: "noopener noreferrer", className: "flex items-center gap-1.5 text-xs text-indigo-600 hover:underline", children: [_jsx(Linkedin, { className: "h-4 w-4" }), _jsx("span", { children: "LinkedIn" })] })) : (_jsxs("span", { className: "text-xs text-brand-400 flex items-center gap-1.5", children: [_jsx(Linkedin, { className: "h-4 w-4" }), " LinkedIn not linked"] })), profile?.portfolioUrl ? (_jsxs("a", { href: profile.portfolioUrl, target: "_blank", rel: "noopener noreferrer", className: "flex items-center gap-1.5 text-xs text-indigo-600 hover:underline", children: [_jsx(Globe, { className: "h-4 w-4" }), _jsx("span", { children: "Portfolio" })] })) : (_jsxs("span", { className: "text-xs text-brand-400 flex items-center gap-1.5", children: [_jsx(Globe, { className: "h-4 w-4" }), " Portfolio not linked"] }))] })] })] })] }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6", children: [_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsx(CardTitle, { className: "text-xs font-bold text-brand-500 uppercase tracking-wider", children: "Academic Overview" }) }), _jsxs(CardContent, { className: "space-y-3", children: [_jsxs("div", { className: "flex justify-between items-center text-xs", children: [_jsx("span", { className: "text-brand-500", children: "Cumulative GPA:" }), _jsxs("span", { className: "font-bold text-brand-900", children: [profile?.cgpa || '0.00', "/10.0"] })] }), _jsxs("div", { className: "flex justify-between items-center text-xs", children: [_jsx("span", { className: "text-brand-500", children: "Current Semester:" }), _jsxs("span", { className: "font-bold text-brand-900", children: ["Semester ", profile?.semester || 1] })] }), _jsxs("div", { className: "flex justify-between items-center text-xs", children: [_jsx("span", { className: "text-brand-500", children: "Placement Readiness Score:" }), _jsxs("span", { className: "font-bold text-indigo-600", children: [profile?.placementReadinessScore || 0, "%"] })] })] })] }), _jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsx(CardTitle, { className: "text-xs font-bold text-brand-500 uppercase tracking-wider", children: "Top Declared Skills" }) }), _jsx(CardContent, { className: "flex flex-wrap gap-1.5", children: profile?.skills && profile.skills.length > 0 ? (profile.skills.slice(0, 8).map((s) => (_jsx(Badge, { variant: s.verified ? 'success' : 'default', className: "text-[10px]", children: s.name }, s.name)))) : (_jsx("p", { className: "text-xs text-brand-400 italic", children: "No skills registered yet." })) })] })] })] })), activeTab === 'academic' && (_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsxs(CardTitle, { className: "text-sm font-bold flex items-center gap-2 text-brand-900", children: [_jsx(GraduationCap, { className: "h-4 w-4 text-brand-500" }), _jsx("span", { children: "Academic Transcript & Summary" })] }) }), _jsxs(CardContent, { className: "space-y-6", children: [_jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-center", children: [_jsxs("div", { className: "p-4 bg-brand-50/50 rounded-xl space-y-1", children: [_jsx("span", { className: "text-xs text-brand-400 font-medium", children: "Cumulative GPA" }), _jsxs("p", { className: "text-2xl font-extrabold text-brand-900", children: [profile?.cgpa || '0.00', "/10"] })] }), _jsxs("div", { className: "p-4 bg-brand-50/50 rounded-xl space-y-1", children: [_jsx("span", { className: "text-xs text-brand-400 font-medium", children: "Current Semester" }), _jsxs("p", { className: "text-2xl font-extrabold text-brand-900", children: ["Sem ", profile?.semester || 1] })] }), _jsxs("div", { className: "p-4 bg-brand-50/50 rounded-xl space-y-1", children: [_jsx("span", { className: "text-xs text-brand-400 font-medium", children: "Completed Semesters" }), _jsx("p", { className: "text-2xl font-extrabold text-brand-900", children: (profile?.semester || 1) - 1 })] })] }), _jsxs("div", { className: "border-t border-brand-100 pt-4 space-y-3", children: [_jsx("h3", { className: "text-xs font-semibold text-brand-500 uppercase tracking-wider", children: "Performance Audit Criteria" }), _jsxs("div", { className: "space-y-2.5 text-xs text-brand-600", children: [_jsx("p", { children: "\u2022 Verified eligibility for placement drives requires GPA \u2265 6.5 and no active backlogs." }), _jsxs("p", { children: ["\u2022 Student current academic status: ", _jsx("span", { className: "font-bold text-green-600", children: "IN GOOD STANDING" }), "."] })] })] })] })] })), activeTab === 'skills' && (_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsxs(CardTitle, { className: "text-sm font-bold flex items-center gap-2 text-brand-900", children: [_jsx(BookOpen, { className: "h-4 w-4 text-brand-500" }), _jsxs("span", { children: ["Skills Inventory (", profile?.skills?.length || 0, ")"] })] }) }), _jsx(CardContent, { className: "space-y-4", children: profile?.skills && profile.skills.length > 0 ? (_jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: profile.skills.map((s) => (_jsxs("div", { className: "p-3 bg-brand-50/50 border border-brand-100 rounded-xl flex items-center justify-between gap-4", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "text-xs font-bold text-brand-900 block", children: s.name }), _jsx("span", { className: "text-[10px] font-semibold text-brand-400 uppercase tracking-wider block", children: s.proficiency })] }), _jsx("div", { className: "flex items-center gap-1.5", children: s.verified ? (_jsxs(Badge, { variant: "success", className: "text-[10px] flex gap-1 items-center", children: [_jsx(CheckCircle, { className: "h-3 w-3" }), _jsx("span", { children: "Verified" })] })) : (_jsx(Badge, { variant: "default", className: "text-[10px]", children: "Self-Declared" })) })] }, s.name))) })) : (_jsx("div", { className: "text-center py-8 text-brand-400 text-xs italic", children: "No skills declared yet. Click Edit Profile to add skills." })) })] })), activeTab === 'projects' && (_jsxs("div", { className: "space-y-4", children: [_jsx("div", { className: "flex justify-between items-center px-1", children: _jsxs("h2", { className: "text-sm font-bold text-brand-900 flex items-center gap-2", children: [_jsx(Briefcase, { className: "h-4 w-4 text-brand-500" }), _jsxs("span", { children: ["Featured Projects (", profile?.projects?.length || 0, ")"] })] }) }), profile?.projects && profile.projects.length > 0 ? (_jsx("div", { className: "grid grid-cols-1 gap-4", children: profile.projects.map((p, idx) => (_jsx(Card, { className: "border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "p-5 space-y-3", children: [_jsx("div", { className: "flex justify-between items-start gap-4", children: _jsxs("div", { className: "space-y-1", children: [_jsx("h3", { className: "font-bold text-brand-950 text-sm leading-snug", children: p.title }), _jsx("p", { className: "text-xs text-brand-600 leading-relaxed", children: p.description })] }) }), _jsx("div", { className: "flex flex-wrap gap-1.5", children: p.technologies.map((t) => (_jsx(Badge, { variant: "secondary", className: "text-[10px]", children: t }, t))) }), _jsxs("div", { className: "flex gap-4 pt-2 border-t border-brand-100 text-xs font-semibold", children: [p.githubUrl && (_jsxs("a", { href: p.githubUrl, target: "_blank", rel: "noopener noreferrer", className: "flex items-center gap-1 text-indigo-600 hover:underline", children: [_jsx(Github, { className: "h-4 w-4 text-brand-500" }), _jsx("span", { children: "View Source" })] })), p.demoUrl && (_jsxs("a", { href: p.demoUrl, target: "_blank", rel: "noopener noreferrer", className: "flex items-center gap-1 text-indigo-600 hover:underline", children: [_jsx(Globe, { className: "h-4 w-4 text-brand-500" }), _jsx("span", { children: "Live Demo" })] }))] })] }) }, idx))) })) : (_jsx(Card, { className: "text-center p-8 border border-brand-200/60 shadow-sm", children: _jsxs(CardContent, { className: "space-y-2", children: [_jsx(Briefcase, { className: "h-8 w-8 mx-auto text-brand-300" }), _jsx("p", { className: "text-brand-500 text-xs italic", children: "No projects registered yet." })] }) }))] })), activeTab === 'certifications' && (_jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsxs(CardTitle, { className: "text-sm font-bold flex items-center gap-2 text-brand-900", children: [_jsx(Award, { className: "h-4 w-4 text-brand-500" }), _jsxs("span", { children: ["Certifications & Credentials (", profile?.certifications?.length || 0, ")"] })] }) }), _jsx(CardContent, { className: "space-y-4", children: profile?.certifications && profile.certifications.length > 0 ? (_jsx("div", { className: "space-y-3", children: profile.certifications.map((c, idx) => (_jsxs("div", { className: "p-4 bg-brand-50/50 border border-brand-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("h4", { className: "font-bold text-brand-900", children: c.name }), _jsxs("p", { className: "text-brand-500 font-medium", children: ["Issued by: ", c.issuingOrg] }), _jsxs("p", { className: "text-[10px] text-brand-400", children: ["Date: ", new Date(c.issueDate).toLocaleDateString()] })] }), c.credentialUrl && (_jsxs("a", { href: c.credentialUrl, target: "_blank", rel: "noopener noreferrer", className: "inline-flex items-center gap-1 text-indigo-600 hover:underline font-semibold self-start sm:self-center", children: [_jsx(LinkIcon, { className: "h-3.5 w-3.5" }), _jsx("span", { children: "Verify Credentials" })] }))] }, idx))) })) : (_jsx("div", { className: "text-center py-8 text-brand-400 text-xs italic", children: "No certifications added yet. Click Edit Profile to add credentials." })) })] })), activeTab === 'career' && (_jsx("div", { className: "space-y-6", children: _jsxs(Card, { className: "border border-brand-200/60 shadow-sm", children: [_jsx(CardHeader, { children: _jsxs(CardTitle, { className: "text-sm font-bold flex items-center gap-2 text-brand-900", children: [_jsx(Award, { className: "h-4 w-4 text-brand-500" }), _jsx("span", { children: "Target Career Alignments" })] }) }), _jsxs(CardContent, { className: "space-y-4 text-xs", children: [_jsxs("div", { className: "space-y-3", children: [_jsx("h3", { className: "font-semibold text-brand-500 uppercase tracking-wider", children: "Career Interests" }), _jsx("div", { className: "flex flex-wrap gap-1.5", children: profile?.careerInterests && profile.careerInterests.length > 0 ? (profile.careerInterests.map((interest) => (_jsx(Badge, { variant: "secondary", children: interest }, interest)))) : (_jsx("p", { className: "text-xs text-brand-400 italic", children: "No career interests set." })) })] }), _jsxs("div", { className: "border-t border-brand-100 pt-4 space-y-3", children: [_jsx("h3", { className: "font-semibold text-brand-500 uppercase tracking-wider", children: "Professional Goals" }), _jsx("div", { className: "flex flex-wrap gap-1.5", children: profile?.careerGoals && profile.careerGoals.length > 0 ? (profile.careerGoals.map((goal) => (_jsx(Badge, { variant: "default", children: goal }, goal)))) : (_jsx("p", { className: "text-xs text-brand-400 italic", children: "No career goals set." })) })] })] })] }) }))] })] }), isEditing && (_jsx("div", { className: "fixed inset-0 z-50 bg-brand-950/65 flex items-center justify-center p-4 overflow-y-auto", children: _jsxs("div", { className: "bg-white border border-brand-200 rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden", children: [_jsxs("div", { className: "px-6 py-4 border-b border-brand-100 flex items-center justify-between bg-brand-50", children: [_jsxs("h2", { className: "font-bold text-brand-900 text-sm flex items-center gap-2", children: [_jsx(Edit2, { className: "h-4 w-4 text-brand-600" }), _jsx("span", { children: "Edit Student Profile Context" })] }), _jsx("button", { onClick: () => setIsEditing(false), className: "text-brand-400 hover:text-brand-700 text-sm font-semibold transition-colors", children: "Close" })] }), _jsxs("div", { className: "flex border-b border-brand-100 overflow-x-auto text-[11px] font-bold bg-brand-50/50", children: [_jsx("button", { onClick: () => setEditTab('personal'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'personal' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Personal & Handles" }), _jsx("button", { onClick: () => setEditTab('academic'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'academic' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Academic Context" }), _jsx("button", { onClick: () => setEditTab('skills'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'skills' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Skills Inventory" }), _jsx("button", { onClick: () => setEditTab('projects'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'projects' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Featured Projects" }), _jsx("button", { onClick: () => setEditTab('certifications'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'certifications' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Certifications" }), _jsx("button", { onClick: () => setEditTab('career'), className: `px-4 py-3 shrink-0 transition-colors border-b-2 ${editTab === 'career' ? 'border-indigo-600 text-indigo-700' : 'border-transparent text-brand-500 hover:text-brand-900'}`, children: "Career Interests" })] }), _jsxs("div", { className: "flex-1 overflow-y-auto p-6 space-y-4 text-xs", children: [editTab === 'personal' && (_jsx("div", { className: "space-y-4", children: _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Registration / Roll Number" }), _jsx("input", { type: "text", value: formData.rollNumber, onChange: (e) => setFormData({ ...formData, rollNumber: e.target.value }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "e.g. 24IT1056" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "GitHub Profile URL" }), _jsx("input", { type: "url", value: formData.githubProfile, onChange: (e) => setFormData({ ...formData, githubProfile: e.target.value }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "https://github.com/username" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "LinkedIn Profile URL" }), _jsx("input", { type: "url", value: formData.linkedinProfile, onChange: (e) => setFormData({ ...formData, linkedinProfile: e.target.value }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "https://linkedin.com/in/username" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Portfolio / Website URL" }), _jsx("input", { type: "url", value: formData.portfolioUrl, onChange: (e) => setFormData({ ...formData, portfolioUrl: e.target.value }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "https://username.dev" })] })] }) })), editTab === 'academic' && (_jsx("div", { className: "space-y-4", children: _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Cumulative GPA (Out of 10.0)" }), _jsx("input", { type: "number", step: "0.01", min: "0", max: "10", value: formData.cgpa, onChange: (e) => setFormData({ ...formData, cgpa: parseFloat(e.target.value) || 0 }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", required: true })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Current Semester" }), _jsx("input", { type: "number", min: "1", max: "8", value: formData.semester, onChange: (e) => setFormData({ ...formData, semester: parseInt(e.target.value) || 1 }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", required: true })] })] }) })), editTab === 'skills' && (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "p-4 border border-brand-100 bg-brand-50/50 rounded-xl flex flex-col sm:flex-row gap-3 items-end", children: [_jsxs("div", { className: "flex-1 w-full", children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1 tracking-wider", children: "Skill Name" }), _jsx("input", { type: "text", value: newSkillName, onChange: (e) => setNewSkillName(e.target.value), placeholder: "e.g. React", className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { className: "w-full sm:w-44", children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1 tracking-wider", children: "Proficiency" }), _jsxs("select", { value: newSkillProficiency, onChange: (e) => setNewSkillProficiency(e.target.value), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white font-medium text-brand-800", children: [_jsx("option", { value: "BEGINNER", children: "BEGINNER" }), _jsx("option", { value: "INTERMEDIATE", children: "INTERMEDIATE" }), _jsx("option", { value: "ADVANCED", children: "ADVANCED" }), _jsx("option", { value: "EXPERT", children: "EXPERT" })] })] }), _jsxs(Button, { type: "button", onClick: addSkill, className: "px-4 py-2.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold flex gap-1.5 shrink-0", children: [_jsx(Plus, { className: "h-4 w-4" }), " Add"] })] }), _jsxs("div", { className: "space-y-2", children: [_jsx("span", { className: "block text-[10px] font-bold uppercase text-brand-500 tracking-wider", children: "Skills List" }), _jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-2", children: formData.skills.map((s, idx) => (_jsxs("div", { className: "p-2 border border-brand-100 rounded-lg flex items-center justify-between bg-white text-xs", children: [_jsxs("div", { children: [_jsx("span", { className: "font-semibold text-brand-800", children: s.name }), _jsxs("span", { className: "text-[9px] uppercase font-bold text-brand-400 ml-2", children: ["(", s.proficiency, ")"] })] }), _jsx("button", { type: "button", onClick: () => removeSkill(idx), className: "text-red-500 hover:text-red-700 p-1 transition-colors", children: _jsx(Trash2, { className: "h-4 w-4" }) })] }, idx))) })] })] })), editTab === 'projects' && (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "p-4 border border-brand-100 bg-brand-50/50 rounded-xl space-y-3", children: [_jsx("span", { className: "block text-[10px] font-bold uppercase text-brand-500 tracking-wider", children: "Add Featured Project" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Project Title" }), _jsx("input", { type: "text", value: newProject.title, onChange: (e) => setNewProject({ ...newProject, title: e.target.value }), placeholder: "e.g. Campus Management SaaS", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Technologies (Comma separated)" }), _jsx("input", { type: "text", value: newProject.technologies, onChange: (e) => setNewProject({ ...newProject, technologies: e.target.value }), placeholder: "e.g. React, Node.js, MongoDB", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "GitHub Repo URL" }), _jsx("input", { type: "url", value: newProject.githubUrl, onChange: (e) => setNewProject({ ...newProject, githubUrl: e.target.value }), placeholder: "https://github.com/...", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Live Demo URL" }), _jsx("input", { type: "url", value: newProject.demoUrl, onChange: (e) => setNewProject({ ...newProject, demoUrl: e.target.value }), placeholder: "https://...", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Description" }), _jsx("textarea", { value: newProject.description, onChange: (e) => setNewProject({ ...newProject, description: e.target.value }), placeholder: "Brief summary of functions and features...", rows: 2, className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsx("div", { className: "flex justify-end", children: _jsx(Button, { type: "button", onClick: addProject, className: "px-4 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold", children: "Add Project" }) })] }), _jsxs("div", { className: "space-y-2", children: [_jsx("span", { className: "block text-[10px] font-bold uppercase text-brand-500 tracking-wider", children: "Projects Added" }), _jsx("div", { className: "space-y-2", children: formData.projects.map((p, idx) => (_jsxs("div", { className: "p-3 border border-brand-100 rounded-xl bg-white flex items-start justify-between gap-4", children: [_jsxs("div", { className: "space-y-1", children: [_jsx("span", { className: "font-bold text-brand-900 block", children: p.title }), _jsx("p", { className: "text-[11px] text-brand-500 leading-snug", children: p.description }), _jsx("div", { className: "flex flex-wrap gap-1 mt-1", children: p.technologies.map((t) => (_jsx(Badge, { variant: "secondary", className: "text-[8px]", children: t }, t))) })] }), _jsx("button", { type: "button", onClick: () => removeProject(idx), className: "text-red-500 hover:text-red-700 p-1 shrink-0", children: _jsx(Trash2, { className: "h-4 w-4" }) })] }, idx))) })] })] })), editTab === 'certifications' && (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { className: "p-4 border border-brand-100 bg-brand-50/50 rounded-xl space-y-3", children: [_jsx("span", { className: "block text-[10px] font-bold uppercase text-brand-500 tracking-wider", children: "Add Certification" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Certificate Title" }), _jsx("input", { type: "text", value: newCert.name, onChange: (e) => setNewCert({ ...newCert, name: e.target.value }), placeholder: "e.g. AWS Certified Solutions Architect", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Issuing Authority" }), _jsx("input", { type: "text", value: newCert.issuingOrg, onChange: (e) => setNewCert({ ...newCert, issuingOrg: e.target.value }), placeholder: "e.g. Amazon Web Services", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Issue Date" }), _jsx("input", { type: "date", value: newCert.issueDate, onChange: (e) => setNewCert({ ...newCert, issueDate: e.target.value }), className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white text-brand-800" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[9px] font-semibold text-brand-600 mb-1", children: "Credential URL" }), _jsx("input", { type: "url", value: newCert.credentialUrl, onChange: (e) => setNewCert({ ...newCert, credentialUrl: e.target.value }), placeholder: "https://...", className: "w-full text-xs border border-brand-200 rounded-lg p-2 outline-none focus:border-indigo-500 bg-white" })] })] }), _jsx("div", { className: "flex justify-end", children: _jsx(Button, { type: "button", onClick: addCertification, className: "px-4 py-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold", children: "Add Certification" }) })] }), _jsxs("div", { className: "space-y-2", children: [_jsx("span", { className: "block text-[10px] font-bold uppercase text-brand-500 tracking-wider", children: "Certifications Added" }), _jsx("div", { className: "space-y-2", children: formData.certifications.map((c, idx) => (_jsxs("div", { className: "p-3 border border-brand-100 rounded-xl bg-white flex items-center justify-between gap-4", children: [_jsxs("div", { className: "space-y-0.5", children: [_jsx("span", { className: "font-bold text-brand-900 block", children: c.name }), _jsxs("span", { className: "text-[10px] text-brand-500", children: ["Issued by: ", c.issuingOrg] })] }), _jsx("button", { type: "button", onClick: () => removeCertification(idx), className: "text-red-500 hover:text-red-700 p-1 shrink-0", children: _jsx(Trash2, { className: "h-4 w-4" }) })] }, idx))) })] })] })), editTab === 'career' && (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Career Interests (Comma separated)" }), _jsx("input", { type: "text", value: formData.careerInterests.join(', '), onChange: (e) => setFormData({
-                                                        ...formData,
-                                                        careerInterests: e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
-                                                    }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "e.g. Software Engineer, Backend Developer" })] }), _jsxs("div", { children: [_jsx("label", { className: "block text-[10px] font-bold uppercase text-brand-500 mb-1.5 tracking-wider", children: "Professional Goals (Comma separated)" }), _jsx("input", { type: "text", value: formData.careerGoals.join(', '), onChange: (e) => setFormData({
-                                                        ...formData,
-                                                        careerGoals: e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
-                                                    }), className: "w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none focus:border-indigo-500 bg-white", placeholder: "e.g. Master React Native, Pass AWS exam" })] })] }))] }), _jsxs("div", { className: "px-6 py-4 border-t border-brand-100 flex justify-end gap-3 bg-brand-50", children: [_jsx(Button, { onClick: () => setIsEditing(false), className: "bg-brand-100 hover:bg-brand-200 text-brand-700 text-xs px-4 py-2 border-0", children: "Cancel" }), _jsx(Button, { onClick: handleSave, isLoading: saving, className: "bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-5 py-2", children: "Save All Changes" })] })] }) }))] }));
+
+    const tabs = [
+        { id: 'overview', label: 'Profile Overview', icon: User },
+        { id: 'academic', label: 'Academic Performance', icon: GraduationCap },
+        { id: 'skills', label: 'Verified Skills', icon: BookOpen },
+        { id: 'projects', label: 'Featured Projects', icon: Briefcase },
+        { id: 'certifications', label: 'Certifications', icon: Award },
+        { id: 'career', label: 'Career Goals', icon: Award }
+    ];
+
+    return (
+        <>
+            <div className="space-y-6 max-w-6xl w-full mx-auto">
+                {/* Hero Profile Banner */}
+                <div className="bg-white border border-[#E1DCC9] rounded-2xl shadow-subtle overflow-hidden relative">
+                    <div className="h-28 sm:h-32 bg-gradient-to-r from-[#1F150C] via-[#31210F] to-[#0A0704] relative">
+                        <div className="absolute right-4 sm:right-6 bottom-3 sm:bottom-4 text-[11px] sm:text-xs font-semibold text-[#E1DCC9]/90 bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-[#E1DCC9]/20">
+                            Student ID: {profile?.rollNumber || 'Not set'}
+                        </div>
+                    </div>
+                    <div className="p-4 sm:p-6 pt-0 flex flex-col md:flex-row md:items-end gap-4 sm:gap-6 relative -mt-10 sm:-mt-12">
+                        <div className="h-20 w-20 sm:h-24 sm:w-24 bg-[#1F150C] border-4 border-white text-[#E1DCC9] rounded-2xl flex items-center justify-center font-black text-2xl sm:text-3xl shadow-md shrink-0">
+                            {profile?.user?.name
+                                ? profile.user.name
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')
+                                      .slice(0, 2)
+                                      .toUpperCase()
+                                : 'ST'}
+                        </div>
+                        <div className="flex-1 space-y-2 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div className="truncate">
+                                    <h1 className="text-xl sm:text-2xl font-bold text-[#1F150C] leading-tight truncate">
+                                        {profile?.user?.name || 'Student Account'}
+                                    </h1>
+                                    <div className="text-xs text-[#6B5336] mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                        <GraduationCap className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
+                                        <span className="font-medium">{profile?.department?.name || 'Engineering Faculty'}</span>
+                                        <span className="text-[#C9BF9F]">•</span>
+                                        <span>B.Tech / Semester {profile?.semester || 1}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2.5 self-start sm:self-auto shrink-0">
+                                    <Button
+                                        onClick={() => setIsEditing(true)}
+                                        variant="secondary"
+                                        size="sm"
+                                        className="text-xs flex items-center gap-2 border-[#E1DCC9]"
+                                    >
+                                        <Edit2 className="h-3.5 w-3.5 text-[#412D15]" />
+                                        <span>Edit Profile</span>
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="pt-2 flex items-center gap-3">
+                                <div className="flex-1 bg-[#F4EFE6] h-2 rounded-full overflow-hidden border border-[#E1DCC9]/50">
+                                    <div
+                                        className="bg-gradient-to-r from-[#412D15] to-[#1F150C] h-full transition-all duration-500 rounded-full"
+                                        style={{ width: `${completionPercent}%` }}
+                                    />
+                                </div>
+                                <span className="text-xs font-bold text-[#412D15] whitespace-nowrap">
+                                    {completionPercent}% Completed
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {error && (
+                    <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex gap-2.5 items-start">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 mt-0.5" />
+                        <p>{error}</p>
+                    </div>
+                )}
+
+                {/* Main Content Layout with Responsive Navigation */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+                    {/* Navigation Pills (Horizontal scroll on mobile/tablet, vertical sidebar on desktop) */}
+                    <div className="md:col-span-1 bg-white border border-[#E1DCC9] rounded-2xl p-2 sm:p-2.5 shadow-subtle overflow-hidden">
+                        <div className="flex md:flex-col overflow-x-auto gap-1 pb-1 md:pb-0 scrollbar-none">
+                            {tabs.map((tab) => {
+                                const Icon = tab.icon;
+                                const isActive = activeTab === tab.id;
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`px-3 py-2 sm:py-2.5 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all whitespace-nowrap shrink-0 text-left cursor-pointer ${
+                                            isActive
+                                                ? 'bg-[#1F150C] text-[#E1DCC9] shadow-subtle'
+                                                : 'text-[#6B5336] hover:bg-[#FAF7F2] hover:text-[#1F150C]'
+                                        }`}
+                                    >
+                                        <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-[#E1DCC9]' : 'text-[#8F7554]'}`} />
+                                        <span>{tab.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Tab Panels */}
+                    <div className="md:col-span-3 space-y-6 min-w-0">
+                        {activeTab === 'overview' && (
+                            <div className="space-y-6">
+                                <Card className="border border-[#E1DCC9] shadow-subtle">
+                                    <CardHeader>
+                                        <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1F150C]">
+                                            <User className="h-4 w-4 text-[#412D15]" />
+                                            <span>Bio & Contact Information</span>
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                                            <div className="p-3.5 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]/70 space-y-1">
+                                                <span className="text-[#8F7554] font-medium text-[11px]">Email Address</span>
+                                                <p className="font-bold text-[#1F150C] flex items-center gap-1.5 mt-0.5 truncate">
+                                                    <Mail className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
+                                                    <span className="truncate">{profile?.user?.email}</span>
+                                                </p>
+                                            </div>
+                                            <div className="p-3.5 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]/70 space-y-1">
+                                                <span className="text-[#8F7554] font-medium text-[11px]">Roll / Registration Number</span>
+                                                <p className="font-bold text-[#1F150C] flex items-center gap-1.5 mt-0.5">
+                                                    <Shield className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
+                                                    <span>{profile?.rollNumber || 'Not configured'}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 pt-2 border-t border-[#E1DCC9]/50">
+                                            <span className="text-xs font-bold text-[#412D15]">Professional Handles</span>
+                                            <div className="flex flex-wrap gap-2.5 sm:gap-3 text-xs">
+                                                {profile?.githubProfile ? (
+                                                    <a
+                                                        href={profile.githubProfile}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] border border-[#E1DCC9] text-[#1F150C] font-semibold hover:border-[#412D15] transition-colors"
+                                                    >
+                                                        <Github className="h-3.5 w-3.5 text-[#1F150C]" />
+                                                        <span>GitHub Profile</span>
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-xs text-[#8F7554] flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2]/60 border border-[#E1DCC9]/50">
+                                                        <Github className="h-3.5 w-3.5 opacity-50" />
+                                                        <span>GitHub not linked</span>
+                                                    </span>
+                                                )}
+                                                {profile?.linkedinProfile ? (
+                                                    <a
+                                                        href={profile.linkedinProfile}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] border border-[#E1DCC9] text-[#1F150C] font-semibold hover:border-[#412D15] transition-colors"
+                                                    >
+                                                        <Linkedin className="h-3.5 w-3.5 text-blue-700" />
+                                                        <span>LinkedIn Profile</span>
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-xs text-[#8F7554] flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2]/60 border border-[#E1DCC9]/50">
+                                                        <Linkedin className="h-3.5 w-3.5 opacity-50" />
+                                                        <span>LinkedIn not linked</span>
+                                                    </span>
+                                                )}
+                                                {profile?.portfolioUrl ? (
+                                                    <a
+                                                        href={profile.portfolioUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] border border-[#E1DCC9] text-[#1F150C] font-semibold hover:border-[#412D15] transition-colors"
+                                                    >
+                                                        <Globe className="h-3.5 w-3.5 text-[#412D15]" />
+                                                        <span>Personal Portfolio</span>
+                                                    </a>
+                                                ) : (
+                                                    <span className="text-xs text-[#8F7554] flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2]/60 border border-[#E1DCC9]/50">
+                                                        <Globe className="h-3.5 w-3.5 opacity-50" />
+                                                        <span>Portfolio not linked</span>
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <Card className="border border-[#E1DCC9] shadow-subtle">
+                                        <CardHeader>
+                                            <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider">
+                                                Academic Overview
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                            <div className="flex justify-between items-center text-xs">
+                                                <span className="text-[#6B5336]">Cumulative GPA:</span>
+                                                <span className="font-bold text-[#1F150C] text-sm">
+                                                    {profile?.cgpa ? Number(profile.cgpa).toFixed(2) : '0.00'} / 10.0
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-xs">
+                                                <span className="text-[#6B5336]">Current Semester:</span>
+                                                <span className="font-bold text-[#1F150C]">
+                                                    Semester {profile?.semester || 1}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-xs">
+                                                <span className="text-[#6B5336]">Placement Readiness:</span>
+                                                <span className="font-bold text-[#412D15]">
+                                                    {profile?.placementReadinessScore || 0}%
+                                                </span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+
+                                    <Card className="border border-[#E1DCC9] shadow-subtle">
+                                        <CardHeader>
+                                            <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider">
+                                                Top Declared Skills
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="flex flex-wrap gap-1.5">
+                                            {profile?.skills && profile.skills.length > 0 ? (
+                                                profile.skills.slice(0, 8).map((s) => (
+                                                    <Badge
+                                                        key={s.name}
+                                                        variant={s.verified ? 'success' : 'secondary'}
+                                                        className="text-[10px]"
+                                                    >
+                                                        {s.name}
+                                                    </Badge>
+                                                ))
+                                            ) : (
+                                                <p className="text-xs text-[#8F7554] italic">
+                                                    No skills registered yet.
+                                                </p>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'academic' && (
+                            <Card className="border border-[#E1DCC9] shadow-subtle">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1F150C]">
+                                        <GraduationCap className="h-4 w-4 text-[#412D15]" />
+                                        <span>Academic Transcript & Summary</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 text-center">
+                                        <div className="p-4 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]/70 space-y-1">
+                                            <span className="text-xs text-[#8F7554] font-medium">Cumulative GPA</span>
+                                            <p className="text-2xl font-black text-[#1F150C]">
+                                                {profile?.cgpa ? Number(profile.cgpa).toFixed(2) : '0.00'}/10
+                                            </p>
+                                        </div>
+                                        <div className="p-4 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]/70 space-y-1">
+                                            <span className="text-xs text-[#8F7554] font-medium">Current Semester</span>
+                                            <p className="text-2xl font-black text-[#1F150C]">
+                                                Sem {profile?.semester || 1}
+                                            </p>
+                                        </div>
+                                        <div className="p-4 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]/70 space-y-1">
+                                            <span className="text-xs text-[#8F7554] font-medium">Completed Semesters</span>
+                                            <p className="text-2xl font-black text-[#1F150C]">
+                                                {Math.max(0, (profile?.semester || 1) - 1)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="border-t border-[#E1DCC9]/70 pt-4 space-y-2.5">
+                                        <h3 className="text-xs font-bold text-[#412D15] uppercase tracking-wider">
+                                            Performance Criteria & Placement Status
+                                        </h3>
+                                        <div className="space-y-2 text-xs text-[#6B5336] leading-relaxed">
+                                            <p>• Verified eligibility for placement drives requires GPA ≥ 6.5 and no active backlogs.</p>
+                                            <p>
+                                                • Academic Standing:{' '}
+                                                <span className="font-bold text-emerald-700">IN GOOD STANDING</span>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {activeTab === 'skills' && (
+                            <Card className="border border-[#E1DCC9] shadow-subtle">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1F150C]">
+                                        <BookOpen className="h-4 w-4 text-[#412D15]" />
+                                        <span>Skills Inventory ({profile?.skills?.length || 0})</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {profile?.skills && profile.skills.length > 0 ? (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                            {profile.skills.map((s) => (
+                                                <div
+                                                    key={s.name}
+                                                    className="p-3.5 bg-[#FAF7F2] border border-[#E1DCC9] rounded-xl flex items-center justify-between gap-3 text-xs"
+                                                >
+                                                    <div className="space-y-0.5">
+                                                        <span className="text-xs font-bold text-[#1F150C] block">
+                                                            {s.name}
+                                                        </span>
+                                                        <span className="text-[10px] font-semibold text-[#8F7554] uppercase tracking-wider block">
+                                                            {s.proficiency}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        {s.verified ? (
+                                                            <Badge variant="success" className="text-[10px] flex gap-1 items-center">
+                                                                <CheckCircle className="h-3 w-3" />
+                                                                <span>Verified</span>
+                                                            </Badge>
+                                                        ) : (
+                                                            <Badge variant="secondary" className="text-[10px]">
+                                                                Self-Declared
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-[#8F7554] text-xs italic">
+                                            No skills declared yet. Click Edit Profile to add skills.
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {activeTab === 'projects' && (
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center px-1">
+                                    <h2 className="text-sm font-bold text-[#1F150C] flex items-center gap-2">
+                                        <Briefcase className="h-4 w-4 text-[#412D15]" />
+                                        <span>Featured Projects ({profile?.projects?.length || 0})</span>
+                                    </h2>
+                                </div>
+                                {profile?.projects && profile.projects.length > 0 ? (
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {profile.projects.map((p, idx) => (
+                                            <Card key={idx} className="border border-[#E1DCC9] shadow-subtle">
+                                                <CardContent className="p-4 sm:p-5 space-y-3">
+                                                    <div className="space-y-1">
+                                                        <h3 className="font-bold text-[#1F150C] text-sm leading-snug">
+                                                            {p.title}
+                                                        </h3>
+                                                        <p className="text-xs text-[#6B5336] leading-relaxed">
+                                                            {p.description}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {p.technologies?.map((t) => (
+                                                            <Badge key={t} variant="secondary" className="text-[10px]">
+                                                                {t}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-4 pt-2 border-t border-[#E1DCC9]/50 text-xs font-semibold">
+                                                        {p.githubUrl && (
+                                                            <a
+                                                                href={p.githubUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-1.5 text-[#1F150C] hover:underline"
+                                                            >
+                                                                <Github className="h-3.5 w-3.5 text-[#412D15]" />
+                                                                <span>View Source</span>
+                                                            </a>
+                                                        )}
+                                                        {p.demoUrl && (
+                                                            <a
+                                                                href={p.demoUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex items-center gap-1.5 text-[#412D15] hover:underline"
+                                                            >
+                                                                <Globe className="h-3.5 w-3.5" />
+                                                                <span>Live Demo</span>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <Card className="text-center p-8 border border-[#E1DCC9] shadow-subtle">
+                                        <CardContent className="space-y-2">
+                                            <Briefcase className="h-8 w-8 mx-auto text-[#C9BF9F]" />
+                                            <p className="text-[#8F7554] text-xs italic">
+                                                No projects registered yet.
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
+                        )}
+
+                        {activeTab === 'certifications' && (
+                            <Card className="border border-[#E1DCC9] shadow-subtle">
+                                <CardHeader>
+                                    <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1F150C]">
+                                        <Award className="h-4 w-4 text-[#412D15]" />
+                                        <span>Certifications & Credentials ({profile?.certifications?.length || 0})</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {profile?.certifications && profile.certifications.length > 0 ? (
+                                        <div className="space-y-3">
+                                            {profile.certifications.map((c, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="p-3.5 sm:p-4 bg-[#FAF7F2] border border-[#E1DCC9] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                                                >
+                                                    <div className="space-y-0.5">
+                                                        <h4 className="font-bold text-[#1F150C]">{c.name}</h4>
+                                                        <p className="text-[#6B5336] font-medium">Issued by: {c.issuingOrg}</p>
+                                                        <p className="text-[10px] text-[#8F7554]">
+                                                            Date: {c.issueDate ? new Date(c.issueDate).toLocaleDateString() : 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                    {c.credentialUrl && (
+                                                        <a
+                                                            href={c.credentialUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-1.5 text-xs text-[#1F150C] hover:underline font-bold self-start sm:self-center"
+                                                        >
+                                                            <LinkIcon className="h-3.5 w-3.5 text-[#412D15]" />
+                                                            <span>Verify Credential</span>
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-[#8F7554] text-xs italic">
+                                            No certifications added yet. Click Edit Profile to add credentials.
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {activeTab === 'career' && (
+                            <div className="space-y-6">
+                                <Card className="border border-[#E1DCC9] shadow-subtle">
+                                    <CardHeader>
+                                        <CardTitle className="text-sm font-bold flex items-center gap-2 text-[#1F150C]">
+                                            <Award className="h-4 w-4 text-[#412D15]" />
+                                            <span>Target Career Alignments</span>
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4 text-xs">
+                                        <div className="space-y-2.5">
+                                            <h3 className="font-bold text-[#412D15] uppercase tracking-wider text-[11px]">
+                                                Career Interests
+                                            </h3>
+                                            <div className="flex flex-wrap gap-2">
+                                                {profile?.careerInterests && profile.careerInterests.length > 0 ? (
+                                                    profile.careerInterests.map((interest) => (
+                                                        <Badge key={interest} variant="secondary">
+                                                            {interest}
+                                                        </Badge>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-xs text-[#8F7554] italic">No career interests set.</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="border-t border-[#E1DCC9]/70 pt-4 space-y-2.5">
+                                            <h3 className="font-bold text-[#412D15] uppercase tracking-wider text-[11px]">
+                                                Professional Goals
+                                            </h3>
+                                            <div className="flex flex-wrap gap-2">
+                                                {profile?.careerGoals && profile.careerGoals.length > 0 ? (
+                                                    profile.careerGoals.map((goal) => (
+                                                        <Badge key={goal} variant="default">
+                                                            {goal}
+                                                        </Badge>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-xs text-[#8F7554] italic">No career goals set.</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* EDIT PROFILE MODAL: Isolated outside container to prevent space-y margin bleed */}
+            {isEditing && (
+                <div
+                    className="fixed inset-0 !m-0 m-0 z-50 bg-[#000000]/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto"
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div className="bg-white border border-[#E1DCC9] rounded-2xl w-full max-w-3xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+                        {/* Modal Header */}
+                        <div className="px-5 sm:px-6 py-4 border-b border-[#E1DCC9] flex items-center justify-between bg-[#FAF7F2]">
+                            <h2 className="font-bold text-[#1F150C] text-sm flex items-center gap-2">
+                                <Edit2 className="h-4 w-4 text-[#412D15]" />
+                                <span>Edit Student Profile Context</span>
+                            </h2>
+                            <button
+                                onClick={() => setIsEditing(false)}
+                                className="p-1 -mr-1 rounded-lg text-[#8F7554] hover:text-[#1F150C] hover:bg-[#E1DCC9]/40 transition-colors flex items-center gap-1 text-xs font-semibold cursor-pointer"
+                                aria-label="Close dialog"
+                            >
+                                <X className="h-4 w-4" />
+                                <span className="hidden sm:inline">Close</span>
+                            </button>
+                        </div>
+
+                        {/* Modal Tabs Bar */}
+                        <div className="flex border-b border-[#E1DCC9] overflow-x-auto text-xs font-bold bg-[#FAF7F2]/60 scrollbar-none shrink-0">
+                            {[
+                                { id: 'personal', label: 'Personal & Handles' },
+                                { id: 'academic', label: 'Academic Context' },
+                                { id: 'skills', label: 'Skills Inventory' },
+                                { id: 'projects', label: 'Featured Projects' },
+                                { id: 'certifications', label: 'Certifications' },
+                                { id: 'career', label: 'Career Interests' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setEditTab(tab.id)}
+                                    className={`px-4 py-3 shrink-0 whitespace-nowrap transition-colors border-b-2 cursor-pointer ${
+                                        editTab === tab.id
+                                            ? 'border-[#1F150C] text-[#1F150C] font-black bg-white'
+                                            : 'border-transparent text-[#6B5336] hover:text-[#1F150C]'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Modal Scrollable Body */}
+                        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
+                            {editTab === 'personal' && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                Registration / Roll Number
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={formData.rollNumber}
+                                                onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                placeholder="e.g. 24IT1056"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                GitHub Profile URL
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.githubProfile}
+                                                onChange={(e) => setFormData({ ...formData, githubProfile: e.target.value })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                placeholder="https://github.com/username"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                LinkedIn Profile URL
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.linkedinProfile}
+                                                onChange={(e) => setFormData({ ...formData, linkedinProfile: e.target.value })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                placeholder="https://linkedin.com/in/username"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                Portfolio / Website URL
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.portfolioUrl}
+                                                onChange={(e) => setFormData({ ...formData, portfolioUrl: e.target.value })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                placeholder="https://username.dev"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTab === 'academic' && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                Cumulative GPA (Out of 10.0)
+                                            </label>
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                min="0"
+                                                max="10"
+                                                value={formData.cgpa}
+                                                onChange={(e) => setFormData({ ...formData, cgpa: parseFloat(e.target.value) || 0 })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                Current Semester
+                                            </label>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                max="8"
+                                                value={formData.semester}
+                                                onChange={(e) => setFormData({ ...formData, semester: parseInt(e.target.value) || 1 })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTab === 'skills' && (
+                                <div className="space-y-4">
+                                    <div className="p-4 border border-[#E1DCC9] bg-[#FAF7F2] rounded-xl flex flex-col sm:flex-row gap-3 items-stretch sm:items-end">
+                                        <div className="flex-1 w-full">
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1 tracking-wider">
+                                                Skill Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={newSkillName}
+                                                onChange={(e) => setNewSkillName(e.target.value)}
+                                                placeholder="e.g. React.js, Python, System Design"
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                            />
+                                        </div>
+                                        <div className="w-full sm:w-44">
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1 tracking-wider">
+                                                Proficiency
+                                            </label>
+                                            <select
+                                                value={newSkillProficiency}
+                                                onChange={(e) => setNewSkillProficiency(e.target.value)}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white font-medium text-[#1F150C]"
+                                            >
+                                                <option value="BEGINNER">BEGINNER</option>
+                                                <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                                <option value="ADVANCED">ADVANCED</option>
+                                                <option value="EXPERT">EXPERT</option>
+                                            </select>
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            onClick={addSkill}
+                                            variant="primary"
+                                            className="px-4 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 shrink-0"
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                            <span>Add Skill</span>
+                                        </Button>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <span className="block text-[10px] font-bold uppercase text-[#6B5336] tracking-wider">
+                                            Registered Skills
+                                        </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            {formData.skills.map((s, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="p-2.5 border border-[#E1DCC9] rounded-xl flex items-center justify-between bg-white text-xs"
+                                                >
+                                                    <div>
+                                                        <span className="font-bold text-[#1F150C]">{s.name}</span>
+                                                        <span className="text-[10px] uppercase font-semibold text-[#8F7554] ml-2">
+                                                            ({s.proficiency})
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeSkill(idx)}
+                                                        className="text-rose-600 hover:text-rose-800 p-1 transition-colors cursor-pointer"
+                                                        aria-label="Remove skill"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTab === 'projects' && (
+                                <div className="space-y-4">
+                                    <div className="p-4 border border-[#E1DCC9] bg-[#FAF7F2] rounded-xl space-y-3">
+                                        <span className="block text-[10px] font-bold uppercase text-[#412D15] tracking-wider">
+                                            Add Featured Project
+                                        </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Project Title
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={newProject.title}
+                                                    onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                                                    placeholder="e.g. Distributed Task Orchestrator"
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Technologies (Comma separated)
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={newProject.technologies}
+                                                    onChange={(e) => setNewProject({ ...newProject, technologies: e.target.value })}
+                                                    placeholder="e.g. React, Node.js, Docker, Redis"
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    GitHub Repository URL
+                                                </label>
+                                                <input
+                                                    type="url"
+                                                    value={newProject.githubUrl}
+                                                    onChange={(e) => setNewProject({ ...newProject, githubUrl: e.target.value })}
+                                                    placeholder="https://github.com/..."
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Live Demo URL
+                                                </label>
+                                                <input
+                                                    type="url"
+                                                    value={newProject.demoUrl}
+                                                    onChange={(e) => setNewProject({ ...newProject, demoUrl: e.target.value })}
+                                                    placeholder="https://..."
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                Description
+                                            </label>
+                                            <textarea
+                                                value={newProject.description}
+                                                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                                                placeholder="Brief summary of architecture, functions and features..."
+                                                rows={2}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                            />
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <Button
+                                                type="button"
+                                                onClick={addProject}
+                                                variant="primary"
+                                                size="sm"
+                                                className="text-xs px-4 py-2"
+                                            >
+                                                Add Project
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <span className="block text-[10px] font-bold uppercase text-[#6B5336] tracking-wider">
+                                            Projects List ({formData.projects.length})
+                                        </span>
+                                        <div className="space-y-2">
+                                            {formData.projects.map((p, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="p-3 border border-[#E1DCC9] rounded-xl bg-white flex items-start justify-between gap-3 text-xs"
+                                                >
+                                                    <div className="space-y-1">
+                                                        <span className="font-bold text-[#1F150C] block">{p.title}</span>
+                                                        <p className="text-[11px] text-[#6B5336] leading-snug">{p.description}</p>
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {p.technologies?.map((t) => (
+                                                                <Badge key={t} variant="secondary" className="text-[9px]">
+                                                                    {t}
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeProject(idx)}
+                                                        className="text-rose-600 hover:text-rose-800 p-1 shrink-0 cursor-pointer"
+                                                        aria-label="Remove project"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTab === 'certifications' && (
+                                <div className="space-y-4">
+                                    <div className="p-4 border border-[#E1DCC9] bg-[#FAF7F2] rounded-xl space-y-3">
+                                        <span className="block text-[10px] font-bold uppercase text-[#412D15] tracking-wider">
+                                            Add Certification
+                                        </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Certificate Title
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={newCert.name}
+                                                    onChange={(e) => setNewCert({ ...newCert, name: e.target.value })}
+                                                    placeholder="e.g. AWS Certified Developer"
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Issuing Authority
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={newCert.issuingOrg}
+                                                    onChange={(e) => setNewCert({ ...newCert, issuingOrg: e.target.value })}
+                                                    placeholder="e.g. Amazon Web Services"
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Issue Date
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    value={newCert.issueDate}
+                                                    onChange={(e) => setNewCert({ ...newCert, issueDate: e.target.value })}
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-semibold text-[#6B5336] mb-1">
+                                                    Credential URL
+                                                </label>
+                                                <input
+                                                    type="url"
+                                                    value={newCert.credentialUrl}
+                                                    onChange={(e) => setNewCert({ ...newCert, credentialUrl: e.target.value })}
+                                                    placeholder="https://..."
+                                                    className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <Button
+                                                type="button"
+                                                onClick={addCertification}
+                                                variant="primary"
+                                                size="sm"
+                                                className="text-xs px-4 py-2"
+                                            >
+                                                Add Certification
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <span className="block text-[10px] font-bold uppercase text-[#6B5336] tracking-wider">
+                                            Certifications ({formData.certifications.length})
+                                        </span>
+                                        <div className="space-y-2">
+                                            {formData.certifications.map((c, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="p-3 border border-[#E1DCC9] rounded-xl bg-white flex items-center justify-between gap-3 text-xs"
+                                                >
+                                                    <div className="space-y-0.5">
+                                                        <span className="font-bold text-[#1F150C] block">{c.name}</span>
+                                                        <span className="text-[10px] text-[#6B5336]">{c.issuingOrg}</span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeCertification(idx)}
+                                                        className="text-rose-600 hover:text-rose-800 p-1 shrink-0 cursor-pointer"
+                                                        aria-label="Remove certification"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTab === 'career' && (
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                            Career Interests (Comma separated)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.careerInterests.join(', ')}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    careerInterests: e.target.value
+                                                        .split(',')
+                                                        .map((s) => s.trim())
+                                                        .filter(Boolean)
+                                                })
+                                            }
+                                            className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                            placeholder="e.g. Full-Stack Engineer, AI Engineer, Cloud Architect"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                            Professional Goals (Comma separated)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.careerGoals.join(', ')}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    careerGoals: e.target.value
+                                                        .split(',')
+                                                        .map((s) => s.trim())
+                                                        .filter(Boolean)
+                                                })
+                                            }
+                                            className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] bg-white text-[#1F150C]"
+                                            placeholder="e.g. Master Distributed Systems, Clear Google Cloud Professional certification"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer with CLEAR, READABLE CANCEL BUTTON */}
+                        <div className="px-5 sm:px-6 py-3.5 border-t border-[#E1DCC9] flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 bg-[#FAF7F2]">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => setIsEditing(false)}
+                                className="w-full sm:w-auto text-xs px-5 py-2 font-bold border border-[#E1DCC9] text-[#1F150C] hover:bg-[#F4EFE6]"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="primary"
+                                onClick={handleSave}
+                                isLoading={saving}
+                                className="w-full sm:w-auto text-xs px-6 py-2 font-bold"
+                            >
+                                Save All Changes
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
 };
+
 export default StudentProfile;

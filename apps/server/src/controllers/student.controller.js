@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { UserRole } from '@campusgent/shared';
 import { ConflictError } from '../utils/errors.js';
+import { cacheService } from '../services/cache.service.js';
 export const getProfile = async (req, res, next) => {
     try {
         const userId = req.query.userId ? String(req.query.userId) : req.user?.id;
@@ -20,7 +21,8 @@ export const getProfile = async (req, res, next) => {
         }
         const profile = await StudentProfile.findOne({ user: userId })
             .populate('user', 'name email role status lastLoginAt')
-            .populate('department', 'name code');
+            .populate('department', 'name code')
+            .lean();
         if (!profile) {
             throw new NotFoundError('Student profile not found');
         }
@@ -79,6 +81,11 @@ export const updateProfile = async (req, res, next) => {
             ipAddress: req.ip,
             userAgent: req.headers['user-agent'],
         });
+
+        // Invalidate cached student listings and analytics
+        await cacheService.delByPattern('cache:/api/v1/students*');
+        await cacheService.delByPattern('cache:/api/v1/analytics*');
+
         res.status(200).json({
             success: true,
             data: profile,
@@ -123,6 +130,11 @@ export const createStudent = async (req, res, next) => {
             userAgent: req.headers['user-agent'],
             details: { targetUser: user._id, targetEmail: user.email },
         });
+
+        // Invalidate cached student listings and analytics
+        await cacheService.delByPattern('cache:/api/v1/students*');
+        await cacheService.delByPattern('cache:/api/v1/analytics*');
+
         res.status(201).json({
             success: true,
             data: {
@@ -146,9 +158,11 @@ export const getStudentsList = async (req, res, next) => {
             throw new ForbiddenError('You are not authorized to view the student list');
         }
         const profiles = await StudentProfile.find()
+            .select('user department rollNumber semester cgpa placementReadinessScore resumeUrl skills createdAt')
             .populate('user', 'name email role status lastLoginAt')
             .populate('department', 'name code')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean();
         res.status(200).json({
             success: true,
             data: profiles,

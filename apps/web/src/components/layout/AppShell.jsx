@@ -403,18 +403,22 @@ export const AppShell = ({ children }) => {
             {/* Main Content Viewport (offset by fixed sidebar width) */}
             <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-apple ${mainMarginClass}`}>
                 {/* Top Sticky Navbar */}
-                <header className="h-16 glass-navbar flex items-center justify-between px-5 sm:px-6 md:px-8 shrink-0 sticky top-0 z-30">
+                <header className="h-16 glass-navbar flex items-center justify-between px-3.5 sm:px-6 md:px-8 shrink-0 sticky top-0 z-30">
                     {/* Left: Mobile menu toggle & Contextual Breadcrumb Badge */}
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex items-center gap-2.5 sm:gap-3.5">
                         <button
                             onClick={() => setSidebarOpen(true)}
                             className="md:hidden p-2 hover:bg-[#F4EFE6] rounded-xl text-[#1F150C] transition-colors cursor-pointer"
+                            aria-label="Open sidebar navigation"
                         >
                             <Menu className="h-5 w-5" />
                         </button>
-                        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F4EFE6] border border-[#E1DCC9] text-[10px] font-bold text-[#1F150C] uppercase tracking-widest shadow-xs">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#412D15] animate-pulse shrink-0" />
-                            <span>{getRoleHeaderBadge()}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="sm:hidden font-black text-xs tracking-wider text-[#1F150C]">CAMPUSGENT</span>
+                            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F4EFE6] border border-[#E1DCC9] text-[10px] font-bold text-[#1F150C] uppercase tracking-widest shadow-xs">
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#412D15] animate-pulse shrink-0" />
+                                <span>{getRoleHeaderBadge()}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -506,7 +510,7 @@ export const AppShell = ({ children }) => {
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
-                                        className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto">
+                                        className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto">
                                         <div className="px-4 py-2.5 border-b border-[#E1DCC9]/70 flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <span className="font-bold text-[#1F150C] text-xs">Notifications</span>
@@ -627,7 +631,7 @@ export const AppShell = ({ children }) => {
                 </header>
 
                 {/* Dynamic Main Page Content Viewport */}
-                <main className="flex-1 p-5 sm:p-6 md:p-8 lg:p-10 max-w-7xl w-full mx-auto space-y-6">
+                <main className="flex-1 p-3.5 sm:p-5 md:p-8 lg:p-10 max-w-7xl w-full mx-auto space-y-6">
                     <motion.div
                         key={location.pathname}
                         initial={{ opacity: 0, y: 12 }}

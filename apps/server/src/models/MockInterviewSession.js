@@ -45,4 +45,6 @@ const MockInterviewSessionSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance index for chronological student interview session history
+MockInterviewSessionSchema.index({ student: 1, createdAt: -1 });
 export const MockInterviewSession = model('MockInterviewSession', MockInterviewSessionSchema);

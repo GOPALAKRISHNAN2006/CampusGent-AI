@@ -35,4 +35,6 @@ const AssessmentSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance index for class assessment queries and chronological ordering
+AssessmentSchema.index({ classId: 1, date: -1 });
 export const Assessment = model('Assessment', AssessmentSchema);

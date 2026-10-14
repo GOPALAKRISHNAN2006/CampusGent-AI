@@ -9,22 +9,28 @@ import mongoose from 'mongoose';
 export const getStudentAnalytics = async (req, res, next) => {
     try {
         const userId = req.user?.id;
-        // Aggregate applications status counts
-        const applications = await JobApplication.aggregate([
-            { $match: { student: new mongoose.Types.ObjectId(userId) } },
-            { $group: { _id: '$status', count: { $sum: 1 } } },
+        
+        // Execute queries concurrently
+        const [applications, profile] = await Promise.all([
+            JobApplication.aggregate([
+                { $match: { student: new mongoose.Types.ObjectId(userId) } },
+                { $group: { _id: '$status', count: { $sum: 1 } } },
+            ]),
+            StudentProfile.findOne({ user: userId })
+                .select('skills cgpa placementReadinessScore')
+                .lean()
         ]);
+
         const statusCounts = applications.reduce((acc, curr) => {
             acc[curr._id] = curr.count;
             return acc;
         }, {});
-        // Fetch CGPA and skill count from student profile
-        const profile = await StudentProfile.findOne({ user: userId });
+
         res.status(200).json({
             success: true,
             data: {
                 applicationStatus: statusCounts,
-                skillsCount: profile?.skills.length || 0,
+                skillsCount: profile?.skills?.length || 0,
                 cgpa: profile?.cgpa || 0.0,
                 readinessScore: profile?.placementReadinessScore || 0,
                 attendance: 88, // Mock default attendance percentage for demo consistency
@@ -38,18 +44,22 @@ export const getStudentAnalytics = async (req, res, next) => {
 // 2. Placement Officer Dashboard Analytics (Placement Rate, Company statistics)
 export const getPlacementAnalytics = async (req, res, next) => {
     try {
-        const totalJobs = await Job.countDocuments();
-        const totalApplications = await JobApplication.countDocuments();
-        // Group applications by status
-        const statusSummary = await JobApplication.aggregate([
-            { $group: { _id: '$status', count: { $sum: 1 } } },
+        // Run aggregations and counts in parallel
+        const [totalJobs, totalApplications, statusSummary, totalStudents] = await Promise.all([
+            Job.countDocuments(),
+            JobApplication.countDocuments(),
+            JobApplication.aggregate([
+                { $group: { _id: '$status', count: { $sum: 1 } } },
+            ]),
+            StudentProfile.countDocuments()
         ]);
+
         const applicationsByStatus = statusSummary.reduce((acc, curr) => {
             acc[curr._id] = curr.count;
             return acc;
         }, {});
+
         // Calculate placement rate
-        const totalStudents = await StudentProfile.countDocuments();
         const hiredApplicationsCount = applicationsByStatus['SELECTED'] || 0;
         const placementRate = totalStudents > 0 ? Math.round((hiredApplicationsCount / totalStudents) * 100) : 0;
         res.status(200).json({
@@ -70,26 +80,29 @@ export const getPlacementAnalytics = async (req, res, next) => {
 // 3. Admin Dashboard Analytics (User management, system costs, tokens)
 export const getAdminAnalytics = async (req, res, next) => {
     try {
-        // Count users by role
-        const usersByRole = await User.aggregate([
-            { $group: { _id: '$role', count: { $sum: 1 } } },
+        // Run all admin aggregate counters in parallel
+        const [usersByRole, tokenCosts, auditCount] = await Promise.all([
+            User.aggregate([
+                { $group: { _id: '$role', count: { $sum: 1 } } },
+            ]),
+            AIUsage.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        totalPrompt: { $sum: '$promptTokens' },
+                        totalCompletion: { $sum: '$completionTokens' },
+                        totalTokens: { $sum: '$totalTokens' },
+                    },
+                },
+            ]),
+            AuditLog.countDocuments()
         ]);
+
         const rolesCount = usersByRole.reduce((acc, curr) => {
             acc[curr._id] = curr.count;
             return acc;
         }, {});
-        // Count total AI usage tokens
-        const tokenCosts = await AIUsage.aggregate([
-            {
-                $group: {
-                    _id: null,
-                    totalPrompt: { $sum: '$promptTokens' },
-                    totalCompletion: { $sum: '$completionTokens' },
-                    totalTokens: { $sum: '$totalTokens' },
-                },
-            },
-        ]);
-        const auditCount = await AuditLog.countDocuments();
+
         res.status(200).json({
             success: true,
             data: {

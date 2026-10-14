@@ -28,4 +28,6 @@ const AttendanceRecordSchema = new Schema({
 }, {
     timestamps: true,
 });
+// Performance index for class attendance log queries and daily deduplication checks
+AttendanceRecordSchema.index({ classId: 1, date: -1 });
 export const AttendanceRecord = model('AttendanceRecord', AttendanceRecordSchema);

@@ -1,10 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { apiClient } from '../api/client.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { Badge } from '../components/ui/Badge.jsx';
 import { Briefcase, Brain, Play, RotateCw, Search, DollarSign, MapPin, Calendar } from 'lucide-react';
+import { useDebounce } from '../hooks/useDebounce.js';
 export const StudentPlacements = () => {
     const [profile, setProfile] = useState(null);
     const [loadingProfile, setLoadingProfile] = useState(true);
@@ -88,13 +89,21 @@ export const StudentPlacements = () => {
             setLoadingAgent(false);
         }
     };
-    // Filtered jobs
-    const filteredJobs = jobs.filter((job) => {
-        const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            job.companyName.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesLocation = !filterLocation || job.location.toLowerCase().includes(filterLocation.toLowerCase());
-        return matchesSearch && matchesLocation;
-    });
+    const debouncedSearch = useDebounce(searchTerm, 250);
+    const debouncedLocation = useDebounce(filterLocation, 250);
+
+    // Filtered jobs memoized to eliminate redundant computations on unrelated state changes
+    const filteredJobs = useMemo(() => {
+        const search = debouncedSearch.toLowerCase().trim();
+        const loc = debouncedLocation.toLowerCase().trim();
+        return jobs.filter((job) => {
+            const matchesSearch = !search ||
+                job.title?.toLowerCase().includes(search) ||
+                job.companyName?.toLowerCase().includes(search);
+            const matchesLocation = !loc || job.location?.toLowerCase().includes(loc);
+            return matchesSearch && matchesLocation;
+        });
+    }, [jobs, debouncedSearch, debouncedLocation]);
     if (loadingProfile) {
         return (_jsxs("div", { className: "space-y-6 max-w-5xl mx-auto animate-pulse", children: [_jsx("div", { className: "h-10 w-44 bg-brand-100 rounded-lg" }), _jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [_jsx("div", { className: "h-96 bg-brand-100 rounded-xl md:col-span-2" }), _jsx("div", { className: "h-96 bg-brand-100 rounded-xl md:col-span-1" })] })] }));
     }

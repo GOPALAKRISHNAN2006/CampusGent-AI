@@ -415,7 +415,7 @@ export const AIInsightsDashboard = () => {
                     </CardContent>
                     <div className="p-4 border-t border-palette-sandstone/40">
                         <Button
-                            onClick={() => runAgent('placement_officer_copilot', { customParams: { query: copilotQuery } })}
+                            onClick={() => runAgent('placement_officer_copilot', { query: copilotQuery })}
                             isLoading={loadingAgent === 'placement_officer_copilot'}
                             disabled={!copilotQuery.trim()}
                             variant="primary"
