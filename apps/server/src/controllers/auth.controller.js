@@ -7,7 +7,7 @@ import { User } from '../models/User.js';
 import { RefreshToken } from '../models/RefreshToken.js';
 import { StudentProfile } from '../models/StudentProfile.js';
 import { FacultyProfile } from '../models/FacultyProfile.js';
-import { UnauthorizedError, ConflictError } from '../utils/errors.js';
+import { UnauthorizedError, ConflictError, ForbiddenError } from '../utils/errors.js';
 import { AuditLog } from '../models/AuditLog.js';
 import mongoose from 'mongoose';
 // Helper to generate access tokens
@@ -40,6 +40,12 @@ const cookieOptions = {
 export const register = async (req, res, next) => {
     try {
         const validatedData = RegisterSchema.parse(req.body);
+        if (validatedData.role !== UserRole.STUDENT) {
+            throw new ForbiddenError(
+                'Registration is restricted to Students only. Faculty and Placement Officer accounts are provisioned by institution administrators.',
+                'REGISTRATION_RESTRICTED'
+            );
+        }
         const existingUser = await User.findOne({ email: validatedData.email });
         if (existingUser) {
             throw new ConflictError('Email address already registered', 'EMAIL_ALREADY_EXISTS');

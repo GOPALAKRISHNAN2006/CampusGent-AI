@@ -28,18 +28,12 @@ export const Register = () => {
     const onSubmit = async (data) => {
         setApiError(null);
         try {
-            await registerUser(data);
+            await registerUser({ ...data, role: UserRole.STUDENT });
             navigate('/login');
         } catch (err) {
             setApiError(err.response?.data?.error?.message || 'Registration failed.');
         }
     };
-
-    const roleOptions = [
-        { value: UserRole.STUDENT, label: '🎓 Student' },
-        { value: UserRole.FACULTY, label: '👨‍🏫 Faculty Mentor' },
-        { value: UserRole.PLACEMENT_OFFICER, label: '💼 Placement Officer' },
-    ];
 
     return (
         <div className="min-h-[100dvh] bg-[#1F150C] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans selection:bg-[#412D15] selection:text-[#E1DCC9] relative overflow-hidden">
@@ -133,12 +127,18 @@ export const Register = () => {
                                     error={errors.password?.message}
                                     {...register('password')}
                                 />
-                                <Select
-                                    label="I am registering as a"
-                                    options={roleOptions}
-                                    error={errors.role?.message}
-                                    {...register('role')}
-                                />
+                                <div className="rounded-xl border border-[#E1DCC9]/60 bg-[#FAF7F2] p-3 text-xs text-[#6B5336] flex items-start gap-2.5">
+                                    <div className="p-1 rounded-lg bg-[#412D15]/10 text-[#412D15] shrink-0 mt-0.5">
+                                        <ShieldCheck className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-[#1F150C]">🎓 Student Registration</p>
+                                        <p className="text-[11px] text-[#6B5336] mt-0.5 leading-relaxed">
+                                            Faculty & Placement Officers: please use your institutional credentials on the{' '}
+                                            <Link to="/login" className="font-semibold text-[#412D15] underline">Sign In page</Link>.
+                                        </p>
+                                    </div>
+                                </div>
                                 <Button
                                     type="submit"
                                     variant="primary"

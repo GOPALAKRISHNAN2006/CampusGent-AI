@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
             const { accessToken: token, user: userData } = response.data.data;
             setAccessToken(token);
             setUser(userData);
+            return userData;
         }
         catch (error) {
             setAccessToken(null);

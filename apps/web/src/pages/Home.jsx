@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import {
     ArrowRight, BrainCircuit, CheckCircle2, GraduationCap,
     LineChart, Sparkles, Users, Briefcase,
-    ShieldCheck, Zap, ChevronRight, Award, Compass, Star
+    ShieldCheck, Zap, ChevronRight, Award, Compass, Star, ShieldAlert
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -62,7 +62,7 @@ const personas = [
         description: 'Get tailored skill gap audits, instant resume analysis, and realistic AI mock interview simulations aligned with top tech recruiters.',
         highlights: ['Target role alignment scoring', 'AI resume optimizer & ATS score', 'Interactive interview simulations'],
         cta: 'Explore Student Portal',
-        link: '/login'
+        link: '/login/student'
     },
     {
         role: 'For Faculty Mentors',
@@ -72,7 +72,7 @@ const personas = [
         description: 'Spot at-risk students before exams or placement rounds. Track attendance, marks, and academic momentum with automated AI insights.',
         highlights: ['Automated at-risk student flags', 'Comprehensive class performance trends', 'Direct student progress tracking'],
         cta: 'Open Faculty Shell',
-        link: '/login'
+        link: '/login/faculty'
     },
     {
         role: 'For Placement Officers',
@@ -82,7 +82,17 @@ const personas = [
         description: 'Automate student eligibility shortlists, track recruiter interviews in real time, and gain predictive analytics on campus hiring outcomes.',
         highlights: ['One-click drive candidate shortlists', 'Live recruiter pipeline tracking', 'Comprehensive CTC & yield analytics'],
         cta: 'Access Command Hub',
-        link: '/login'
+        link: '/login/placement'
+    },
+    {
+        role: 'For Administrators',
+        icon: ShieldAlert,
+        tag: 'SYSTEM GOVERNANCE',
+        headline: 'Institutional security & agent telemetry',
+        description: 'Manage roles and departments, audit real-time agent system health, and inspect immutable security audit trails across campus operations.',
+        highlights: ['21 AI agent health monitor', 'Granular RBAC role assignment', 'Immutable activity audit logs'],
+        cta: 'Enter Admin Console',
+        link: '/login/admin'
     },
 ];
 

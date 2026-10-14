@@ -135,8 +135,13 @@ function App() {
             }
           >
             <Routes>
-              {/* Public Routes */}
-              <Route path="/login" element={<Login />} />
+              {/* Public & Role-Specific Login Routes */}
+              <Route path="/login" element={<Login role="STUDENT" />} />
+              <Route path="/login/student" element={<Login role="STUDENT" />} />
+              <Route path="/login/faculty" element={<Login role="FACULTY" />} />
+              <Route path="/login/placement" element={<Login role="PLACEMENT_OFFICER" />} />
+              <Route path="/login/placement-officer" element={<Login role="PLACEMENT_OFFICER" />} />
+              <Route path="/login/admin" element={<Login role="ADMIN" />} />
               <Route path="/register" element={<Register />} />
               <Route path="/" element={<Home />} />
 

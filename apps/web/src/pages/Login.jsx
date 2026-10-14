@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema } from '@campusgent/shared';
@@ -7,33 +7,149 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { Input } from '../components/ui/Input.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Target, Users, Mail, Lock } from 'lucide-react';
+import {
+    ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Target,
+    Users, Mail, Lock, GraduationCap, BookOpen, Briefcase,
+    ShieldAlert, AlertCircle, KeyRound
+} from 'lucide-react';
 
 const EASE_APPLE = [0.16, 1, 0.3, 1];
-const EASE_SPRING = [0.32, 0.72, 0, 1];
 
-export const Login = () => {
-    const { login } = useAuth();
+const PORTALS = {
+    STUDENT: {
+        id: 'STUDENT',
+        path: '/login/student',
+        badge: 'STUDENT OPERATING PORTAL',
+        title: 'Student Sign In',
+        subtitle: 'Access your academic health, skill radar, and active placement drives.',
+        icon: GraduationCap,
+        leftTitle: 'Empowering your student career trajectory.',
+        leftDescription: 'Connect course grades, code repositories, and placement opportunities into an explainable, recruiter-ready profile.',
+        demoEmail: 'student@campusgent.edu',
+        demoPass: 'Password@123',
+        allowRegister: true,
+        stats: [
+            { icon: Target, label: 'Predictive Matching' },
+            { icon: Users, label: 'Skill Gap Radar' },
+            { icon: ShieldCheck, label: 'ATS Resume Scorer' },
+        ],
+    },
+    FACULTY: {
+        id: 'FACULTY',
+        path: '/login/faculty',
+        badge: 'FACULTY ACADEMIC SUITE',
+        title: 'Faculty Portal Sign In',
+        subtitle: 'Manage classroom rosters, internal assessment marks, and student interventions.',
+        icon: BookOpen,
+        leftTitle: 'Unified academic & mentorship intelligence.',
+        leftDescription: 'Detect at-risk students automatically, view class performance trends, and collaborate directly with placement officers.',
+        demoEmail: 'faculty@campusgent.edu',
+        demoPass: 'Password@123',
+        allowRegister: false,
+        stats: [
+            { icon: Target, label: 'At-Risk Early Warning' },
+            { icon: Users, label: 'Class Attendance' },
+            { icon: ShieldCheck, label: 'Faculty AI Insights' },
+        ],
+    },
+    PLACEMENT_OFFICER: {
+        id: 'PLACEMENT_OFFICER',
+        path: '/login/placement',
+        badge: 'PLACEMENT & RECRUITMENT COMMAND',
+        title: 'Placement Officer Sign In',
+        subtitle: 'Coordinate multi-stage recruitment drives, company funnels, and offer tracking.',
+        icon: Briefcase,
+        leftTitle: 'Autonomous placement operations hub.',
+        leftDescription: 'Filter eligible candidates with zero backlogs, audit CTC distributions, and manage campus drive schedules seamlessly.',
+        demoEmail: 'placement@campusgent.edu',
+        demoPass: 'Password@123',
+        allowRegister: false,
+        stats: [
+            { icon: Target, label: 'Company Recruitment' },
+            { icon: Users, label: 'Candidate Funnel' },
+            { icon: ShieldCheck, label: 'Salary Analytics' },
+        ],
+    },
+    ADMIN: {
+        id: 'ADMIN',
+        path: '/login/admin',
+        badge: 'ENTERPRISE SYSTEM ADMINISTRATION',
+        title: 'Admin Command Sign In',
+        subtitle: 'System health monitoring, user role management, and immutable security audit logs.',
+        icon: ShieldAlert,
+        leftTitle: 'System operations & security control.',
+        leftDescription: 'Manage university departments, configure AI agent registries, inspect real-time system memory, and audit access trails.',
+        demoEmail: 'admin@campusgent.edu',
+        demoPass: 'Password@123',
+        allowRegister: false,
+        stats: [
+            { icon: Target, label: '21 AI Agents Registry' },
+            { icon: Users, label: 'Role Upgrade Guards' },
+            { icon: ShieldCheck, label: 'Immutable Audit Trail' },
+        ],
+    },
+};
+
+export const Login = ({ role }) => {
+    const { login, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [apiError, setApiError] = useState(null);
+
+    // Determine target portal by prop or route pathname
+    let currentRole = role;
+    if (!currentRole) {
+        if (location.pathname.includes('/faculty')) currentRole = 'FACULTY';
+        else if (location.pathname.includes('/placement')) currentRole = 'PLACEMENT_OFFICER';
+        else if (location.pathname.includes('/admin')) currentRole = 'ADMIN';
+        else currentRole = 'STUDENT';
+    }
+
+    const portal = PORTALS[currentRole] || PORTALS.STUDENT;
 
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors, isSubmitting },
     } = useForm({
         resolver: zodResolver(LoginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
     });
+
+    const handleFillDemo = () => {
+        setValue('email', portal.demoEmail, { shouldValidate: true });
+        setValue('password', portal.demoPass, { shouldValidate: true });
+    };
 
     const onSubmit = async (data) => {
         setApiError(null);
         try {
-            await login(data);
+            const userData = await login(data);
+            
+            // Check if user role matches portal constraint
+            if (currentRole !== 'STUDENT' && userData?.role === 'STUDENT') {
+                await logout();
+                setApiError(`Access denied: This portal is reserved for ${portal.title.replace(' Sign In', '')} accounts. Students must log in via the Student Portal.`);
+                return;
+            }
+
+            if (currentRole === 'ADMIN' && userData?.role !== 'ADMIN' && userData?.role !== 'SUPER_ADMIN') {
+                await logout();
+                setApiError('Access denied: Administrative privileges required.');
+                return;
+            }
+
             navigate('/dashboard');
         } catch (err) {
             setApiError(err.response?.data?.error?.message || 'Login failed, check your credentials.');
         }
     };
+
+    const PortalIcon = portal.icon;
 
     return (
         <div className="min-h-[100dvh] bg-[#1F150C] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans selection:bg-[#412D15] selection:text-[#E1DCC9] relative overflow-hidden">
@@ -48,13 +164,6 @@ export const Login = () => {
                 animate={{ scale: [1, 1.1, 1], x: [0, 30, 0] }}
                 transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
             />
-            {/* Orbiting particle */}
-            <motion.div
-                className="absolute top-1/2 left-1/2 h-3 w-3 rounded-full bg-[#E1DCC9]/20 pointer-events-none"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                style={{ transformOrigin: '-60px -60px' }}
-            />
 
             <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.96 }}
@@ -63,7 +172,7 @@ export const Login = () => {
                 className="relative z-10 mx-auto w-full max-w-5xl double-bezel-dark p-2 sm:p-3 rounded-[2.5rem]"
             >
                 <div className="grid min-h-[calc(100vh-6rem)] w-full overflow-hidden rounded-[calc(2.5rem-0.5rem)] bg-white shadow-2xl border border-[#412D15]/60 lg:grid-cols-[1.1fr_0.9fr]">
-                    {/* Left Brand Showcase Pane (Obsidian, Espresso & Bronze) */}
+                    {/* Left Brand Showcase Pane */}
                     <section className="relative hidden overflow-hidden bg-[#000000] p-8 sm:p-12 text-white lg:flex lg:flex-col lg:justify-between border-r border-[#412D15]/70">
                         <motion.div
                             className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#412D15]/40 blur-3xl pointer-events-none"
@@ -98,28 +207,32 @@ export const Login = () => {
                             
                             <div className="max-w-md pt-6 space-y-3.5">
                                 <motion.div
+                                    key={portal.badge}
                                     initial={{ opacity: 0, x: -16 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.5, ease: EASE_APPLE }}
+                                    transition={{ duration: 0.5, ease: EASE_APPLE }}
                                     className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9]/30 bg-[#E1DCC9]/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#E1DCC9]"
                                 >
-                                    Autonomous Placement Suite
+                                    <PortalIcon className="h-3 w-3" />
+                                    {portal.badge}
                                 </motion.div>
                                 <motion.h2
+                                    key={portal.leftTitle}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.55, ease: EASE_APPLE }}
+                                    transition={{ duration: 0.6, ease: EASE_APPLE }}
                                     className="text-3xl xl:text-4xl font-black leading-tight text-white tracking-tight"
                                 >
-                                    Turn your campus potential into a verified career story.
+                                    {portal.leftTitle}
                                 </motion.h2>
                                 <motion.p
+                                    key={portal.leftDescription}
                                     initial={{ opacity: 0, y: 14 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.65, ease: EASE_APPLE }}
+                                    transition={{ duration: 0.5, ease: EASE_APPLE }}
                                     className="text-xs sm:text-sm leading-relaxed text-[#E1DCC9]/80 font-normal"
                                 >
-                                    One connected workspace for academic momentum, predictive skill scoring, AI interview coaching, and recruiter shortlists.
+                                    {portal.leftDescription}
                                 </motion.p>
                             </div>
                         </motion.div>
@@ -130,16 +243,9 @@ export const Login = () => {
                             transition={{ duration: 0.5, delay: 0.8, ease: EASE_APPLE }}
                             className="relative grid gap-2.5 sm:grid-cols-3 pt-6 border-t border-[#412D15]/70"
                         >
-                            {[
-                                { icon: Target, label: 'Predictive Matching' },
-                                { icon: Users, label: 'Mentor Sync' },
-                                { icon: ShieldCheck, label: '100% Audited AI' },
-                            ].map(({ icon: Icon, label }, i) => (
+                            {portal.stats.map(({ icon: Icon, label }) => (
                                 <motion.div
                                     key={label}
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.9 + i * 0.1, ease: EASE_APPLE }}
                                     whileHover={{ y: -2, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
                                     className="flex items-center gap-2 rounded-xl border border-[#412D15] bg-[#1F150C] px-3 py-2.5 text-[11px] font-semibold text-[#E1DCC9] cursor-default"
                                 >
@@ -156,33 +262,47 @@ export const Login = () => {
                             initial={{ opacity: 0, y: 24 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.4, ease: EASE_APPLE }}
-                            className="w-full max-w-sm space-y-6"
+                            className="w-full max-w-sm space-y-5"
                         >
-                            {/* Mobile Header */}
-                            <div className="lg:hidden flex items-center gap-2 mb-2">
-                                <div className="rounded-xl bg-[#1F150C] p-2 text-[#E1DCC9]">
-                                    <Sparkles className="h-4 w-4" />
+                            {/* Portal Switcher Tabs */}
+                            <div className="space-y-1.5">
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-[#6B5336]">Select Portal</p>
+                                <div className="grid grid-cols-4 gap-1 p-1 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]">
+                                    {[
+                                        { id: 'STUDENT', path: '/login/student', label: 'Student' },
+                                        { id: 'FACULTY', path: '/login/faculty', label: 'Faculty' },
+                                        { id: 'PLACEMENT_OFFICER', path: '/login/placement', label: 'Placement' },
+                                        { id: 'ADMIN', path: '/login/admin', label: 'Admin' },
+                                    ].map((t) => {
+                                        const isActive = currentRole === t.id;
+                                        return (
+                                            <Link
+                                                key={t.id}
+                                                to={t.path}
+                                                className={`text-center py-1.5 px-1 rounded-lg text-[10px] font-bold transition-all ${
+                                                    isActive
+                                                        ? 'bg-[#1F150C] text-[#E1DCC9] shadow-xs'
+                                                        : 'text-[#6B5336] hover:bg-[#E1DCC9]/40 hover:text-[#1F150C]'
+                                                }`}
+                                            >
+                                                {t.label}
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
-                                <span className="text-xs font-black tracking-wider text-[#1F150C]">CAMPUSGENT AI</span>
                             </div>
 
-                            <div className="space-y-1.5">
-                                <motion.h1
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.5, ease: EASE_APPLE }}
-                                    className="text-2xl sm:text-3xl font-black tracking-tight text-[#1F150C]"
-                                >
-                                    Welcome back
-                                </motion.h1>
-                                <motion.p
-                                    initial={{ opacity: 0, y: 8 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.6, ease: EASE_APPLE }}
-                                    className="text-xs text-[#6B5336] font-normal"
-                                >
-                                    Sign in to access your dashboard and career insights.
-                                </motion.p>
+                            <div className="space-y-1.5 pt-1">
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#412D15]/10 text-[#412D15] text-[10px] font-black uppercase tracking-wider">
+                                    <PortalIcon className="h-3 w-3" />
+                                    {portal.title}
+                                </div>
+                                <h1 className="text-2xl font-black tracking-tight text-[#1F150C]">
+                                    {portal.title}
+                                </h1>
+                                <p className="text-xs text-[#6B5336] font-normal">
+                                    {portal.subtitle}
+                                </p>
                             </div>
 
                             <AnimatePresence>
@@ -193,24 +313,34 @@ export const Login = () => {
                                         exit={{ opacity: 0, y: -4, scale: 0.98 }}
                                         transition={{ duration: 0.25, ease: EASE_APPLE }}
                                         role="alert"
-                                        className="rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-800 shadow-xs"
+                                        className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800 shadow-xs flex items-start gap-2"
                                     >
-                                        {apiError}
+                                        <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 mt-0.5" />
+                                        <span>{apiError}</span>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
 
-                            <motion.form
-                                initial={{ opacity: 0, y: 16 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.65, ease: EASE_APPLE }}
-                                onSubmit={handleSubmit(onSubmit)}
-                                className="space-y-4"
+                            {/* Demo credential auto-fill pill */}
+                            <button
+                                type="button"
+                                onClick={handleFillDemo}
+                                className="w-full text-left p-2.5 rounded-xl border border-dashed border-[#6B5336]/40 bg-[#FAF7F2] hover:bg-[#FAF7F2]/80 transition-colors flex items-center justify-between group cursor-pointer"
                             >
+                                <div className="flex items-center gap-2">
+                                    <KeyRound className="h-3.5 w-3.5 text-[#412D15] group-hover:scale-110 transition-transform" />
+                                    <span className="text-[11px] font-semibold text-[#1F150C]">
+                                        Use Test Account: <span className="font-mono text-[10px] text-[#6B5336]">{portal.demoEmail}</span>
+                                    </span>
+                                </div>
+                                <span className="text-[10px] font-bold text-[#412D15] bg-[#E1DCC9]/60 px-2 py-0.5 rounded-md">Fill</span>
+                            </button>
+
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
                                 <Input
-                                    label="Email Address"
+                                    label="Institutional Email"
                                     type="email"
-                                    placeholder="name@university.edu"
+                                    placeholder={portal.demoEmail}
                                     icon={Mail}
                                     error={errors.email?.message}
                                     {...register('email')}
@@ -227,38 +357,36 @@ export const Login = () => {
                                     type="submit"
                                     variant="primary"
                                     size="lg"
-                                    className="w-full py-3 mt-2"
+                                    className="w-full py-3 mt-1"
                                     isLoading={isSubmitting}
                                     trailingIcon={ArrowRight}
                                 >
-                                    Sign In Securely
+                                    Sign In to {portal.title.replace(' Sign In', '')}
                                 </Button>
-                            </motion.form>
+                            </form>
 
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5, delay: 0.85, ease: EASE_APPLE }}
-                                className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-[#8F7554] pt-2"
-                            >
+                            <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-[#8F7554] pt-1">
                                 <CheckCircle2 className="h-3.5 w-3.5 text-[#412D15]" />
                                 <span>Encrypted session with token rotation</span>
-                            </motion.div>
+                            </div>
 
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5, delay: 0.95, ease: EASE_APPLE }}
-                                className="text-center text-xs text-[#6B5336] border-t border-[#E1DCC9] pt-4 font-normal"
-                            >
-                                Don't have an account?{' '}
-                                <Link
-                                    to="/register"
-                                    className="font-bold text-[#412D15] hover:text-[#000000] transition-colors underline"
-                                >
-                                    Register Here
-                                </Link>
-                            </motion.p>
+                            {portal.allowRegister ? (
+                                <p className="text-center text-xs text-[#6B5336] border-t border-[#E1DCC9] pt-3.5 font-normal">
+                                    New student without an account?{' '}
+                                    <Link
+                                        to="/register"
+                                        className="font-bold text-[#412D15] hover:text-[#000000] transition-colors underline"
+                                    >
+                                        Register Here
+                                    </Link>
+                                </p>
+                            ) : (
+                                <div className="text-center text-[11px] text-[#6B5336] border-t border-[#E1DCC9] pt-3 leading-relaxed">
+                                    <span className="font-semibold text-[#1F150C]">{portal.title.replace(' Sign In', '')}</span> accounts are pre-provisioned.
+                                    <br />
+                                    Need institutional access? Contact system administration.
+                                </div>
+                            )}
                         </motion.div>
                     </section>
                 </div>
