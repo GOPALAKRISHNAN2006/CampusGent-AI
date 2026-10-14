@@ -141,7 +141,7 @@ export const StudentDashboard = () => {
                 icon={Sparkles}
                 action={{ label: 'Open Placement Plan', href: '/placements' }}
             >
-                <div className="min-w-[220px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-5 backdrop-blur-md shadow-bezel-dark">
+                <div className="w-full sm:w-auto sm:min-w-[220px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-4 sm:p-5 backdrop-blur-md shadow-bezel-dark">
                     <div className="flex items-center justify-between">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#E1DCC9]">Placement Readiness</p>
                         <span className="text-[10px] font-bold text-[#E1DCC9]/80">Top Tier</span>

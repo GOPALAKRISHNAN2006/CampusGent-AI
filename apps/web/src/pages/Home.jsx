@@ -128,19 +128,19 @@ export const Home = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: EASE_APPLE }}
-                className="relative z-30 mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10 glass-navbar mt-3 sm:mt-5 rounded-full border border-[#E1DCC9] shadow-subtle"
+                className="relative z-30 mx-3 sm:mx-auto flex max-w-7xl items-center justify-between px-3.5 py-3 sm:px-8 sm:py-4 lg:px-10 glass-navbar mt-3 sm:mt-5 rounded-full border border-[#E1DCC9] shadow-subtle"
             >
                 <Link to="/" className="flex items-center gap-2.5 group">
                     <motion.div
                         whileHover={{ scale: 1.08, rotate: 3 }}
                         transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-                        className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#1F150C] to-[#412D15] text-[#E1DCC9] border border-[#E1DCC9]/30 shadow-md"
+                        className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#1F150C] to-[#412D15] text-[#E1DCC9] border border-[#E1DCC9]/30 shadow-md shrink-0"
                     >
-                        <Sparkles className="h-5 w-5 animate-pulse text-[#E1DCC9]" />
+                        <Sparkles className="h-4.5 w-4.5 sm:h-5 sm:w-5 animate-pulse text-[#E1DCC9]" />
                     </motion.div>
                     <div>
                         <span className="block text-xs sm:text-sm font-black tracking-[0.16em] text-[#1F150C] leading-none">CAMPUSGENT</span>
-                        <span className="block text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#412D15] mt-0.5">AI PLATFORM</span>
+                        <span className="block text-[8px] sm:text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#412D15] mt-0.5">AI PLATFORM</span>
                     </div>
                 </Link>
 
@@ -160,20 +160,20 @@ export const Home = () => {
                     ))}
                 </nav>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                     <Link
                         to="/login"
-                        className="rounded-full px-4 py-2 text-xs font-bold text-[#1F150C] hover:bg-[#F4EFE6] transition-all"
+                        className="rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-bold text-[#1F150C] hover:bg-[#F4EFE6] transition-all"
                     >
                         Sign In
                     </Link>
                     <MagneticButton strength={0.12}>
                         <Link
                             to="/register"
-                            className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1F150C] via-[#140D07] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] pl-4 pr-1.5 py-1.5 text-xs font-bold text-[#E1DCC9] border border-[#412D15] shadow-md transition-all duration-200 ease-apple active:scale-95"
+                            className="group inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-gradient-to-r from-[#1F150C] via-[#140D07] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] pl-3 sm:pl-4 pr-1.5 py-1.5 text-xs font-bold text-[#E1DCC9] border border-[#412D15] shadow-md transition-all duration-200 ease-apple active:scale-95"
                         >
                             <span>Get Started</span>
-                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-current transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5">
+                            <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-white/10 text-current transition-transform duration-200 group-hover:scale-110 group-hover:translate-x-0.5">
                                 <ArrowRight className="h-3 w-3" />
                             </span>
                         </Link>

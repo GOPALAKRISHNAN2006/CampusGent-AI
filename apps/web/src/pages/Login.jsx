@@ -267,7 +267,7 @@ export const Login = ({ role }) => {
                             {/* Portal Switcher Tabs */}
                             <div className="space-y-1.5">
                                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#6B5336]">Select Portal</p>
-                                <div className="grid grid-cols-4 gap-1 p-1 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-[#FAF7F2] rounded-xl border border-[#E1DCC9]">
                                     {[
                                         { id: 'STUDENT', path: '/login/student', label: 'Student' },
                                         { id: 'FACULTY', path: '/login/faculty', label: 'Faculty' },
@@ -279,7 +279,7 @@ export const Login = ({ role }) => {
                                             <Link
                                                 key={t.id}
                                                 to={t.path}
-                                                className={`text-center py-1.5 px-1 rounded-lg text-[10px] font-bold transition-all ${
+                                                className={`text-center py-2 sm:py-1.5 px-2 rounded-lg text-[10px] font-bold transition-all ${
                                                     isActive
                                                         ? 'bg-[#1F150C] text-[#E1DCC9] shadow-xs'
                                                         : 'text-[#6B5336] hover:bg-[#E1DCC9]/40 hover:text-[#1F150C]'

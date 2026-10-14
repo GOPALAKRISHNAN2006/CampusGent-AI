@@ -86,8 +86,8 @@ export const PlacementDashboard = () => {
                 tone="espresso"
                 action={{ label: 'Open AI Placement Insights', href: '/placement/ai-insights' }}
             >
-                <div className="grid grid-cols-3 gap-2.5 min-w-[280px]">
-                    <div className="rounded-2xl border border-palette-sandstone/25 bg-palette-sandstone/10 p-3.5 backdrop-blur-md text-center shadow-xs">
+                <div className="grid grid-cols-3 gap-2 sm:gap-2.5 w-full lg:w-auto">
+                    <div className="rounded-2xl border border-palette-sandstone/25 bg-palette-sandstone/10 p-3 sm:p-3.5 backdrop-blur-md text-center shadow-xs">
                         <p className="text-[9.5px] font-bold uppercase tracking-wider text-palette-sandstone/80">Season</p>
                         <p className="mt-1 font-black text-sm text-white">2026–27</p>
                     </div>

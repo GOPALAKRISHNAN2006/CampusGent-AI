@@ -97,7 +97,7 @@ export const FacultyDashboard = () => {
                 tone="espresso"
                 action={{ label: 'Review Risk Registry', href: '/faculty/at-risk' }}
             >
-                <div className="min-w-[210px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-5 backdrop-blur-md shadow-bezel-dark">
+                <div className="w-full sm:w-auto sm:min-w-[210px] rounded-2xl border border-[#E1DCC9]/30 bg-[#000000]/40 p-5 backdrop-blur-md shadow-bezel-dark">
                     <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#E1DCC9]">High-Risk Mentees</p>
                     <p className="mt-2 text-4xl font-black text-white tabular-nums">{highRiskCount}</p>
                     <p className="mt-1 text-[11px] text-[#E1DCC9]/80">Requires proactive intervention</p>
@@ -307,7 +307,7 @@ export const FacultyDashboard = () => {
                                     variant="primary"
                                     isLoading={isAdding}
                                     trailingIcon={ArrowRight}
-                                    className="h-10 px-5 shrink-0"
+                                    className="w-full md:w-auto h-10 px-5 shrink-0 justify-center"
                                 >
                                     Register Student
                                 </Button>

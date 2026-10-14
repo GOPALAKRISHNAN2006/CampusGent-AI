@@ -205,7 +205,7 @@ export const AIMockInterview = () => {
                                     disabled={!answer.trim()}
                                     variant="primary"
                                     trailingIcon={Send}
-                                    className="px-6 py-2.5"
+                                    className="w-full sm:w-auto px-6 py-2.5 justify-center"
                                 >
                                     {currentIdx < questions.length - 1 ? 'Submit & Next Question' : 'Complete & Generate AI Scorecard'}
                                 </Button>

@@ -41,8 +41,8 @@ export const Register = () => {
             <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-[#412D15]/40 blur-3xl pointer-events-none animate-pulse-glow" />
             <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-[#E1DCC9]/15 blur-3xl pointer-events-none" />
 
-            <div className="relative z-10 mx-auto w-full max-w-5xl double-bezel-dark p-2 sm:p-3 rounded-[2.5rem]">
-                <div className="grid min-h-[calc(100vh-6rem)] w-full overflow-hidden rounded-[calc(2.5rem-0.5rem)] bg-white shadow-2xl border border-[#412D15]/60 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative z-10 mx-auto w-full max-w-5xl double-bezel-dark p-1 sm:p-3 rounded-3xl sm:rounded-[2.5rem]">
+                <div className="grid min-h-[auto] lg:min-h-[calc(100vh-6rem)] w-full overflow-hidden rounded-[calc(1.5rem-0.25rem)] sm:rounded-[calc(2.5rem-0.5rem)] bg-white shadow-2xl border border-[#412D15]/60 lg:grid-cols-[1.05fr_0.95fr]">
                     {/* Left Brand Pane (Obsidian, Espresso & Bronze) */}
                     <section className="relative hidden overflow-hidden bg-[#000000] p-8 sm:p-12 text-white lg:flex lg:flex-col lg:justify-between border-r border-[#412D15]/70">
                         <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#412D15]/40 blur-3xl pointer-events-none" />
