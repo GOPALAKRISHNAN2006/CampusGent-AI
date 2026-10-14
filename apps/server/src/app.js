@@ -12,6 +12,8 @@ import { apiLimiter } from './middleware/rateLimiter.js';
 import { logger } from './utils/logger.js';
 import { initializeAgentEcosystem } from './ai/agents/index.js';
 import './models/index.js';
+import { User } from './models/User.js';
+import { seedDatabase } from './seed.js';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -74,6 +76,27 @@ app.get('/api/health', (req, res) => {
             version: '1.0.0',
         },
     });
+});
+
+// 8.5 Safe Database Seed Endpoint
+app.all('/api/v1/system/seed', async (req, res, next) => {
+    try {
+        const secret = req.query.key || req.headers['x-seed-key'];
+        const adminCount = await User.countDocuments({ role: 'ADMIN' });
+        if (adminCount > 0 && secret !== env.JWT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                message: 'Admin account already exists. Pass ?key=<JWT_SECRET> to re-seed.',
+            });
+        }
+        await seedDatabase();
+        res.status(200).json({
+            success: true,
+            message: 'Core credentials successfully seeded (Admin, Faculty, Placement Officer, Student).',
+        });
+    } catch (err) {
+        next(err);
+    }
 });
 
 // 9. API Routes & Rate Limiting
