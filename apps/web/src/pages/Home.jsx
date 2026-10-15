@@ -128,7 +128,7 @@ export const Home = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: EASE_APPLE }}
-                className="relative z-30 mx-3 sm:mx-auto flex max-w-7xl items-center justify-between px-3.5 py-3 sm:px-8 sm:py-4 lg:px-10 glass-navbar mt-3 sm:mt-5 rounded-full border border-[#E1DCC9] shadow-subtle"
+                className="relative z-30 mx-3 sm:mx-auto flex max-w-screen-2xl items-center justify-between px-3.5 py-3 sm:px-8 sm:py-4 lg:px-10 glass-navbar mt-3 sm:mt-5 rounded-full border border-[#E1DCC9] shadow-subtle"
             >
                 <Link to="/" className="flex items-center gap-2.5 group">
                     <motion.div
@@ -144,7 +144,7 @@ export const Home = () => {
                     </div>
                 </Link>
 
-                <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-[#6B5336]">
+                <nav className="hidden md:flex items-center gap-2 lg:gap-3 xl:gap-8 whitespace-nowrap text-[9px] lg:text-[10px] xl:text-xs font-bold text-[#6B5336]">
                     {['Platform Capabilities', 'Who We Serve', 'Institutional Impact'].map((label, i) => (
                         <motion.a
                             key={label}
@@ -182,9 +182,9 @@ export const Home = () => {
             </motion.header>
 
             {/* Main Content */}
-            <main className="relative z-20 space-y-24 sm:space-y-36 py-12 sm:py-24">
+            <main className="relative z-20 space-y-16 sm:space-y-20 lg:space-y-24 py-8 sm:py-12 lg:py-16">
                 {/* Hero Section */}
-                <section className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+                <section className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
                     {/* Left Hero Copy */}
                     <div className="space-y-6 text-left">
                         <BlurFadeIn delay={0.1}>
@@ -350,7 +350,7 @@ export const Home = () => {
                 </section>
 
                 {/* Platform Capabilities (Asymmetric Bento Grid) */}
-                <section id="platform" className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 space-y-12">
+                <section id="platform" className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10 space-y-8 sm:space-y-10">
                     <FadeIn delay={0.1} className="max-w-2xl space-y-3">
                         <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] bg-[#F4EFE6] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15]">
                             <Compass className="h-3 w-3" />
@@ -364,9 +364,9 @@ export const Home = () => {
                         </p>
                     </FadeIn>
 
-                    <StaggerContainer staggerDelay={0.12} className="grid gap-6 md:grid-cols-3">
+                    <StaggerContainer staggerDelay={0.12} className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
                         {capabilities.map(({ icon: Icon, title, text, badge, tone, metrics, featured }) => (
-                            <StaggerItem key={title} className={featured ? 'md:col-span-2' : 'md:col-span-1'}>
+                            <StaggerItem key={title} className={featured ? 'md:col-span-2 xl:col-span-1' : 'md:col-span-1'}>
                                 <HoverLift lift={-6}>
                                     <div className="group double-bezel h-full">
                                         <div className="double-bezel-inner p-7 sm:p-8 flex flex-col justify-between h-full space-y-6">
@@ -405,7 +405,7 @@ export const Home = () => {
                 </section>
 
                 {/* Who We Serve (Persona Showcase) */}
-                <section id="personas" className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 space-y-12">
+                <section id="personas" className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10 space-y-8 sm:space-y-10">
                     <FadeIn className="text-center max-w-2xl mx-auto space-y-3">
                         <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] bg-[#F4EFE6] px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15]">
                             <Star className="h-3 w-3 text-[#412D15]" />
@@ -416,7 +416,7 @@ export const Home = () => {
                         </h2>
                     </FadeIn>
 
-                    <StaggerContainer staggerDelay={0.1} className="grid gap-6 lg:grid-cols-3">
+                    <StaggerContainer staggerDelay={0.1} className="grid gap-5 md:grid-cols-2 xl:grid-cols-4 xl:gap-6">
                         {personas.map(({ role, icon: Icon, tag, headline, description, highlights, cta, link }) => (
                             <StaggerItem key={role}>
                                 <HoverLift lift={-6}>
@@ -464,7 +464,7 @@ export const Home = () => {
                 </section>
 
                 {/* Institutional Impact Stats Banner */}
-                <section id="impact" className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+                <section id="impact" className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10">
                     <ScaleIn>
                         <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#000000] via-[#1F150C] to-[#31210F] p-8 sm:p-14 text-white border border-[#412D15]/80 shadow-2xl space-y-8">
                             <motion.div
@@ -528,7 +528,7 @@ export const Home = () => {
 
             {/* Footer */}
             <FadeIn y={16} className="border-t border-[#E1DCC9] bg-white px-5 py-8 sm:px-8 lg:px-10 relative z-20 text-xs text-[#6B5336]">
-                <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-4 font-semibold">
+                <div className="mx-auto flex max-w-screen-2xl flex-col sm:flex-row items-center justify-between gap-4 font-semibold">
                     <div className="flex items-center gap-2">
                         <Sparkles className="h-4 w-4 text-[#412D15]" />
                         <span className="font-black text-[#1F150C]">CampusGent AI</span>
