@@ -140,12 +140,12 @@ export const Home = () => {
                         <Sparkles className="h-4.5 w-4.5 sm:h-5 sm:w-5 animate-pulse text-[#E1DCC9]" />
                     </motion.div>
                     <div>
-                        <span className="block text-xs sm:text-sm font-black tracking-[0.16em] text-[#1F150C] leading-none">CAMPUSGENT</span>
-                        <span className="block text-[8px] sm:text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#412D15] mt-0.5">AI PLATFORM</span>
+                        <span className="block text-xs sm:text-sm font-black tracking-[0.16em] text-[#1F150C] dark:text-[#FAF7F2] leading-none">CAMPUSGENT</span>
+                        <span className="block text-[8px] sm:text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#412D15] dark:text-[#C9BF9F] mt-0.5">AI PLATFORM</span>
                     </div>
                 </Link>
 
-                <nav className="hidden md:flex items-center gap-2 lg:gap-3 xl:gap-8 whitespace-nowrap text-[9px] lg:text-[10px] xl:text-xs font-bold text-[#6B5336]">
+                <nav className="hidden md:flex items-center gap-2 lg:gap-3 xl:gap-8 whitespace-nowrap text-[9px] lg:text-[10px] xl:text-xs font-bold text-[#523B20] dark:text-[#E1DCC9]">
                     {['Platform Capabilities', 'Who We Serve', 'Institutional Impact'].map((label, i) => (
                         <motion.a
                             key={label}
@@ -153,10 +153,10 @@ export const Home = () => {
                             initial={{ opacity: 0, y: -8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.3 + i * 0.08, ease: EASE_APPLE }}
-                            className="hover:text-[#1F150C] transition-colors relative group"
+                            className="hover:text-[#1F150C] dark:hover:text-[#FFFFFF] transition-colors relative group"
                         >
                             {label}
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#412D15] rounded-full transition-all duration-300 group-hover:w-full" />
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#412D15] dark:bg-[#E1DCC9] rounded-full transition-all duration-300 group-hover:w-full" />
                         </motion.a>
                     ))}
                 </nav>
@@ -165,7 +165,7 @@ export const Home = () => {
                     <ThemeToggle />
                     <Link
                         to="/login"
-                        className="rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-bold text-[#1F150C] hover:bg-[#F4EFE6] transition-all"
+                        className="rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-bold text-[#1F150C] dark:text-[#FAF7F2] hover:bg-[#F4EFE6] dark:hover:bg-[#1F150C] transition-all"
                     >
                         Sign In
                     </Link>
@@ -190,8 +190,8 @@ export const Home = () => {
                     {/* Left Hero Copy */}
                     <div className="space-y-6 text-left">
                         <BlurFadeIn delay={0.1}>
-                            <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] bg-white/90 px-4 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.18em] text-[#1F150C] shadow-xs backdrop-blur-md">
-                                <span className="h-2 w-2 animate-pulse rounded-full bg-[#412D15]" />
+                            <div className="inline-flex items-center gap-2 rounded-full border border-[#94805A]/40 dark:border-[#412D15] bg-[#F4EFE6] dark:bg-[#1F150C] px-4 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.18em] text-[#1F150C] dark:text-[#E1DCC9] shadow-xs backdrop-blur-md">
+                                <span className="h-2 w-2 animate-pulse rounded-full bg-[#412D15] dark:bg-[#E1DCC9]" />
                                 <span>Next-Gen Campus Intelligence 2.0</span>
                             </div>
                         </BlurFadeIn>
@@ -199,7 +199,7 @@ export const Home = () => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.2, ease: EASE_APPLE }}
-                            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#1F150C] leading-[1.06]"
+                            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#1F150C] dark:text-[#FAF7F2] leading-[1.06]"
                         >
                             Accelerate Campus Potential into{' '}
                             <span className="text-shimmer">
@@ -210,7 +210,7 @@ export const Home = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.35, ease: EASE_APPLE }}
-                            className="max-w-xl text-base sm:text-lg text-[#6B5336] leading-relaxed font-normal"
+                            className="max-w-xl text-base sm:text-lg text-[#523B20] dark:text-[#E1DCC9] leading-relaxed font-normal"
                         >
                             CampusGent AI connects academic rigor, verified portfolio evidence, mentor interventions, and placement drives into one calm, autonomous intelligence workspace.
                         </motion.p>
@@ -233,17 +233,17 @@ export const Home = () => {
                             </MagneticButton>
                             <a
                                 href="#platform"
-                                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#E1DCC9] bg-white/80 hover:bg-[#F4EFE6] px-6 py-3.5 text-xs font-bold text-[#1F150C] shadow-xs transition-all hover:border-[#412D15]/40 backdrop-blur-md"
+                                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#94805A]/50 dark:border-[#412D15] bg-[#F4EFE6] dark:bg-[#1F150C] hover:bg-white dark:hover:bg-[#2A2016] px-6 py-3.5 text-xs font-bold text-[#1F150C] dark:text-[#FAF7F2] shadow-xs transition-all hover:border-[#412D15] dark:hover:border-[#E1DCC9]"
                             >
                                 <span>Explore Platform Capabilities</span>
-                                <ChevronRight className="h-3.5 w-3.5 text-[#6B5336]" />
+                                <ChevronRight className="h-3.5 w-3.5 text-[#6B5336] dark:text-[#E1DCC9]" />
                             </a>
                         </motion.div>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.6, ease: EASE_APPLE }}
-                            className="flex flex-wrap items-center gap-6 pt-4 text-xs font-semibold text-[#6B5336]"
+                            className="flex flex-wrap items-center gap-6 pt-4 text-xs font-semibold text-[#523B20] dark:text-[#D8D1BC]"
                         >
                             {[
                                 { icon: CheckCircle2, text: 'Profile-grounded AI' },
@@ -257,7 +257,7 @@ export const Home = () => {
                                     transition={{ duration: 0.4, delay: 0.65 + i * 0.08, ease: EASE_APPLE }}
                                     className="flex items-center gap-2"
                                 >
-                                    <Icon className="h-4 w-4 text-[#412D15]" />
+                                    <Icon className="h-4 w-4 text-[#412D15] dark:text-[#E1DCC9]" />
                                     <span>{text}</span>
                                 </motion.div>
                             ))}
@@ -286,7 +286,7 @@ export const Home = () => {
                                         </div>
                                         <div>
                                             <p className="text-xs font-bold text-white">Student Command Center</p>
-                                            <p className="text-[10px] text-[#E1DCC9]/70 font-medium">Computer Science · Semester 6</p>
+                                            <p className="text-[10px] text-[#FAF7F2] font-semibold">Computer Science · Semester 6</p>
                                         </div>
                                     </div>
                                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E1DCC9]/15 border border-[#E1DCC9]/30 text-[9.5px] font-bold text-[#E1DCC9] uppercase tracking-wider">
@@ -298,14 +298,14 @@ export const Home = () => {
                                 {/* Readiness Gauge Card */}
                                 <div className="rounded-2xl bg-[#000000]/80 border border-[#412D15]/80 p-4 space-y-2.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#C9BF9F]">Placement Readiness Score</span>
-                                        <span className="text-xs font-bold text-[#E1DCC9] tabular-nums">+14% this month</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#FAF7F2]">Placement Readiness Score</span>
+                                        <span className="text-xs font-bold text-[#FAF7F2] tabular-nums">+14% this month</span>
                                     </div>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-3xl sm:text-4xl font-black text-white tabular-nums">
                                             <AnimatedCounter target={88} suffix="%" duration={2} />
                                         </span>
-                                        <span className="text-xs font-semibold text-[#E1DCC9]/70">Top 5% candidate tier</span>
+                                        <span className="text-xs font-semibold text-[#FAF7F2]">Top 5% candidate tier</span>
                                     </div>
                                     <AnimatedProgress value={88} delay={0.8} barClassName="bg-gradient-to-r from-[#412D15] via-[#8F7554] to-[#E1DCC9]" className="bg-[#1F150C] border-[#412D15]" />
                                 </div>
@@ -314,16 +314,16 @@ export const Home = () => {
                                 <StaggerContainer staggerDelay={0.12} delay={0.6} className="grid grid-cols-2 gap-3">
                                     <StaggerItem>
                                         <div className="rounded-2xl bg-[#000000]/60 border border-[#412D15]/60 p-3.5 space-y-1">
-                                            <p className="text-[9.5px] font-bold uppercase tracking-wider text-[#C9BF9F]">Target Role Match</p>
+                                            <p className="text-[9.5px] font-bold uppercase tracking-wider text-[#FAF7F2]">Target Role Match</p>
                                             <p className="text-sm font-black text-white">Full Stack SDE</p>
-                                            <p className="text-[10.5px] font-bold text-[#E1DCC9] tabular-nums">92% Fit Score</p>
+                                            <p className="text-[10.5px] font-bold text-[#FAF7F2] tabular-nums">92% Fit Score</p>
                                         </div>
                                     </StaggerItem>
                                     <StaggerItem>
                                         <div className="rounded-2xl bg-[#000000]/60 border border-[#412D15]/60 p-3.5 space-y-1">
-                                            <p className="text-[9.5px] font-bold uppercase tracking-wider text-[#C9BF9F]">Active Placement Drives</p>
+                                            <p className="text-[9.5px] font-bold uppercase tracking-wider text-[#FAF7F2]">Active Placement Drives</p>
                                             <p className="text-sm font-black text-white">06 Eligible</p>
-                                            <p className="text-[10.5px] font-bold text-[#E1DCC9] truncate">Google, AWS, TCS</p>
+                                            <p className="text-[10.5px] font-bold text-[#FAF7F2] truncate">Google, AWS, TCS</p>
                                         </div>
                                     </StaggerItem>
                                 </StaggerContainer>
@@ -342,9 +342,9 @@ export const Home = () => {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-[10.5px] font-bold text-white">Recommended Next Action</p>
-                                        <p className="text-[10px] text-[#E1DCC9]/85 truncate font-normal">Run AI Mock Technical Interview for AWS Drive</p>
+                                        <p className="text-[10px] text-[#FAF7F2] truncate font-medium">Run AI Mock Technical Interview for AWS Drive</p>
                                     </div>
-                                    <span className="text-xs font-bold text-[#E1DCC9] shrink-0">Start →</span>
+                                    <span className="text-xs font-bold text-[#FAF7F2] shrink-0">Start →</span>
                                 </motion.div>
                             </div>
                         </div>
@@ -354,14 +354,14 @@ export const Home = () => {
                 {/* Platform Capabilities (Asymmetric Bento Grid) */}
                 <section id="platform" className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10 space-y-8 sm:space-y-10">
                     <FadeIn delay={0.1} className="max-w-2xl space-y-3">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] bg-[#F4EFE6] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15]">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] dark:border-[#412D15] bg-[#F4EFE6] dark:bg-[#1F1812] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15] dark:text-[#E1DCC9]">
                             <Compass className="h-3 w-3" />
                             <span>Engineered for Institutional Excellence</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F150C]">
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F150C] dark:text-[#FAF7F2]">
                             Everything your campus needs to turn intent into career outcomes.
                         </h2>
-                        <p className="text-sm text-[#6B5336] leading-relaxed">
+                        <p className="text-sm text-[#523B20] dark:text-[#D8D1BC] leading-relaxed">
                             Purpose-built multi-agent architecture delivering personalized guidance, institutional visibility, and placement operations in one unified workspace.
                         </p>
                     </FadeIn>
@@ -381,17 +381,17 @@ export const Home = () => {
                                                     >
                                                         <Icon className="h-6 w-6" />
                                                     </motion.div>
-                                                    <span className="text-[9.5px] font-extrabold uppercase tracking-wider text-[#412D15] bg-[#F4EFE6] border border-[#E1DCC9] px-3 py-1 rounded-full shadow-xs">
+                                                    <span className="text-[9.5px] font-extrabold uppercase tracking-wider text-[#412D15] dark:text-[#E1DCC9] bg-[#F4EFE6] dark:bg-[#1F1812] border border-[#E1DCC9] dark:border-[#412D15] px-3 py-1 rounded-full shadow-xs">
                                                         {badge}
                                                     </span>
                                                 </div>
-                                                <h3 className="text-lg sm:text-xl font-bold text-[#1F150C] tracking-tight">{title}</h3>
-                                                <p className="text-xs sm:text-sm leading-relaxed text-[#6B5336] font-normal">{text}</p>
+                                                <h3 className="text-lg sm:text-xl font-bold text-[#1F150C] dark:text-[#FAF7F2] tracking-tight">{title}</h3>
+                                                <p className="text-xs sm:text-sm leading-relaxed text-[#523B20] dark:text-[#D8D1BC] font-normal">{text}</p>
                                             </div>
-                                            <div className="pt-4 border-t border-[#E1DCC9]/60 flex items-center justify-between">
-                                                <span className="text-[11px] font-bold text-[#412D15]">{metrics}</span>
+                                            <div className="pt-4 border-t border-[#E1DCC9]/60 dark:border-[#412D15] flex items-center justify-between">
+                                                <span className="text-[11px] font-bold text-[#412D15] dark:text-[#FAF7F2]">{metrics}</span>
                                                 <motion.span
-                                                    className="text-xs font-bold text-[#1F150C]"
+                                                    className="text-xs font-bold text-[#1F150C] dark:text-[#FAF7F2]"
                                                     whileHover={{ x: 4 }}
                                                     transition={{ type: 'spring', stiffness: 300, damping: 15 }}
                                                 >
@@ -409,11 +409,11 @@ export const Home = () => {
                 {/* Who We Serve (Persona Showcase) */}
                 <section id="personas" className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-10 space-y-8 sm:space-y-10">
                     <FadeIn className="text-center max-w-2xl mx-auto space-y-3">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] bg-[#F4EFE6] px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15]">
-                            <Star className="h-3 w-3 text-[#412D15]" />
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[#E1DCC9] dark:border-[#412D15] bg-[#F4EFE6] dark:bg-[#1F1812] px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#412D15] dark:text-[#E1DCC9]">
+                            <Star className="h-3 w-3 text-[#412D15] dark:text-[#E1DCC9]" />
                             <span>Tailored Role Experiences</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F150C]">
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F150C] dark:text-[#FAF7F2]">
                             Designed for every stakeholder on campus.
                         </h2>
                     </FadeIn>
@@ -429,30 +429,30 @@ export const Home = () => {
                                                     <motion.div
                                                         whileHover={{ scale: 1.08, rotate: -3 }}
                                                         transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-                                                        className="h-10 w-10 rounded-2xl bg-[#F4EFE6] border border-[#E1DCC9] text-[#412D15] flex items-center justify-center shadow-xs"
+                                                        className="h-10 w-10 rounded-2xl bg-[#F4EFE6] dark:bg-[#1F1812] border border-[#E1DCC9] dark:border-[#412D15] text-[#412D15] dark:text-[#E1DCC9] flex items-center justify-center shadow-xs"
                                                     >
                                                         <Icon className="h-5 w-5" />
                                                     </motion.div>
                                                     <div>
-                                                        <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#412D15]">{tag}</span>
-                                                        <h3 className="text-base font-extrabold text-[#1F150C]">{role}</h3>
+                                                        <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#412D15] dark:text-[#C9BF9F]">{tag}</span>
+                                                        <h3 className="text-base font-extrabold text-[#1F150C] dark:text-[#FAF7F2]">{role}</h3>
                                                     </div>
                                                 </div>
-                                                <h4 className="text-sm font-bold text-[#1F150C] leading-snug">{headline}</h4>
-                                                <p className="text-xs text-[#6B5336] leading-relaxed font-normal">{description}</p>
+                                                <h4 className="text-sm font-bold text-[#1F150C] dark:text-[#FAF7F2] leading-snug">{headline}</h4>
+                                                <p className="text-xs text-[#523B20] dark:text-[#D8D1BC] leading-relaxed font-normal">{description}</p>
                                             </div>
-                                            <div className="space-y-3 pt-4 border-t border-[#E1DCC9]/70">
+                                            <div className="space-y-3 pt-4 border-t border-[#E1DCC9]/70 dark:border-[#412D15]">
                                                 <div className="space-y-2">
                                                     {highlights.map((h) => (
-                                                        <div key={h} className="flex items-center gap-2 text-xs font-medium text-[#1F150C]">
-                                                            <CheckCircle2 className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
+                                                        <div key={h} className="flex items-center gap-2 text-xs font-medium text-[#1F150C] dark:text-[#FAF7F2]">
+                                                            <CheckCircle2 className="h-3.5 w-3.5 text-[#412D15] dark:text-[#E1DCC9] shrink-0" />
                                                             <span>{h}</span>
                                                         </div>
                                                     ))}
                                                 </div>
                                                 <Link
                                                     to={link}
-                                                    className="mt-3 block text-center rounded-xl bg-[#FAF7F2] hover:bg-[#F4EFE6] border border-[#E1DCC9] py-2 text-xs font-bold text-[#1F150C] transition-colors"
+                                                    className="mt-3 block text-center rounded-xl bg-[#FAF7F2] dark:bg-[#1F1812] hover:bg-[#F4EFE6] dark:hover:bg-[#2A2016] border border-[#E1DCC9] dark:border-[#412D15] py-2 text-xs font-bold text-[#1F150C] dark:text-[#FAF7F2] transition-colors"
                                                 >
                                                     {cta} →
                                                 </Link>
@@ -485,10 +485,10 @@ export const Home = () => {
                                     <Award className="h-3.5 w-3.5" />
                                     <span>Measurable Campus Outcomes</span>
                                 </div>
-                                <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
+                                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
                                     Ready to elevate your campus placement ecosystem?
                                 </h2>
-                                <p className="text-xs sm:text-sm text-[#E1DCC9]/85 font-normal leading-relaxed">
+                                <p className="text-xs sm:text-sm text-[#FAF7F2] font-normal leading-relaxed">
                                     Join forward-thinking colleges empowering thousands of engineering and management graduates.
                                 </p>
                             </FadeIn>
@@ -499,7 +499,7 @@ export const Home = () => {
                                         <p className="text-3xl sm:text-4xl font-black text-white tabular-nums">
                                             <AnimatedCounter target={parseFloat(value)} suffix={suffix} duration={2} decimals={value.includes('.') ? 1 : 0} />
                                         </p>
-                                        <p className="text-xs text-[#E1DCC9]/75 font-medium">{label}</p>
+                                        <p className="text-xs text-[#FAF7F2] font-semibold">{label}</p>
                                     </StaggerItem>
                                 ))}
                             </StaggerContainer>
@@ -529,17 +529,17 @@ export const Home = () => {
             </main>
 
             {/* Footer */}
-            <FadeIn y={16} className="border-t border-[#E1DCC9] bg-white px-5 py-8 sm:px-8 lg:px-10 relative z-20 text-xs text-[#6B5336]">
+            <FadeIn y={16} className="border-t border-[#E1DCC9] dark:border-[#412D15] bg-white dark:bg-[#17120D] px-5 py-8 sm:px-8 lg:px-10 relative z-20 text-xs text-[#523B20] dark:text-[#D8D1BC]">
                 <div className="mx-auto flex max-w-screen-2xl flex-col sm:flex-row items-center justify-between gap-4 font-semibold">
                     <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-[#412D15]" />
-                        <span className="font-black text-[#1F150C]">CampusGent AI</span>
+                        <Sparkles className="h-4 w-4 text-[#412D15] dark:text-[#E1DCC9]" />
+                        <span className="font-black text-[#1F150C] dark:text-[#FAF7F2]">CampusGent AI</span>
                         <span>· © 2026. All rights reserved.</span>
                     </div>
                     <div className="flex items-center gap-6">
-                        <Link to="/login" className="hover:text-[#1F150C] transition-colors">Student Portal</Link>
-                        <Link to="/login" className="hover:text-[#1F150C] transition-colors">Faculty Mentors</Link>
-                        <Link to="/login" className="hover:text-[#1F150C] transition-colors">Placement Officers</Link>
+                        <Link to="/login" className="hover:text-[#1F150C] dark:hover:text-[#FAF7F2] transition-colors">Student Portal</Link>
+                        <Link to="/login" className="hover:text-[#1F150C] dark:hover:text-[#FAF7F2] transition-colors">Faculty Mentors</Link>
+                        <Link to="/login" className="hover:text-[#1F150C] dark:hover:text-[#FAF7F2] transition-colors">Placement Officers</Link>
                     </div>
                 </div>
             </FadeIn>

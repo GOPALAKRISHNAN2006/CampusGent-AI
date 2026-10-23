@@ -264,6 +264,7 @@
 
   /* Text gradient shimmer */
   .text-shimmer {
+    display: inline-block;
     background: linear-gradient(
       120deg,
       #1F150C 0%,
@@ -274,8 +275,32 @@
     );
     background-size: 250% 100%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: text-shine 4s ease-in-out infinite;
+  }
+
+  .dark .text-shimmer {
+    display: inline-block;
+    background: linear-gradient(
+      120deg,
+      #FFFFFF 0%,
+      #FAF7F2 25%,
+      #E1DCC9 50%,
+      #C9BF9F 75%,
+      #FFFFFF 100%
+    ) !important;
+    background-size: 250% 100% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: text-shine 4s ease-in-out infinite;
+  }
+
+  .dark .gradient-text-bronze {
+    background: linear-gradient(to right, #FFFFFF, #FAF7F2, #E1DCC9) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
   }
 
   /* Status pulse dot */
@@ -291,7 +316,11 @@
   /* ═══════════════════════════════════════════════════════════════
      DARK THEME ADAPTIVE UTILITIES — High-End Obsidian & Bronze
      ═══════════════════════════════════════════════════════════════ */
-  .dark .bg-white {
+  .dark .bg-white,
+  .dark .bg-white\/95,
+  .dark .bg-white\/90,
+  .dark .bg-white\/85,
+  .dark .bg-white\/80 {
     background-color: #17120D !important;
   }
 
