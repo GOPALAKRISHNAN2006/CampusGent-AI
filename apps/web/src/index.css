@@ -10,15 +10,61 @@
     box-sizing: border-box;
   }
 
+  :root {
+    --background: #FAF7F2;
+    --foreground: #1F150C;
+    --card: #FFFFFF;
+    --card-foreground: #1F150C;
+    --popover: #FFFFFF;
+    --popover-foreground: #1F150C;
+    --primary: #1F150C;
+    --primary-foreground: #FAF7F2;
+    --secondary: #F4EFE6;
+    --secondary-foreground: #412D15;
+    --muted: #E1DCC9;
+    --muted-foreground: #6B5336;
+    --accent: #C49A5A;
+    --accent-foreground: #1F150C;
+    --border: #E1DCC9;
+    --input: #94805A;
+    --ring: #412D15;
+    --success: #15803d;
+    --warning: #b45309;
+    --destructive: #b91c1c;
+  }
+
+  .dark, [data-theme="dark"], html.dark {
+    --background: #0C0A07;
+    --foreground: #F5F0E8;
+    --card: #17120D;
+    --card-foreground: #F5F0E8;
+    --popover: #1F1812;
+    --popover-foreground: #F5F0E8;
+    --primary: #E1DCC9;
+    --primary-foreground: #17120D;
+    --secondary: #21180F;
+    --secondary-foreground: #E1DCC9;
+    --muted: #2A2016;
+    --muted-foreground: #C8BFAF;
+    --accent: #C49A5A;
+    --accent-foreground: #FAF7F2;
+    --border: #403426;
+    --input: #403426;
+    --ring: #C49A5A;
+    --success: #4ade80;
+    --warning: #fbbf24;
+    --destructive: #f87171;
+  }
+
   html {
-    background: #FAF7F2;
+    background: var(--background);
     color-scheme: light;
     scroll-behavior: smooth;
   }
 
   body {
-    background-color: #FAF7F2;
-    color: #1F150C;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -314,138 +360,411 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     DARK THEME ADAPTIVE UTILITIES — High-End Obsidian & Bronze
+     DARK THEME ADAPTIVE UTILITIES — CampusGent AI Obsidian & Bronze
      ═══════════════════════════════════════════════════════════════ */
+
+  /* 1. Primary Text (Headings, titles, high-emphasis values): #F5F0E8 */
+  .dark .text-brand-950,
+  .dark .text-brand-900,
+  .dark .text-brand-850,
+  .dark .text-brand-800,
+  .dark .text-brand-750,
+  .dark .text-brand-700,
+  .dark .text-brand-650,
+  .dark .text-brand-600,
+  .dark .text-black,
+  .dark .text-slate-900,
+  .dark .text-gray-900,
+  .dark .text-stone-900,
+  .dark .text-zinc-900,
+  .dark .text-neutral-900,
+  .dark .text-\[\#1F150C\],
+  .dark .text-\[\#140D07\],
+  .dark .text-\[\#0A0704\],
+  .dark .text-\[\#000000\],
+  .dark .text-palette-black,
+  .dark .text-palette-espresso,
+  .dark .text-campus-primary,
+  .dark .text-campus-dark {
+    color: var(--foreground) !important;
+  }
+
+  /* 2. Secondary Text (Subheadings, section labels, emphasized badges): #E1DCC9 */
+  .dark .text-brand-500,
+  .dark .text-brand-450,
+  .dark .text-slate-800,
+  .dark .text-gray-800,
+  .dark .text-stone-800,
+  .dark .text-zinc-800,
+  .dark .text-\[\#412D15\],
+  .dark .text-\[\#31210F\],
+  .dark .text-\[\#261A0C\],
+  .dark .text-palette-bronze,
+  .dark .text-campus-accent {
+    color: var(--accent) !important;
+  }
+
+  /* 3. Muted / Body Secondary Text (Descriptions, metadata, captions): #C8BFAF */
+  .dark .text-brand-400,
+  .dark .text-brand-350,
+  .dark .text-slate-700,
+  .dark .text-gray-700,
+  .dark .text-stone-700,
+  .dark .text-slate-600,
+  .dark .text-gray-600,
+  .dark .text-stone-600,
+  .dark .text-\[\#523B20\],
+  .dark .text-\[\#6B5336\],
+  .dark .text-\[\#786144\],
+  .dark .text-palette-espresso\/90,
+  .dark .text-palette-espresso\/80,
+  .dark .text-palette-espresso\/70,
+  .dark .text-palette-espresso\/60,
+  .dark .text-palette-espresso\/50 {
+    color: var(--muted-foreground) !important;
+  }
+
+  /* 4. Subtle Muted Text (Timestamps, empty states, minor indicators): #A69B89 */
+  .dark .text-slate-500,
+  .dark .text-gray-500,
+  .dark .text-stone-500,
+  .dark .text-zinc-500,
+  .dark .text-\[\#8F7554\],
+  .dark .text-palette-espresso\/40,
+  .dark .text-palette-espresso\/30 {
+    color: #A69B89 !important;
+  }
+
+  /* 5. Light Accents & Sandstone Inversions in Dark Mode */
+  .dark .text-brand-300,
+  .dark .text-brand-200,
+  .dark .text-brand-100,
+  .dark .text-brand-50,
+  .dark .text-palette-sandstone,
+  .dark .text-palette-sandstone-light,
+  .dark .text-palette-sandstone-canvas,
+  .dark .text-campus-sandstone {
+    color: #FAF7F2 !important;
+  }
+
+  /* 6. Accessible Status Colors in Dark Mode */
+  .dark .text-rose-700,
+  .dark .text-rose-800,
+  .dark .text-red-700,
+  .dark .text-red-800 {
+    color: #f87171 !important;
+  }
+
+  .dark .text-emerald-700,
+  .dark .text-emerald-800,
+  .dark .text-green-700,
+  .dark .text-green-800 {
+    color: #4ade80 !important;
+  }
+
+  .dark .text-amber-700,
+  .dark .text-amber-800,
+  .dark .text-yellow-700,
+  .dark .text-yellow-800 {
+    color: #fbbf24 !important;
+  }
+
+  .dark .text-indigo-600,
+  .dark .text-indigo-700 {
+    color: #C49A5A !important;
+  }
+
+  /* 7. Backgrounds in Dark Mode */
   .dark .bg-white,
   .dark .bg-white\/95,
   .dark .bg-white\/90,
   .dark .bg-white\/85,
-  .dark .bg-white\/80 {
-    background-color: #17120D !important;
+  .dark .bg-white\/80,
+  .dark .bg-campus-card {
+    background-color: var(--card) !important;
   }
 
-  .dark .bg-\[\#FAF7F2\] {
-    background-color: #0E0B07 !important;
+  .dark .bg-\[\#FAF7F2\],
+  .dark .bg-\[\#FAF7F2\]\/80,
+  .dark .bg-\[\#FAF7F2\]\/90,
+  .dark .bg-palette-sandstone-canvas,
+  .dark .bg-palette-sandstone-canvas\/60 {
+    background-color: var(--background) !important;
   }
 
-  .dark .bg-\[\#F4EFE6\] {
-    background-color: #1F1812 !important;
+  .dark .bg-\[\#F4EFE6\],
+  .dark .bg-palette-sandstone-light {
+    background-color: var(--popover) !important;
   }
 
-  .dark .bg-\[\#E1DCC9\] {
-    background-color: #2A2016 !important;
+  .dark .bg-\[\#E1DCC9\],
+  .dark .bg-palette-sandstone {
+    background-color: var(--muted) !important;
   }
 
-  .dark .text-\[\#1F150C\] {
-    color: #FAF7F2 !important;
+  .dark .bg-palette-sandstone\/40,
+  .dark .bg-palette-sandstone\/30,
+  .dark .bg-palette-sandstone\/20,
+  .dark .bg-palette-sandstone\/10 {
+    background-color: rgba(65, 45, 21, 0.3) !important;
   }
 
-  .dark .text-\[\#412D15\] {
-    color: #E1DCC9 !important;
+  .dark .bg-brand-50,
+  .dark .bg-indigo-50,
+  .dark .bg-slate-50,
+  .dark .bg-gray-50,
+  .dark .bg-stone-50 {
+    background-color: rgba(255, 255, 255, 0.04) !important;
   }
 
-  .dark .text-\[\#6B5336\] {
-    color: #D8D1BC !important;
+  .dark .bg-brand-100,
+  .dark .bg-indigo-100,
+  .dark .bg-slate-100,
+  .dark .bg-gray-100,
+  .dark .bg-stone-100 {
+    background-color: var(--secondary) !important;
   }
 
-  .dark .text-\[\#8F7554\],
-  .dark .text-\[\#786144\],
-  .dark .text-brand-400 {
-    color: #C9BF9F !important;
+  .dark .bg-brand-200,
+  .dark .bg-indigo-200,
+  .dark .bg-slate-200,
+  .dark .bg-gray-200,
+  .dark .bg-stone-200 {
+    background-color: var(--muted) !important;
   }
 
-  .dark .text-rose-700 {
-    color: #fda4af !important;
+  .dark .bg-green-50,
+  .dark .bg-emerald-50,
+  .dark .bg-green-50\/20,
+  .dark .bg-emerald-50\/20 {
+    background-color: rgba(74, 222, 128, 0.12) !important;
   }
 
-  .dark .text-emerald-700 {
-    color: #6ee7b7 !important;
+  .dark .bg-red-50,
+  .dark .bg-rose-50,
+  .dark .bg-red-50\/20,
+  .dark .bg-rose-50\/20 {
+    background-color: rgba(248, 113, 113, 0.12) !important;
   }
 
-  .dark .text-amber-700 {
-    color: #fcd34d !important;
+  .dark .bg-amber-50,
+  .dark .bg-yellow-50,
+  .dark .bg-amber-50\/20 {
+    background-color: rgba(251, 191, 36, 0.12) !important;
   }
 
+  .dark .bg-indigo-50,
+  .dark .bg-indigo-50\/50,
+  .dark .bg-indigo-50\/20 {
+    background-color: rgba(196, 154, 90, 0.12) !important;
+  }
+
+  /* 8. Borders in Dark Mode */
   .border-brand-300 {
     border-color: #94805A !important;
   }
 
-  .dark .border-brand-300 {
-    border-color: #C9BF9F !important;
-  }
-
+  .dark .border-brand-300,
   .dark .border-brand-200,
   .dark .border-brand-200\/60,
-  .dark .border-brand-200\/50 {
-    border-color: rgba(225, 220, 201, 0.22) !important;
-  }
-
-  .dark .border-\[\#E1DCC9\] {
-    border-color: rgba(225, 220, 201, 0.22) !important;
-  }
-
+  .dark .border-brand-200\/50,
+  .dark .border-brand-100,
+  .dark .border-indigo-100,
+  .dark .border-indigo-200,
+  .dark .border-slate-100,
+  .dark .border-slate-200,
+  .dark .border-gray-100,
+  .dark .border-gray-200,
+  .dark .border-stone-100,
+  .dark .border-stone-200,
+  .dark .border-campus-border,
+  .dark .border-palette-sandstone,
+  .dark .border-palette-sandstone\/70,
+  .dark .border-palette-sandstone\/50,
+  .dark .border-palette-sandstone\/40,
+  .dark .border-palette-sandstone\/30,
+  .dark .border-palette-sandstone\/25,
+  .dark .border-palette-sandstone\/20,
+  .dark .border-palette-sandstone\/10,
+  .dark .border-palette-bronze,
+  .dark .border-palette-bronze\/50,
+  .dark .border-palette-bronze\/40,
+  .dark .border-palette-bronze\/30,
+  .dark .border-\[\#E1DCC9\],
+  .dark .border-\[\#E1DCC9\]\/90,
   .dark .border-\[\#E1DCC9\]\/70,
+  .dark .border-\[\#E1DCC9\]\/60,
   .dark .border-\[\#E1DCC9\]\/50,
-  .dark .border-\[\#E1DCC9\]\/30 {
-    border-color: rgba(225, 220, 201, 0.16) !important;
+  .dark .border-\[\#E1DCC9\]\/40,
+  .dark .border-\[\#E1DCC9\]\/30,
+  .dark .border-\[\#E1DCC9\]\/20 {
+    border-color: var(--border) !important;
   }
 
-  .dark .hover\:bg-\[\#FAF7F2\]:hover {
-    background-color: #1C1610 !important;
+  .dark .border-green-100,
+  .dark .border-emerald-100 {
+    border-color: rgba(74, 222, 128, 0.25) !important;
   }
 
-  .dark .hover\:bg-\[\#F4EFE6\]:hover {
-    background-color: #241D15 !important;
+  .dark .border-red-100,
+  .dark .border-rose-100,
+  .dark .border-red-200,
+  .dark .border-rose-200 {
+    border-color: rgba(248, 113, 113, 0.25) !important;
   }
 
+  .dark .border-amber-100,
+  .dark .border-yellow-100 {
+    border-color: rgba(251, 191, 36, 0.25) !important;
+  }
+
+  .dark .border-indigo-100 {
+    border-color: rgba(196, 154, 90, 0.25) !important;
+  }
+
+  /* 9. Interactive & Hover States in Dark Mode */
+  .dark .hover\:bg-\[\#FAF7F2\]:hover,
+  .dark .hover\:bg-\[\#F4EFE6\]:hover,
+  .dark .hover\:bg-white:hover,
+  .dark .hover\:bg-brand-50:hover,
+  .dark .hover\:bg-slate-50:hover,
+  .dark .hover\:bg-gray-50:hover,
+  .dark .hover\:bg-stone-50:hover,
+  .dark .hover\:bg-palette-sandstone-light\/40:hover,
+  .dark .hover\:bg-palette-sandstone-light\/60:hover {
+    background-color: #261E16 !important;
+  }
+
+  .dark .hover\:text-\[\#000000\]:hover,
+  .dark .hover\:text-\[\#1F150C\]:hover,
+  .dark .hover\:text-brand-900:hover,
+  .dark .hover\:text-black:hover,
+  .dark .hover\:text-palette-espresso:hover {
+    color: #FFFFFF !important;
+  }
+
+  /* 10. Surfaces & Glassmorphism in Dark Mode */
   .dark .glass-navbar {
-    background: rgba(14, 11, 7, 0.90) !important;
-    border-bottom: 1px solid rgba(225, 220, 201, 0.16) !important;
+    background: rgba(12, 10, 7, 0.92) !important;
+    border-bottom: 1px solid var(--border) !important;
     box-shadow: inset 0 -1px 0 0 rgba(225, 220, 201, 0.08), 0 4px 16px -2px rgba(0, 0, 0, 0.5) !important;
   }
 
   .dark .glass-card {
-    background: rgba(23, 18, 13, 0.90) !important;
-    border: 1px solid rgba(225, 220, 201, 0.16) !important;
+    background: rgba(23, 18, 13, 0.92) !important;
+    border: 1px solid var(--border) !important;
     box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 4px 20px -4px rgba(0, 0, 0, 0.4) !important;
   }
 
   .dark .double-bezel {
     background-color: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(225, 220, 201, 0.20) !important;
+    border: 1px solid var(--border) !important;
     box-shadow: 0 0 0 1px rgba(65, 45, 21, 0.3), 0 2px 8px -2px rgba(0, 0, 0, 0.4) !important;
   }
 
   .dark .double-bezel-inner {
-    background-color: #17120D !important;
-    border: 1px solid rgba(225, 220, 201, 0.16) !important;
+    background-color: var(--card) !important;
+    border: 1px solid var(--border) !important;
     box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
   }
 
+  /* 11. Form Inputs in Dark Mode */
   .dark input:not([type="checkbox"]):not([type="radio"]),
   .dark textarea,
   .dark select {
     background-color: #1A140E;
-    color: #FAF7F2;
-    border-color: rgba(225, 220, 201, 0.45) !important;
+    color: var(--foreground);
+    border-color: var(--border) !important;
   }
 
   .dark input:not([type="checkbox"]):not([type="radio"]):focus,
   .dark textarea:focus,
   .dark select:focus {
-    border-color: #E1DCC9 !important;
-    box-shadow: 0 0 0 3px rgba(225, 220, 201, 0.2) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(196, 154, 90, 0.25) !important;
   }
 
+  /* 12. Modals, Dropdowns & Popovers */
   .dark [role="dialog"],
-  .dark .shadow-xl {
-    background-color: #17120D;
-    color: #FAF7F2;
-    border-color: rgba(225, 220, 201, 0.16);
+  .dark [role="menu"],
+  .dark .shadow-xl,
+  .dark .shadow-2xl {
+    background-color: var(--card);
+    color: var(--foreground);
+    border-color: var(--border);
   }
 
   .dark .shadow-subtle {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* 13. Accessible Table Styling in Dark Mode */
+  .dark table {
+    color: var(--foreground);
+  }
+
+  .dark th {
+    color: var(--muted-foreground) !important;
+    background-color: var(--popover) !important;
+    border-color: var(--border) !important;
+  }
+
+  .dark td {
+    color: var(--foreground) !important;
+    border-color: var(--border) !important;
+  }
+
+  .dark tr:hover td {
+    background-color: var(--secondary) !important;
+  }
+
+  /* 14. Universal Recharts Theme-Aware Visualizations */
+  .recharts-default-tooltip {
+    background-color: #17120D !important;
+    border: 1px solid #403426 !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    color: #F5F0E8 !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .recharts-tooltip-label {
+    color: #C8BFAF !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+  }
+
+  .recharts-tooltip-item {
+    color: #F5F0E8 !important;
+    font-size: 0.75rem !important;
+  }
+
+  html:not(.dark) .recharts-default-tooltip {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E1DCC9 !important;
+    color: #1F150C !important;
+  }
+
+  html:not(.dark) .recharts-tooltip-label {
+    color: #6B5336 !important;
+  }
+
+  html:not(.dark) .recharts-tooltip-item {
+    color: #1F150C !important;
+  }
+
+  .dark .recharts-cartesian-grid line {
+    stroke: rgba(64, 52, 38, 0.45) !important;
+  }
+
+  .dark .recharts-text,
+  .dark .recharts-cartesian-axis-tick-value {
+    fill: #C8BFAF !important;
+    font-size: 11px !important;
+  }
+
+  .dark .recharts-legend-item-text {
+    color: #F5F0E8 !important;
   }
 }
 

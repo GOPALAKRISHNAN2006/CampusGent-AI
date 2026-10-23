@@ -132,7 +132,7 @@ export const StudentDashboard = () => {
     const readinessScore = stats?.readinessScore || profile?.placementReadinessScore || 78;
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto text-xs font-sans text-[#1F150C]">
+        <div className="space-y-6 max-w-7xl mx-auto text-xs font-sans text-[#1F150C] dark:text-[#F5F0E8]">
             {/* Top Hero Banner (Obsidian, Espresso & Bronze) */}
             <DashboardHero
                 eyebrow="Autonomous Student Success Center"
@@ -163,7 +163,7 @@ export const StudentDashboard = () => {
             {/* Error Message if any */}
             {error && (
                 <FadeIn>
-                    <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 font-semibold rounded-2xl shadow-sm">
+                    <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40 text-rose-800 dark:text-rose-200 font-semibold rounded-2xl shadow-sm">
                         {error}
                     </div>
                 </FadeIn>
@@ -245,15 +245,15 @@ export const StudentDashboard = () => {
                 <div className="lg:col-span-2 space-y-6">
                     {/* CGPA Progression Card */}
                     <FadeIn delay={0.1}>
-                        <Card bezel={true} className="bg-white/95">
-                            <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-[#E1DCC9]/70">
-                                <CardTitle className="text-xs font-bold text-[#1F150C] uppercase tracking-wider flex items-center gap-2">
-                                    <TrendingUp className="h-4 w-4 text-[#412D15]" />
+                        <Card bezel={true} className="bg-white/95 dark:bg-[#17120D] dark:border-[#403426]">
+                            <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-[#E1DCC9]/70 dark:border-[#403426]">
+                                <CardTitle className="text-xs font-bold text-[#1F150C] dark:text-[#F5F0E8] uppercase tracking-wider flex items-center gap-2">
+                                    <TrendingUp className="h-4 w-4 text-[#412D15] dark:text-[#C49A5A]" />
                                     <span>Academic CGPA Progression</span>
                                 </CardTitle>
                                 <Link
                                     to="/academics"
-                                    className="text-[#412D15] hover:text-[#000000] font-bold flex items-center gap-1 transition-colors underline text-xs"
+                                    className="text-[#412D15] dark:text-[#C49A5A] hover:text-[#000000] dark:hover:text-[#F5F0E8] font-bold flex items-center gap-1 transition-colors underline text-xs"
                                 >
                                     <span>View Transcript</span>
                                     <ChevronRight className="h-3.5 w-3.5" />
@@ -264,26 +264,29 @@ export const StudentDashboard = () => {
                                     <AreaChart data={gpaData} margin={{ top: 10, right: 20, left: -25, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="colorGpaBronze" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#412D15" stopOpacity={0.35} />
-                                                <stop offset="95%" stopColor="#412D15" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#C49A5A" stopOpacity={0.4} />
+                                                <stop offset="95%" stopColor="#C49A5A" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#E1DCC9" />
-                                        <XAxis dataKey="semester" stroke="#8F7554" fontSize={11} />
-                                        <YAxis domain={[0, 10]} stroke="#8F7554" fontSize={11} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#403426" strokeOpacity={0.4} />
+                                        <XAxis dataKey="semester" stroke="#A69B89" fontSize={11} tick={{ fill: '#A69B89' }} />
+                                        <YAxis domain={[0, 10]} stroke="#A69B89" fontSize={11} tick={{ fill: '#A69B89' }} />
                                         <Tooltip
                                             contentStyle={{
-                                                backgroundColor: '#1F150C',
+                                                backgroundColor: '#17120D',
                                                 borderRadius: '12px',
-                                                color: '#E1DCC9',
+                                                color: '#F5F0E8',
                                                 fontSize: '11px',
-                                                border: '1px solid #412D15'
+                                                border: '1px solid #403426',
+                                                boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
                                             }}
+                                            itemStyle={{ color: '#F5F0E8' }}
+                                            labelStyle={{ color: '#C49A5A', fontWeight: 'bold' }}
                                         />
                                         <Area
                                             type="monotone"
                                             dataKey="gpa"
-                                            stroke="#412D15"
+                                            stroke="#C49A5A"
                                             strokeWidth={2.5}
                                             fillOpacity={1}
                                             fill="url(#colorGpaBronze)"
@@ -301,25 +304,25 @@ export const StudentDashboard = () => {
                         {/* Learning Roadmap Card */}
                         <StaggerItem>
                             <HoverLift>
-                                <Card bezel={true} className="bg-white/95 flex flex-col justify-between h-full">
-                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
-                                        <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
-                                            <BookOpen className="h-4 w-4 text-[#412D15]" />
+                                <Card bezel={true} className="bg-white/95 dark:bg-[#17120D] dark:border-[#403426] flex flex-col justify-between h-full">
+                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40 dark:border-[#403426]">
+                                        <CardTitle className="text-xs font-bold text-[#6B5336] dark:text-[#C49A5A] uppercase tracking-wider flex items-center gap-2">
+                                            <BookOpen className="h-4 w-4 text-[#412D15] dark:text-[#C49A5A]" />
                                             <span>Learning Roadmap</span>
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-4 pt-4">
                                         <div className="space-y-1.5">
-                                            <span className="font-bold text-[#1F150C] block text-sm">Full Stack Development Track</span>
-                                            <div className="flex items-center justify-between text-[11px] text-[#6B5336]">
+                                            <span className="font-bold text-[#1F150C] dark:text-[#F5F0E8] block text-sm">Full Stack Development Track</span>
+                                            <div className="flex items-center justify-between text-[11px] text-[#6B5336] dark:text-[#C8BFAF]">
                                                 <span>Progress</span>
-                                                <span className="font-bold text-[#412D15] tabular-nums">68% Complete</span>
+                                                <span className="font-bold text-[#412D15] dark:text-[#C49A5A] tabular-nums">68% Complete</span>
                                             </div>
                                             <AnimatedProgress value={68} delay={0.3} />
                                         </div>
-                                        <div className="p-3 border border-[#E1DCC9] rounded-xl bg-[#FAF7F2] space-y-1">
-                                            <span className="text-[9.5px] uppercase font-bold text-[#6B5336] tracking-wider">Next Up:</span>
-                                            <p className="font-bold text-[#1F150C] text-xs">Advanced React State & Async Patterns</p>
+                                        <div className="p-3 border border-[#E1DCC9] dark:border-[#403426] rounded-xl bg-[#FAF7F2] dark:bg-[#21180F] space-y-1">
+                                            <span className="text-[9.5px] uppercase font-bold text-[#6B5336] dark:text-[#C8BFAF] tracking-wider">Next Up:</span>
+                                            <p className="font-bold text-[#1F150C] dark:text-[#F5F0E8] text-xs">Advanced React State & Async Patterns</p>
                                         </div>
                                         <Link to="/learning" className="inline-block pt-1 w-full">
                                             <Button variant="secondary" trailingIcon={ArrowRight} className="w-full text-xs py-2 justify-center">
@@ -334,26 +337,26 @@ export const StudentDashboard = () => {
                         {/* Target Role Alignment Card */}
                         <StaggerItem>
                             <HoverLift>
-                                <Card bezel={true} className="bg-white/95 flex flex-col justify-between h-full">
-                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
-                                        <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
-                                            <Briefcase className="h-4 w-4 text-[#412D15]" />
+                                <Card bezel={true} className="bg-white/95 dark:bg-[#17120D] dark:border-[#403426] flex flex-col justify-between h-full">
+                                    <CardHeader className="pb-2 border-b border-[#E1DCC9]/40 dark:border-[#403426]">
+                                        <CardTitle className="text-xs font-bold text-[#6B5336] dark:text-[#C49A5A] uppercase tracking-wider flex items-center gap-2">
+                                            <Briefcase className="h-4 w-4 text-[#412D15] dark:text-[#C49A5A]" />
                                             <span>Target Role Alignment</span>
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-4 pt-4">
                                         <div className="space-y-1">
-                                            <span className="font-bold text-[#1F150C] block text-sm">
+                                            <span className="font-bold text-[#1F150C] dark:text-[#F5F0E8] block text-sm">
                                                 {profile?.careerInterests?.[0] || 'Software Development Engineer'}
                                             </span>
-                                            <span className="text-[11px] text-[#6B5336] font-medium">Skill Match Benchmark: 92%</span>
+                                            <span className="text-[11px] text-[#6B5336] dark:text-[#C8BFAF] font-medium">Skill Match Benchmark: 92%</span>
                                         </div>
                                         <div className="flex gap-1.5 flex-wrap">
                                             {(profile?.skills || [{ name: 'React' }, { name: 'Node.js' }, { name: 'TypeScript' }]).slice(0, 3).map((s) => (
                                                 <Badge key={s.name} variant="bronze" size="xs">{s.name}</Badge>
                                             ))}
                                             {(profile?.skills || []).length > 3 && (
-                                                <span className="text-[10px] text-[#6B5336] font-semibold self-center">
+                                                <span className="text-[10px] text-[#6B5336] dark:text-[#C8BFAF] font-semibold self-center">
                                                     +{profile.skills.length - 3} more
                                                 </span>
                                             )}
@@ -374,10 +377,10 @@ export const StudentDashboard = () => {
                 <div className="lg:col-span-1 space-y-6">
                     {/* AI Recommendations Card */}
                     <SlideIn direction="right" delay={0.15}>
-                        <Card bezel={true} className="bg-white/95">
-                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
-                                <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
-                                    <Sparkles className="h-4 w-4 text-[#412D15]" />
+                        <Card bezel={true} className="bg-white/95 dark:bg-[#17120D] dark:border-[#403426]">
+                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40 dark:border-[#403426]">
+                                <CardTitle className="text-xs font-bold text-[#6B5336] dark:text-[#C49A5A] uppercase tracking-wider flex items-center gap-2">
+                                    <Sparkles className="h-4 w-4 text-[#412D15] dark:text-[#C49A5A]" />
                                     <span>AI Recommendations</span>
                                 </CardTitle>
                             </CardHeader>
@@ -409,11 +412,11 @@ export const StudentDashboard = () => {
                                         viewport={{ once: true }}
                                         transition={{ duration: 0.4, delay: 0.2 + i * 0.1, ease: EASE_APPLE }}
                                         whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-                                        className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E1DCC9] hover:bg-[#F4EFE6] transition-colors space-y-1 group cursor-default"
+                                        className="p-3.5 rounded-2xl bg-[#FAF7F2] dark:bg-[#21180F] border border-[#E1DCC9] dark:border-[#403426] hover:bg-[#F4EFE6] dark:hover:bg-[#281e13] transition-colors space-y-1 group cursor-default"
                                     >
-                                        <h4 className="font-bold text-[#1F150C] text-xs">{rec.title}</h4>
-                                        <p className="text-[11px] text-[#6B5336] leading-relaxed">{rec.desc}</p>
-                                        <Link to={rec.link} className="text-[11px] font-bold text-[#412D15] group-hover:text-[#000000] inline-flex items-center gap-1 pt-1 underline">
+                                        <h4 className="font-bold text-[#1F150C] dark:text-[#F5F0E8] text-xs">{rec.title}</h4>
+                                        <p className="text-[11px] text-[#6B5336] dark:text-[#C8BFAF] leading-relaxed">{rec.desc}</p>
+                                        <Link to={rec.link} className="text-[11px] font-bold text-[#412D15] dark:text-[#C49A5A] group-hover:text-[#000000] dark:group-hover:text-[#F5F0E8] inline-flex items-center gap-1 pt-1 underline">
                                             <span>{rec.cta}</span>
                                             <ArrowUpRight className="h-3.5 w-3.5" />
                                         </Link>
@@ -425,15 +428,15 @@ export const StudentDashboard = () => {
 
                     {/* Recent Activity Timeline */}
                     <SlideIn direction="right" delay={0.25}>
-                        <Card bezel={true} className="bg-white/95">
-                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40">
-                                <CardTitle className="text-xs font-bold text-[#6B5336] uppercase tracking-wider flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-[#412D15]" />
+                        <Card bezel={true} className="bg-white/95 dark:bg-[#17120D] dark:border-[#403426]">
+                            <CardHeader className="pb-2 border-b border-[#E1DCC9]/40 dark:border-[#403426]">
+                                <CardTitle className="text-xs font-bold text-[#6B5336] dark:text-[#C49A5A] uppercase tracking-wider flex items-center gap-2">
+                                    <Clock className="h-4 w-4 text-[#412D15] dark:text-[#C49A5A]" />
                                     <span>Recent Activity</span>
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-5">
-                                <div className="relative pl-4 border-l border-[#E1DCC9] space-y-4 text-xs">
+                                <div className="relative pl-4 border-l border-[#E1DCC9] dark:border-[#403426] space-y-4 text-xs">
                                     {[
                                         { time: 'Today', text: 'Cumulative GPA Context Refreshed', color: 'bg-[#412D15]' },
                                         { time: 'Yesterday', text: 'Applied to Amazon SDE-1 Drive', color: 'bg-[#6B5336]' },
@@ -452,10 +455,10 @@ export const StudentDashboard = () => {
                                                 whileInView={{ scale: 1 }}
                                                 viewport={{ once: true }}
                                                 transition={{ duration: 0.3, delay: 0.35 + i * 0.12, ease: EASE_SPRING }}
-                                                className={`absolute -left-[21px] top-1 ${item.color} h-2.5 w-2.5 rounded-full ring-4 ring-white shadow-xs`}
+                                                className={`absolute -left-[21px] top-1 ${item.color} h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-[#17120D] shadow-xs`}
                                             />
-                                            <span className="text-[10px] text-[#8F7554] font-semibold block">{item.time}</span>
-                                            <span className="font-bold text-[#1F150C] text-xs">{item.text}</span>
+                                            <span className="text-[10px] text-[#8F7554] dark:text-[#A69B89] font-semibold block">{item.time}</span>
+                                            <span className="font-bold text-[#1F150C] dark:text-[#F5F0E8] text-xs">{item.text}</span>
                                         </motion.div>
                                     ))}
                                 </div>

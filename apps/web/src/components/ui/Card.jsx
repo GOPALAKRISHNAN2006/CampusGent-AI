@@ -21,15 +21,15 @@ export const Card = ({ children, className, hover = false, bezel = false, glass 
         return (
             <MotionTag
                 className={twMerge(
-                    'p-1 rounded-[1.5rem] bg-black/[0.03] border border-[#E1DCC9]/90 shadow-bezel-outer transition-all duration-300 ease-apple',
-                    hover && 'hover:-translate-y-1 hover:shadow-card-hover hover:border-[#412D15]/40',
+                    'p-1 rounded-[1.5rem] bg-black/[0.03] dark:bg-white/[0.03] border border-[#E1DCC9]/90 dark:border-[#403426] shadow-bezel-outer transition-all duration-300 ease-apple',
+                    hover && 'hover:-translate-y-1 hover:shadow-card-hover hover:border-[#412D15]/40 dark:hover:border-[#C49A5A]/40',
                     className
                 )}
                 {...motionProps}
                 {...hoverProps}
                 {...props}
             >
-                <div className="rounded-[calc(1.5rem-0.25rem)] bg-white border border-[#E1DCC9]/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] overflow-hidden">
+                <div className="rounded-[calc(1.5rem-0.25rem)] bg-white dark:bg-[#17120D] border border-[#E1DCC9]/60 dark:border-[#403426] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] overflow-hidden">
                     {children}
                 </div>
             </MotionTag>
@@ -39,9 +39,9 @@ export const Card = ({ children, className, hover = false, bezel = false, glass 
     return (
         <MotionTag
             className={twMerge(
-                glass ? 'glass-card' : 'bg-white border border-[#E1DCC9]',
-                'shadow-subtle rounded-2xl overflow-hidden transition-all duration-300 ease-apple shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_3px_rgba(31,21,12,0.05)]',
-                hover && 'hover:-translate-y-1 hover:shadow-card-hover hover:border-[#412D15]/50',
+                glass ? 'glass-card' : 'bg-white dark:bg-[#17120D] border border-[#E1DCC9] dark:border-[#403426]',
+                'shadow-subtle rounded-2xl overflow-hidden transition-all duration-300 ease-apple shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_3px_rgba(31,21,12,0.05)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)]',
+                hover && 'hover:-translate-y-1 hover:shadow-card-hover hover:border-[#412D15]/50 dark:hover:border-[#C49A5A]/40',
                 className
             )}
             {...motionProps}
@@ -56,7 +56,7 @@ export const Card = ({ children, className, hover = false, bezel = false, glass 
 export const CardHeader = ({ children, className, ...props }) => {
     return (
         <div
-            className={twMerge('px-5 py-4 border-b border-[#E1DCC9]/60 flex items-center justify-between gap-3', className)}
+            className={twMerge('px-5 py-4 border-b border-[#E1DCC9]/60 dark:border-[#403426] flex items-center justify-between gap-3', className)}
             {...props}
         >
             {children}
@@ -67,7 +67,7 @@ export const CardHeader = ({ children, className, ...props }) => {
 export const CardTitle = ({ children, className, ...props }) => {
     return (
         <h3
-            className={twMerge('text-sm font-bold text-[#1F150C] tracking-tight leading-snug', className)}
+            className={twMerge('text-sm font-bold text-[#1F150C] dark:text-[#F5F0E8] tracking-tight leading-snug', className)}
             {...props}
         >
             {children}
@@ -78,7 +78,7 @@ export const CardTitle = ({ children, className, ...props }) => {
 export const CardDescription = ({ children, className, ...props }) => {
     return (
         <p
-            className={twMerge('text-xs text-[#6B5336] font-normal mt-0.5 leading-relaxed', className)}
+            className={twMerge('text-xs text-[#6B5336] dark:text-[#C8BFAF] font-normal mt-0.5 leading-relaxed', className)}
             {...props}
         >
             {children}
@@ -89,7 +89,7 @@ export const CardDescription = ({ children, className, ...props }) => {
 export const CardContent = ({ children, className, ...props }) => {
     return (
         <div
-            className={twMerge('p-5 text-[#1F150C]', className)}
+            className={twMerge('p-5 text-[#1F150C] dark:text-[#F5F0E8]', className)}
             {...props}
         >
             {children}
@@ -100,7 +100,7 @@ export const CardContent = ({ children, className, ...props }) => {
 export const CardFooter = ({ children, className, ...props }) => {
     return (
         <div
-            className={twMerge('px-5 py-3.5 bg-[#FAF7F2]/80 border-t border-[#E1DCC9]/60 flex items-center justify-between', className)}
+            className={twMerge('px-5 py-3.5 bg-[#FAF7F2]/80 dark:bg-[#1A140E] border-t border-[#E1DCC9]/60 dark:border-[#403426] flex items-center justify-between', className)}
             {...props}
         >
             {children}

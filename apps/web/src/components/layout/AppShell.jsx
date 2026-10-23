@@ -491,26 +491,26 @@ export const AppShell = ({ children }) => {
                                             initial="hidden"
                                             animate="visible"
                                             exit="exit"
-                                            className="absolute right-0 mt-2 w-48 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-1.5 z-50 text-xs"
+                                            className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#17120D] border border-[#E1DCC9] dark:border-[#403426] rounded-2xl shadow-xl py-1.5 z-50 text-xs"
                                         >
                                             <Link
                                                 to="/placement/drives"
                                                 onClick={() => setShowQuickActions(false)}
-                                                className="block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold border-b border-[#E1DCC9]/70 transition-colors"
+                                                className="block px-4 py-2 hover:bg-[#FAF7F2] dark:hover:bg-[#261E16] text-[#1F150C] dark:text-[#F5F0E8] font-semibold border-b border-[#E1DCC9]/70 dark:border-[#403426] transition-colors"
                                             >
                                                 + Create Placement Drive
                                             </Link>
                                             <Link
                                                 to="/placement/companies"
                                                 onClick={() => setShowQuickActions(false)}
-                                                className="block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold border-b border-[#E1DCC9]/70 transition-colors"
+                                                className="block px-4 py-2 hover:bg-[#FAF7F2] dark:hover:bg-[#261E16] text-[#1F150C] dark:text-[#F5F0E8] font-semibold border-b border-[#E1DCC9]/70 dark:border-[#403426] transition-colors"
                                             >
                                                 + Add Company Profile
                                             </Link>
                                             <Link
                                                 to="/placement/applications"
                                                 onClick={() => setShowQuickActions(false)}
-                                                className="block px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors"
+                                                className="block px-4 py-2 hover:bg-[#FAF7F2] dark:hover:bg-[#261E16] text-[#1F150C] dark:text-[#F5F0E8] font-semibold transition-colors"
                                             >
                                                 Review Applications
                                             </Link>
@@ -528,11 +528,11 @@ export const AppShell = ({ children }) => {
                         <div className="relative">
                             <button
                                 onClick={() => setShowNotifications(!showNotifications)}
-                                className="p-2 hover:bg-[#F4EFE6] rounded-xl relative transition-colors text-[#412D15] hover:text-[#000000] cursor-pointer"
+                                className="p-2 hover:bg-[#F4EFE6] dark:hover:bg-[#1F1812] rounded-xl relative transition-colors text-[#412D15] dark:text-[#E1DCC9] hover:text-[#000000] dark:hover:text-[#FFFFFF] cursor-pointer"
                             >
                                 <Bell className="h-5 w-5" />
                                 {unreadCount > 0 && (
-                                    <span className="absolute top-1 right-1 bg-[#412D15] text-[#E1DCC9] font-bold text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center ring-2 ring-white shadow-xs">
+                                    <span className="absolute top-1 right-1 bg-[#412D15] dark:bg-[#C49A5A] text-[#E1DCC9] dark:text-[#17120D] font-bold text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-[#17120D] shadow-xs">
                                         {unreadCount > 9 ? '9+' : unreadCount}
                                     </span>
                                 )}
@@ -546,12 +546,12 @@ export const AppShell = ({ children }) => {
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
-                                        className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto">
-                                        <div className="px-4 py-2.5 border-b border-[#E1DCC9]/70 flex items-center justify-between">
+                                        className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 bg-white dark:bg-[#17120D] border border-[#E1DCC9] dark:border-[#403426] rounded-2xl shadow-xl py-2 z-50 max-h-[28rem] overflow-y-auto">
+                                        <div className="px-4 py-2.5 border-b border-[#E1DCC9]/70 dark:border-[#403426] flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-bold text-[#1F150C] text-xs">Notifications</span>
+                                                <span className="font-bold text-[#1F150C] dark:text-[#F5F0E8] text-xs">Notifications</span>
                                                 {unreadCount > 0 && (
-                                                    <span className="bg-[#F4EFE6] text-[#412D15] border border-[#E1DCC9] text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                    <span className="bg-[#F4EFE6] dark:bg-[#21180F] text-[#412D15] dark:text-[#E1DCC9] border border-[#E1DCC9] dark:border-[#403426] text-[10px] font-bold px-2 py-0.5 rounded-full">
                                                         {unreadCount} new
                                                     </span>
                                                 )}
@@ -559,33 +559,33 @@ export const AppShell = ({ children }) => {
                                             {unreadCount > 0 && (
                                                 <button
                                                     onClick={handleMarkAllRead}
-                                                    className="text-[11px] font-bold text-[#412D15] hover:text-[#000000] transition-colors cursor-pointer"
+                                                    className="text-[11px] font-bold text-[#412D15] dark:text-[#C49A5A] hover:text-[#000000] dark:hover:text-[#FFFFFF] transition-colors cursor-pointer"
                                                 >
                                                     Mark all read
                                                 </button>
                                             )}
                                         </div>
                                         {notifications.length === 0 ? (
-                                            <div className="px-4 py-8 text-center text-[#6B5336] dark:text-[#D8D1BC] space-y-1">
-                                                <Bell className="h-6 w-6 mx-auto text-[#8F7554] dark:text-[#C9BF9F] mb-2" />
-                                                <p className="text-xs font-semibold text-[#1F150C] dark:text-[#FAF7F2]">All caught up!</p>
-                                                <p className="text-[11px] text-[#6B5336] dark:text-[#D8D1BC]">No new notifications right now.</p>
+                                            <div className="px-4 py-8 text-center text-[#6B5336] dark:text-[#C8BFAF] space-y-1">
+                                                <Bell className="h-6 w-6 mx-auto text-[#8F7554] dark:text-[#C49A5A] mb-2" />
+                                                <p className="text-xs font-semibold text-[#1F150C] dark:text-[#F5F0E8]">All caught up!</p>
+                                                <p className="text-[11px] text-[#6B5336] dark:text-[#C8BFAF]">No new notifications right now.</p>
                                             </div>
                                         ) : (
                                             notifications.slice(0, 5).map((n) => (
                                                 <div
                                                     key={n._id}
-                                                    className={`px-4 py-3 border-b border-[#E1DCC9]/50 dark:border-[#382818] text-xs transition-colors hover:bg-[#FAF7F2] dark:hover:bg-[#1C1610] ${
-                                                        n.read ? 'bg-transparent text-[#6B5336] dark:text-[#D8D1BC]' : 'bg-[#FAF7F2] dark:bg-[#1C1610]'
+                                                    className={`px-4 py-3 border-b border-[#E1DCC9]/50 dark:border-[#403426] text-xs transition-colors hover:bg-[#FAF7F2] dark:hover:bg-[#21180F] ${
+                                                        n.read ? 'bg-transparent text-[#6B5336] dark:text-[#C8BFAF]' : 'bg-[#FAF7F2] dark:bg-[#21180F]'
                                                     }`}
                                                 >
                                                     <div className="flex justify-between items-start mb-0.5">
-                                                        <span className="font-bold text-[#1F150C] dark:text-[#FAF7F2]">{n.title}</span>
-                                                        <span className="text-[9.5px] text-[#6B5336] dark:text-[#D8D1BC] font-medium">
+                                                        <span className="font-bold text-[#1F150C] dark:text-[#F5F0E8]">{n.title}</span>
+                                                        <span className="text-[9.5px] text-[#6B5336] dark:text-[#A69B89] font-medium">
                                                             {new Date(n.createdAt).toLocaleDateString()}
                                                         </span>
                                                     </div>
-                                                    <p className="text-[#6B5336] dark:text-[#D8D1BC] leading-relaxed text-[11px] line-clamp-2">
+                                                    <p className="text-[#6B5336] dark:text-[#C8BFAF] leading-relaxed text-[11px] line-clamp-2">
                                                         {n.message}
                                                     </p>
                                                 </div>
@@ -594,7 +594,7 @@ export const AppShell = ({ children }) => {
                                         <Link
                                             to={isFaculty ? "/faculty/notifications" : isPlacementOfficer ? "/placement/notifications" : "/notifications"}
                                             onClick={() => setShowNotifications(false)}
-                                            className="block text-center py-2 text-[11px] font-bold text-[#412D15] hover:text-[#000000] transition-colors border-t border-[#E1DCC9]/70 mt-1"
+                                            className="block text-center py-2 text-[11px] font-bold text-[#412D15] dark:text-[#C49A5A] hover:text-[#000000] dark:hover:text-[#FFFFFF] transition-colors border-t border-[#E1DCC9]/70 dark:border-[#403426] mt-1"
                                         >
                                             View all notifications →
                                         </Link>
@@ -608,12 +608,12 @@ export const AppShell = ({ children }) => {
                         <div className="relative">
                             <button
                                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                                className="flex items-center gap-2 p-1.5 hover:bg-[#F4EFE6] rounded-xl transition-colors cursor-pointer text-left"
+                                className="flex items-center gap-2 p-1.5 hover:bg-[#F4EFE6] dark:hover:bg-[#1F1812] rounded-xl transition-colors cursor-pointer text-left"
                             >
                                 <div className="h-8 w-8 bg-gradient-to-br from-[#1F150C] to-[#000000] border border-[#412D15] text-[#E1DCC9] rounded-xl flex items-center justify-center font-black text-xs shadow-xs">
                                     {user?.name ? user.name.slice(0, 2).toUpperCase() : 'CG'}
                                 </div>
-                                <span className="hidden md:inline font-bold text-[#1F150C] text-xs truncate max-w-[110px]">
+                                <span className="hidden md:inline font-bold text-[#1F150C] dark:text-[#F5F0E8] text-xs truncate max-w-[110px]">
                                     {user?.name ? user.name.split(' ')[0] : 'Account'}
                                 </span>
                             </button>
@@ -626,32 +626,32 @@ export const AppShell = ({ children }) => {
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
-                                        className="absolute right-0 mt-2 w-52 bg-white border border-[#E1DCC9] rounded-2xl shadow-xl py-2 z-50 text-xs">
-                                        <div className="px-4 py-2 border-b border-[#E1DCC9]/70">
-                                            <p className="font-bold text-[#1F150C] truncate">{user?.name}</p>
-                                            <p className="text-[10px] text-[#6B5336] font-medium truncate">{user?.email}</p>
+                                        className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#17120D] border border-[#E1DCC9] dark:border-[#403426] rounded-2xl shadow-xl py-2 z-50 text-xs">
+                                        <div className="px-4 py-2 border-b border-[#E1DCC9]/70 dark:border-[#403426]">
+                                            <p className="font-bold text-[#1F150C] dark:text-[#F5F0E8] truncate">{user?.name}</p>
+                                            <p className="text-[10px] text-[#6B5336] dark:text-[#C8BFAF] font-medium truncate">{user?.email}</p>
                                         </div>
                                         <Link
                                             to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : isAdmin ? "/admin/settings" : "/profile"}
                                             onClick={() => setShowProfileMenu(false)}
-                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] dark:hover:bg-[#261E16] text-[#1F150C] dark:text-[#F5F0E8] font-semibold transition-colors"
                                         >
-                                            <User className="h-4 w-4 text-[#6B5336]" />
+                                            <User className="h-4 w-4 text-[#6B5336] dark:text-[#C49A5A]" />
                                             <span>{isAdmin ? "Admin Profile" : "My Profile"}</span>
                                         </Link>
                                         <Link
                                             to={isFaculty ? "/faculty/settings" : isPlacementOfficer ? "/placement/settings" : isAdmin ? "/admin/settings" : "/settings"}
                                             onClick={() => setShowProfileMenu(false)}
-                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] text-[#1F150C] font-semibold transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-[#FAF7F2] dark:hover:bg-[#261E16] text-[#1F150C] dark:text-[#F5F0E8] font-semibold transition-colors"
                                         >
-                                            <Settings className="h-4 w-4 text-[#6B5336]" />
+                                            <Settings className="h-4 w-4 text-[#6B5336] dark:text-[#C49A5A]" />
                                             <span>Settings</span>
                                         </Link>
-                                        <div className="px-4 py-2 flex items-center justify-between border-t border-[#E1DCC9]/70">
-                                            <span className="text-[11px] text-[#6B5336] font-semibold">Theme</span>
+                                        <div className="px-4 py-2 flex items-center justify-between border-t border-[#E1DCC9]/70 dark:border-[#403426]">
+                                            <span className="text-[11px] text-[#6B5336] dark:text-[#C8BFAF] font-semibold">Theme</span>
                                             <ThemeToggle variant="pill" />
                                         </div>
-                                        <div className="border-t border-[#E1DCC9]/70 my-1" />
+                                        <div className="border-t border-[#E1DCC9]/70 dark:border-[#403426] my-1" />
                                         <button
                                             onClick={() => {
                                                 setShowProfileMenu(false);

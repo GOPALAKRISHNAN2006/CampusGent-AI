@@ -162,10 +162,10 @@ export const DashboardStat = ({
     const content = (
         <div className="flex items-start justify-between gap-3">
             <div className="space-y-1.5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6B5336]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6B5336] dark:text-[#C8BFAF]">
                     {label}
                 </p>
-                <p className="text-2xl sm:text-3xl font-black tracking-tight text-[#1F150C] tabular-nums">
+                <p className="text-2xl sm:text-3xl font-black tracking-tight text-[#1F150C] dark:text-[#F5F0E8] tabular-nums">
                     {value}
                 </p>
                 {(detail || trend) && (
@@ -214,7 +214,7 @@ export const DashboardStat = ({
     return (
         <motion.div
             {...cardMotion}
-            className="group relative overflow-hidden rounded-2xl border border-[#E1DCC9] bg-white p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_3px_rgba(31,21,12,0.04)] glow-on-hover"
+            className="group relative overflow-hidden rounded-2xl border border-[#E1DCC9] dark:border-[#403426] bg-white dark:bg-[#17120D] p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_3px_rgba(31,21,12,0.04)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.4)] glow-on-hover"
         >
             {content}
         </motion.div>
@@ -228,18 +228,18 @@ export const DashboardSectionTitle = ({ eyebrow, title, action }) => (
     <FadeIn delay={0.1} y={16} className="flex items-end justify-between gap-4 mb-4">
         <div>
             {eyebrow && (
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.18em] text-[#412D15] mb-0.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.18em] text-[#412D15] dark:text-[#C49A5A] mb-0.5">
                     {eyebrow}
                 </p>
             )}
-            <h2 className="text-base sm:text-lg font-bold tracking-tight text-[#1F150C]">
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-[#1F150C] dark:text-[#F5F0E8]">
                 {title}
             </h2>
         </div>
         {action && (
             <Link
                 to={action.href}
-                className="group text-xs font-semibold text-[#412D15] hover:text-[#1F150C] transition-colors flex items-center gap-1"
+                className="group text-xs font-semibold text-[#412D15] dark:text-[#C49A5A] hover:text-[#1F150C] dark:hover:text-[#FAF7F2] transition-colors flex items-center gap-1"
             >
                 <span>{action.label}</span>
                 <motion.span
@@ -263,9 +263,9 @@ export const DashboardChecklist = ({ items = [] }) => (
             <StaggerItem key={item}>
                 <motion.div
                     whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-                    className="flex items-start gap-2.5 text-xs font-medium text-[#1F150C] bg-[#FAF7F2] p-3 rounded-xl border border-[#E1DCC9] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] transition-colors hover:bg-white cursor-default"
+                    className="flex items-start gap-2.5 text-xs font-medium text-[#1F150C] dark:text-[#F5F0E8] bg-[#FAF7F2] dark:bg-[#1A140E] p-3 rounded-xl border border-[#E1DCC9] dark:border-[#403426] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] transition-colors hover:bg-white dark:hover:bg-[#241D15] cursor-default"
                 >
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#412D15]" />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#412D15] dark:text-[#C49A5A]" />
                     <span className="leading-snug">{item}</span>
                 </motion.div>
             </StaggerItem>
