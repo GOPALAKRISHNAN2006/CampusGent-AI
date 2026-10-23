@@ -60,13 +60,13 @@ export const GenericAgentViewer = ({ agentName, title, description }) => {
       {!insight && !loading && (
         <Card className="text-center p-12 border-dashed border-2 border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/20 shadow-none">
           <CardContent className="space-y-4 p-0">
-            <div className="mx-auto w-14 h-14 bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-2xl flex items-center justify-center shadow-xs">
+            <div className="mx-auto w-14 h-14 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-2xl flex items-center justify-center shadow-xs">
               <Bot className="h-7 w-7" />
             </div>
             <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">
               Agent Workspace is Ready for Execution
             </h2>
-            <p className="text-stone-500 dark:text-stone-400 text-xs max-w-md mx-auto leading-relaxed">
+            <p className="text-stone-600 dark:text-stone-300 text-xs max-w-md mx-auto leading-relaxed">
               Click 'Run Agent Analysis' to execute this cognitive agent against your latest verified campus data.
             </p>
             <div className="flex flex-wrap justify-center gap-2 pt-2 text-[11px] font-semibold">
@@ -90,7 +90,7 @@ export const GenericAgentViewer = ({ agentName, title, description }) => {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <CardTitle className="text-stone-900 dark:text-stone-100">Agent Output Intelligence</CardTitle>
-                <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400 font-normal">
+                <p className="mt-0.5 text-xs text-stone-600 dark:text-stone-300 font-normal">
                   Generated from verified profile snapshot.
                 </p>
               </div>

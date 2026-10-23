@@ -34,9 +34,13 @@ export const ApplicationStatus = {
     SHORTLISTED: 'SHORTLISTED',
     INTERVIEW: 'INTERVIEW',
     SELECTED: 'SELECTED',
+    OFFERED: 'OFFERED',
+    OFFER_ACCEPTED: 'OFFER_ACCEPTED',
+    OFFER_REJECTED: 'OFFER_REJECTED',
     REJECTED: 'REJECTED',
     WITHDRAWN: 'WITHDRAWN',
 };
+
 // --- Zod Validations ---
 // Authentication
 export const RegisterSchema = z.object({

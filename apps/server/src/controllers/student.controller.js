@@ -46,13 +46,17 @@ export const updateProfile = async (req, res, next) => {
         if (!profile) {
             throw new NotFoundError('Student profile not found');
         }
-        // Update fields
-        if (validatedData.rollNumber)
-            profile.rollNumber = validatedData.rollNumber;
+        // Authoritative Academic Protection:
+        // Only administrators can directly override academic identifiers (rollNumber) or CGPA.
+        // For students, CGPA is recomputed authoritatively from academic assessments & attendance.
+        if (req.user?.role === UserRole.ADMIN || req.user?.role === 'SUPER_ADMIN') {
+            if (validatedData.rollNumber)
+                profile.rollNumber = validatedData.rollNumber;
+            if (validatedData.cgpa !== undefined)
+                profile.cgpa = validatedData.cgpa;
+        }
         if (validatedData.semester)
             profile.semester = validatedData.semester;
-        if (validatedData.cgpa !== undefined)
-            profile.cgpa = validatedData.cgpa;
         if (validatedData.skills)
             profile.skills = validatedData.skills;
         if (validatedData.projects)

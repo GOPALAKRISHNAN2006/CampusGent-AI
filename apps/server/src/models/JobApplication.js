@@ -51,6 +51,37 @@ const JobApplicationSchema = new Schema({
             },
         },
     ],
+    offerDetails: {
+        packageLpa: {
+            type: Number,
+            min: 0,
+        },
+        designation: {
+            type: String,
+            trim: true,
+        },
+        joiningLocation: {
+            type: String,
+            trim: true,
+        },
+        deadline: {
+            type: Date,
+        },
+        issuedAt: {
+            type: Date,
+        },
+        issuedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        respondedAt: {
+            type: Date,
+        },
+        decisionRemarks: {
+            type: String,
+            trim: true,
+        },
+    },
 }, {
     timestamps: true,
 });

@@ -18,6 +18,9 @@ import { UserRole, UserStatus, JobStatus, EmploymentType, ApplicationStatus } fr
 const DEFAULT_PASSWORD = 'Password@123';
 
 export const seedDatabase = async () => {
+    if (env.NODE_ENV === 'production' && process.env.ALLOW_SEED_IN_PRODUCTION !== 'true') {
+        throw new Error('❌ Production Safety Guard: Automatic seeding of demo accounts and mock records is prohibited in production mode. Set ALLOW_SEED_IN_PRODUCTION=true to force seeding.');
+    }
     try {
         console.log('🌱 Connecting to database for seeding...');
         await mongoose.connect(env.MONGODB_URI);

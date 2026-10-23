@@ -31,6 +31,40 @@ export const errorHandler = (err, req, res, next) => {
         });
         return;
     }
+    // 2.5 Mongoose CastError (Malformed ObjectIds)
+    if (err.name === 'CastError') {
+        res.status(400).json({
+            success: false,
+            error: {
+                code: 'INVALID_IDENTIFIER',
+                message: `Invalid format for resource identifier '${err.path}': ${err.value}`,
+            },
+        });
+        return;
+    }
+    // 2.6 Mongoose Duplicate Key Error (E11000)
+    if (err.code === 11000) {
+        const field = Object.keys(err.keyValue || {})[0] || 'resource';
+        res.status(409).json({
+            success: false,
+            error: {
+                code: 'DUPLICATE_RESOURCE',
+                message: `A record with this ${field} already exists in the system.`,
+            },
+        });
+        return;
+    }
+    // 2.7 Mongoose Document Validation Errors
+    if (err.name === 'ValidationError') {
+        res.status(400).json({
+            success: false,
+            error: {
+                code: 'VALIDATION_ERROR',
+                message: err.message,
+            },
+        });
+        return;
+    }
     // 3. Fallback for Internal Uncaught Server Errors
     const responseError = {
         code: 'INTERNAL_SERVER_ERROR',

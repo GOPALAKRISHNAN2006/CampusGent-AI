@@ -4,6 +4,7 @@ import { apiClient } from '../api/client.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { CheckCircle, Settings, AlertCircle, User, Bell, Lock } from 'lucide-react';
+import { ThemeToggle } from '../components/ui/ThemeToggle.jsx';
 
 export const FacultySettings = () => {
   const { user } = useAuth();
@@ -201,6 +202,13 @@ export const FacultySettings = () => {
                         value={email}
                         className="w-full text-xs border border-brand-200 rounded-lg p-2.5 outline-none bg-brand-50/60 text-brand-600"
                       />
+                    </div>
+                    <div className="p-3 bg-brand-50/50 rounded-lg border border-brand-100 flex items-center justify-between md:col-span-2">
+                      <div>
+                        <span className="text-brand-450 block font-medium text-[11px]">Interface Theme</span>
+                        <span className="font-bold text-brand-900 block mt-0.5 text-xs">Switch between Light and Dark mode</span>
+                      </div>
+                      <ThemeToggle variant="pill" />
                     </div>
                   </div>
                   <div className="flex justify-end pt-2">

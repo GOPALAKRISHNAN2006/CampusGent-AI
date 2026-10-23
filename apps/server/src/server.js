@@ -9,13 +9,17 @@ const startServer = async () => {
     // Connect to Database
     await connectDB();
 
-    // Auto-seed core roles if admin account does not exist
+    // Auto-seed core roles in non-production environments if admin account does not exist
     try {
         const adminExists = await User.findOne({ email: 'admin@campusgent.edu' });
         if (!adminExists) {
-            console.log('🌱 Admin account not detected. Initializing database with core roles (Admin, Faculty, Placement Officer)...');
-            await seedDatabase();
-            console.log('✅ Auto-seed completed successfully.');
+            if (env.NODE_ENV !== 'production') {
+                console.log('🌱 Admin account not detected. Initializing database with core roles (Admin, Faculty, Placement Officer)...');
+                await seedDatabase();
+                console.log('✅ Auto-seed completed successfully.');
+            } else {
+                console.warn('⚠️ Admin account not detected in production. Manual administrator provisioning required.');
+            }
         }
     } catch (seedErr) {
         console.warn('⚠️ Auto-seed check notice:', seedErr.message);

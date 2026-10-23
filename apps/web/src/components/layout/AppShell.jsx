@@ -10,6 +10,7 @@ import {
     ListTodo, Calendar, TrendingUp, AlertCircle, CheckSquare, Users,
     Search, Plus, X, ExternalLink, BrainCircuit
 } from 'lucide-react';
+import { ThemeToggle } from '../ui/ThemeToggle.jsx';
 
 const EASE_APPLE = [0.16, 1, 0.3, 1];
 
@@ -456,14 +457,14 @@ export const AppShell = ({ children }) => {
 
                     {/* Center: Quick Search Bar */}
                     {(isPlacementOfficer || isFaculty) && (
-                        <div className="hidden lg:flex items-center gap-2 bg-[#F4EFE6] border border-[#E1DCC9] px-3.5 py-1.5 rounded-xl w-72 text-[#1F150C] focus-within:border-[#412D15] focus-within:bg-white focus-within:ring-4 focus-within:ring-[#412D15]/10 transition-all shadow-xs">
-                            <Search className="h-3.5 w-3.5 text-[#6B5336] shrink-0" />
+                        <div className="hidden lg:flex items-center gap-2 bg-[#F4EFE6] dark:bg-[#1A140E] border border-[#94805A]/40 dark:border-[#8F7554]/50 px-3.5 py-1.5 rounded-xl w-72 text-[#1F150C] dark:text-[#FAF7F2] focus-within:border-[#412D15] dark:focus-within:border-[#E1DCC9] focus-within:bg-white dark:focus-within:bg-[#17120D] focus-within:ring-4 focus-within:ring-[#412D15]/10 dark:focus-within:ring-[#E1DCC9]/10 transition-all shadow-xs">
+                            <Search className="h-3.5 w-3.5 text-[#6B5336] dark:text-[#C9BF9F] shrink-0" />
                             <input
                                 type="text"
                                 placeholder="Search students, drives, skills..."
-                                className="bg-transparent border-none outline-none text-xs w-full text-[#1F150C] placeholder:text-[#8F7554]"
+                                className="bg-transparent border-none outline-none text-xs w-full text-[#1F150C] dark:text-[#FAF7F2] placeholder:text-[#786144] dark:placeholder:text-[#C9BF9F]"
                             />
-                            <kbd className="px-1.5 py-0.5 text-[9px] font-mono text-[#6B5336] bg-white border border-[#E1DCC9] rounded">
+                            <kbd className="px-1.5 py-0.5 text-[9px] font-mono text-[#6B5336] dark:text-[#D8D1BC] bg-white dark:bg-[#1F1812] border border-[#E1DCC9] dark:border-[#412D15] rounded">
                                 Ctrl K
                             </kbd>
                         </div>
@@ -520,6 +521,9 @@ export const AppShell = ({ children }) => {
                             </div>
                         )}
 
+                        {/* Theme Toggle */}
+                        <ThemeToggle />
+
                         {/* Notifications Menu */}
                         <div className="relative">
                             <button
@@ -562,26 +566,26 @@ export const AppShell = ({ children }) => {
                                             )}
                                         </div>
                                         {notifications.length === 0 ? (
-                                            <div className="px-4 py-8 text-center text-[#8F7554] space-y-1">
-                                                <Bell className="h-6 w-6 mx-auto text-[#C9BF9F] mb-2" />
-                                                <p className="text-xs font-semibold text-[#1F150C]">All caught up!</p>
-                                                <p className="text-[11px] text-[#8F7554]">No new notifications right now.</p>
+                                            <div className="px-4 py-8 text-center text-[#6B5336] dark:text-[#D8D1BC] space-y-1">
+                                                <Bell className="h-6 w-6 mx-auto text-[#8F7554] dark:text-[#C9BF9F] mb-2" />
+                                                <p className="text-xs font-semibold text-[#1F150C] dark:text-[#FAF7F2]">All caught up!</p>
+                                                <p className="text-[11px] text-[#6B5336] dark:text-[#D8D1BC]">No new notifications right now.</p>
                                             </div>
                                         ) : (
                                             notifications.slice(0, 5).map((n) => (
                                                 <div
                                                     key={n._id}
-                                                    className={`px-4 py-3 border-b border-[#E1DCC9]/50 text-xs transition-colors hover:bg-[#FAF7F2] ${
-                                                        n.read ? 'opacity-60' : 'bg-[#FAF7F2]'
+                                                    className={`px-4 py-3 border-b border-[#E1DCC9]/50 dark:border-[#382818] text-xs transition-colors hover:bg-[#FAF7F2] dark:hover:bg-[#1C1610] ${
+                                                        n.read ? 'bg-transparent text-[#6B5336] dark:text-[#D8D1BC]' : 'bg-[#FAF7F2] dark:bg-[#1C1610]'
                                                     }`}
                                                 >
                                                     <div className="flex justify-between items-start mb-0.5">
-                                                        <span className="font-bold text-[#1F150C]">{n.title}</span>
-                                                        <span className="text-[9.5px] text-[#8F7554] font-medium">
+                                                        <span className="font-bold text-[#1F150C] dark:text-[#FAF7F2]">{n.title}</span>
+                                                        <span className="text-[9.5px] text-[#6B5336] dark:text-[#D8D1BC] font-medium">
                                                             {new Date(n.createdAt).toLocaleDateString()}
                                                         </span>
                                                     </div>
-                                                    <p className="text-[#6B5336] leading-relaxed text-[11px] line-clamp-2">
+                                                    <p className="text-[#6B5336] dark:text-[#D8D1BC] leading-relaxed text-[11px] line-clamp-2">
                                                         {n.message}
                                                     </p>
                                                 </div>
@@ -643,15 +647,19 @@ export const AppShell = ({ children }) => {
                                             <Settings className="h-4 w-4 text-[#6B5336]" />
                                             <span>Settings</span>
                                         </Link>
+                                        <div className="px-4 py-2 flex items-center justify-between border-t border-[#E1DCC9]/70">
+                                            <span className="text-[11px] text-[#6B5336] font-semibold">Theme</span>
+                                            <ThemeToggle variant="pill" />
+                                        </div>
                                         <div className="border-t border-[#E1DCC9]/70 my-1" />
                                         <button
                                             onClick={() => {
                                                 setShowProfileMenu(false);
                                                 handleLogout();
                                             }}
-                                            className="w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-rose-50 text-rose-700 font-semibold transition-colors cursor-pointer"
+                                            className="w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-semibold transition-colors cursor-pointer"
                                         >
-                                            <LogOut className="h-4 w-4 text-rose-600" />
+                                            <LogOut className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                                             <span>Log Out</span>
                                         </button>
                                     </motion.div>

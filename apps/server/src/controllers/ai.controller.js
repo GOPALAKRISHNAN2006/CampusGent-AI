@@ -309,3 +309,87 @@ export const executeAgent = async (req, res, next) => {
         next(error);
     }
 };
+
+/**
+ * Phase 5 — AI Conversation Memory & History Endpoints
+ */
+export const getConversationHistory = async (req, res, next) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            throw new ForbiddenError('Authentication required');
+        }
+        const limit = Math.min(parseInt(req.query.limit, 10) || 10, 30);
+        const turns = await memoryManager.getPersistentHistory(userId, limit);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                turns,
+                total: turns.length,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const listUserConversations = async (req, res, next) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            throw new ForbiddenError('Authentication required');
+        }
+        const conversations = await memoryManager.listConversations(userId);
+
+        res.status(200).json({
+            success: true,
+            data: conversations,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const resetConversation = async (req, res, next) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            throw new ForbiddenError('Authentication required');
+        }
+        await memoryManager.clearHistory(userId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Conversation memory session successfully reset.',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deleteConversation = async (req, res, next) => {
+    try {
+        const userId = req.user?.id;
+        const { id } = req.params;
+        if (!userId) {
+            throw new ForbiddenError('Authentication required');
+        }
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestError('Invalid conversation identifier');
+        }
+
+        const deleted = await memoryManager.deleteConversation(userId, id);
+        if (!deleted) {
+            throw new NotFoundError('Conversation not found or not owned by user');
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Conversation successfully removed.',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+

@@ -16,3 +16,7 @@ import './AttendanceRecord.js';
 import './Assessment.js';
 import './StudentMark.js';
 import './Company.js';
+import './AcademicEvent.js';
+import './Announcement.js';
+import './ConversationMemory.js';
+

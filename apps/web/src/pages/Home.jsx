@@ -22,6 +22,7 @@ import {
     EASE_SPRING,
     EASE_OUT_EXPO,
 } from '../components/ui/AnimationPrimitives.jsx';
+import { ThemeToggle } from '../components/ui/ThemeToggle.jsx';
 
 const capabilities = [
     {
@@ -161,6 +162,7 @@ export const Home = () => {
                 </nav>
 
                 <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                    <ThemeToggle />
                     <Link
                         to="/login"
                         className="rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-bold text-[#1F150C] hover:bg-[#F4EFE6] transition-all"

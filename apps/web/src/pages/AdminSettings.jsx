@@ -8,6 +8,7 @@ import {
     User, Sliders, Database, Activity
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { ThemeToggle } from '../components/ui/ThemeToggle.jsx';
 
 export const AdminSettings = () => {
     const { user: authUser } = useAuth();
@@ -198,6 +199,13 @@ export const AdminSettings = () => {
                                         <span className="text-xs font-semibold text-emerald-800 flex items-center gap-1.5 mt-1">
                                             <span className="h-2 w-2 rounded-full bg-emerald-500" /> Full Campus Governance
                                         </span>
+                                    </div>
+                                    <div className="p-3.5 bg-[#FAF7F2] border border-[#E1DCC9] rounded-xl flex items-center justify-between sm:col-span-2">
+                                        <div>
+                                            <span className="text-[10px] font-bold text-[#8F7554] uppercase tracking-wider block">Interface Appearance</span>
+                                            <p className="font-bold text-[#1F150C] text-xs mt-0.5">Toggle between Light and Dark mode</p>
+                                        </div>
+                                        <ThemeToggle variant="pill" />
                                     </div>
                                 </div>
                             </CardContent>

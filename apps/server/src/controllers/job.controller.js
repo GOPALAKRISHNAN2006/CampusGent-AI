@@ -102,6 +102,9 @@ export const getJobs = async (req, res, next) => {
 // 3. Get Job details
 export const getJobById = async (req, res, next) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            throw new BadRequestError('Invalid job identifier');
+        }
         const job = await Job.findById(req.params.id)
             .populate('eligibilityCriteria.allowedDepartments', 'name code')
             .lean();
@@ -120,6 +123,9 @@ export const getJobById = async (req, res, next) => {
 // 4. Update Job listing
 export const updateJob = async (req, res, next) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            throw new BadRequestError('Invalid job identifier');
+        }
         const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!job) {
             throw new NotFoundError('Job posting not found');
@@ -242,6 +248,9 @@ export const getStudentApplications = async (req, res, next) => {
 export const getJobApplications = async (req, res, next) => {
     try {
         const { jobId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            throw new BadRequestError('Invalid job identifier');
+        }
         const applications = await JobApplication.find({ job: jobId })
             .populate('student', 'name email')
             .sort({ appliedAt: -1 })
@@ -255,10 +264,26 @@ export const getJobApplications = async (req, res, next) => {
         next(error);
     }
 };
+export const VALID_APPLICATION_TRANSITIONS = {
+    [ApplicationStatus.APPLIED]: [ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SCREENING]: [ApplicationStatus.SHORTLISTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SHORTLISTED]: [ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.INTERVIEW]: [ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SELECTED]: [ApplicationStatus.OFFERED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.OFFERED]: [ApplicationStatus.OFFER_ACCEPTED, ApplicationStatus.OFFER_REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.OFFER_ACCEPTED]: [],
+    [ApplicationStatus.OFFER_REJECTED]: [],
+    [ApplicationStatus.REJECTED]: [],
+    [ApplicationStatus.WITHDRAWN]: [],
+};
+
 // 8. Update Application Status (Placement Officer / Admin)
 export const updateApplicationStatus = async (req, res, next) => {
     try {
         const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestError('Invalid application identifier');
+        }
         const { status, remarks } = req.body;
         if (!status || !Object.values(ApplicationStatus).includes(status)) {
             throw new BadRequestError('Invalid application status');
@@ -267,14 +292,31 @@ export const updateApplicationStatus = async (req, res, next) => {
         if (!application) {
             throw new NotFoundError('Job application not found');
         }
+
+        // Validate state machine transition
+        const allowed = VALID_APPLICATION_TRANSITIONS[application.status] || [];
+        if (!allowed.includes(status)) {
+            throw new BadRequestError(
+                `Invalid status transition from ${application.status} to ${status}. Allowed next states: [${allowed.join(', ') || 'None (terminal state)'}]`
+            );
+        }
+
         application.status = status;
         application.timeline.push({
             status,
             updatedAt: new Date(),
             updatedBy: new mongoose.Types.ObjectId(req.user?.id),
-            remarks,
+            remarks: remarks || `Status changed to ${status}`,
         });
         await application.save();
+
+        // Audit Log
+        await AuditLog.create({
+            user: new mongoose.Types.ObjectId(req.user?.id),
+            action: 'UPDATE_APPLICATION_STATUS',
+            details: { applicationId: application._id, newStatus: status, remarks },
+        });
+
         // Notify Student
         const jobDetails = application.job;
         await Notification.create({
@@ -283,12 +325,224 @@ export const updateApplicationStatus = async (req, res, next) => {
             title: `Application Status: ${status}`,
             message: `Your application status for ${jobDetails.title} at ${jobDetails.companyName} has been updated to ${status}. Remarks: ${remarks || 'None'}`,
         });
+
+        await cacheService.delByPrefix('analytics:');
+
         res.status(200).json({
             success: true,
             data: application,
         });
     }
     catch (error) {
+        next(error);
+    }
+};
+
+// 8.1 Issue Job Offer (Placement Officer / Admin)
+export const issueOffer = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestError('Invalid application identifier');
+        }
+        const { packageLpa, designation, joiningLocation, deadline, notes } = req.body;
+        if (!packageLpa || Number(packageLpa) <= 0) {
+            throw new BadRequestError('A valid positive CTC package (LPA) is required');
+        }
+
+        const application = await JobApplication.findById(id).populate('job', 'title companyName');
+        if (!application) {
+            throw new NotFoundError('Job application not found');
+        }
+
+        if (application.status !== ApplicationStatus.SELECTED && application.status !== ApplicationStatus.OFFERED) {
+            throw new BadRequestError(`Offers can only be issued for candidates who have been SELECTED. Current status: ${application.status}`);
+        }
+
+        const offerDeadline = deadline ? new Date(deadline) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        if (offerDeadline <= new Date()) {
+            throw new BadRequestError('Offer acceptance deadline must be in the future');
+        }
+
+        application.status = ApplicationStatus.OFFERED;
+        application.offerDetails = {
+            packageLpa: Number(packageLpa),
+            designation: designation || application.job?.title || 'Graduate Trainee',
+            joiningLocation: joiningLocation || 'TBD',
+            deadline: offerDeadline,
+            issuedAt: new Date(),
+            issuedBy: new mongoose.Types.ObjectId(req.user.id),
+            decisionRemarks: notes || '',
+        };
+
+        application.timeline.push({
+            status: ApplicationStatus.OFFERED,
+            updatedAt: new Date(),
+            updatedBy: new mongoose.Types.ObjectId(req.user.id),
+            remarks: `Official offer of ${packageLpa} LPA issued. Deadline: ${offerDeadline.toLocaleDateString()}`,
+        });
+
+        await application.save();
+
+        await Notification.create({
+            recipient: application.student,
+            type: 'placement',
+            title: '🎉 Job Offer Letter Issued!',
+            message: `Congratulations! You received an official offer for ${application.job?.title} at ${application.job?.companyName} (${packageLpa} LPA). Please review and respond by ${offerDeadline.toLocaleDateString()}.`,
+        });
+
+        await AuditLog.create({
+            user: new mongoose.Types.ObjectId(req.user.id),
+            action: 'ISSUE_OFFER',
+            details: {
+                applicationId: application._id,
+                studentId: application.student,
+                packageLpa,
+                deadline: offerDeadline,
+            },
+        });
+
+        await cacheService.delByPrefix('analytics:');
+
+        res.status(200).json({
+            success: true,
+            message: 'Offer successfully extended to candidate',
+            data: application,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 8.2 Student Respond to Offer (Accept / Reject)
+export const respondToOffer = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestError('Invalid application identifier');
+        }
+        const { decision, remarks } = req.body;
+        if (!decision || !['ACCEPT', 'REJECT'].includes(decision.toUpperCase())) {
+            throw new BadRequestError("Offer decision must be either 'ACCEPT' or 'REJECT'");
+        }
+
+        const application = await JobApplication.findById(id).populate('job', 'title companyName');
+        if (!application) {
+            throw new NotFoundError('Job application not found');
+        }
+
+        if (application.student.toString() !== req.user.id) {
+            throw new ForbiddenError('Unauthorized: Only the nominated candidate can respond to this offer');
+        }
+
+        if (application.status !== ApplicationStatus.OFFERED) {
+            throw new BadRequestError(`Cannot respond to offer. Current application status is '${application.status}'`);
+        }
+
+        if (application.offerDetails?.deadline && new Date() > new Date(application.offerDetails.deadline)) {
+            throw new BadRequestError('The response deadline for this offer has expired.');
+        }
+
+        const isAccept = decision.toUpperCase() === 'ACCEPT';
+        const newStatus = isAccept ? ApplicationStatus.OFFER_ACCEPTED : ApplicationStatus.OFFER_REJECTED;
+
+        application.status = newStatus;
+        if (!application.offerDetails) application.offerDetails = {};
+        application.offerDetails.respondedAt = new Date();
+        application.offerDetails.decisionRemarks = remarks || (isAccept ? 'Accepted by candidate' : 'Declined by candidate');
+
+        application.timeline.push({
+            status: newStatus,
+            updatedAt: new Date(),
+            updatedBy: new mongoose.Types.ObjectId(req.user.id),
+            remarks: remarks || (isAccept ? 'Candidate accepted official offer' : 'Candidate declined offer'),
+        });
+
+        await application.save();
+
+        await AuditLog.create({
+            user: new mongoose.Types.ObjectId(req.user.id),
+            action: isAccept ? 'ACCEPT_OFFER' : 'REJECT_OFFER',
+            details: {
+                applicationId: application._id,
+                jobId: application.job?._id,
+                company: application.job?.companyName,
+                remarks,
+            },
+        });
+
+        await Notification.create({
+            recipient: application.student,
+            type: 'placement',
+            title: isAccept ? 'Offer Acceptance Recorded' : 'Offer Decline Recorded',
+            message: isAccept
+                ? `You have officially accepted the offer from ${application.job?.companyName}!`
+                : `You have declined the offer from ${application.job?.companyName}.`,
+        });
+
+        await cacheService.delByPrefix('analytics:');
+
+        res.status(200).json({
+            success: true,
+            message: isAccept ? 'Offer accepted successfully' : 'Offer declined successfully',
+            data: application,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 8.3 Student Withdraw Application
+export const withdrawApplication = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestError('Invalid application identifier');
+        }
+        const { remarks } = req.body;
+
+        const application = await JobApplication.findById(id).populate('job', 'title companyName');
+        if (!application) {
+            throw new NotFoundError('Job application not found');
+        }
+
+        if (application.student.toString() !== req.user.id) {
+            throw new ForbiddenError('Unauthorized: Only the applicant can withdraw this application');
+        }
+
+        const nonWithdrawable = [ApplicationStatus.OFFER_ACCEPTED, ApplicationStatus.WITHDRAWN, ApplicationStatus.REJECTED];
+        if (nonWithdrawable.includes(application.status)) {
+            throw new BadRequestError(`Cannot withdraw application in status '${application.status}'`);
+        }
+
+        application.status = ApplicationStatus.WITHDRAWN;
+        application.timeline.push({
+            status: ApplicationStatus.WITHDRAWN,
+            updatedAt: new Date(),
+            updatedBy: new mongoose.Types.ObjectId(req.user.id),
+            remarks: remarks || 'Withdrawn by student',
+        });
+
+        await application.save();
+
+        await AuditLog.create({
+            user: new mongoose.Types.ObjectId(req.user.id),
+            action: 'WITHDRAW_APPLICATION',
+            details: {
+                applicationId: application._id,
+                jobId: application.job?._id,
+                remarks,
+            },
+        });
+
+        await cacheService.delByPrefix('analytics:');
+
+        res.status(200).json({
+            success: true,
+            message: 'Application withdrawn successfully',
+            data: application,
+        });
+    } catch (error) {
         next(error);
     }
 };
@@ -339,15 +593,32 @@ export const scheduleInterview = async (req, res, next) => {
             throw new ForbiddenError('You are not authorized to schedule interviews');
         }
         const { applicationId, studentId, jobId, date, type, meetingUrl } = req.body;
+        if (!applicationId || !mongoose.Types.ObjectId.isValid(applicationId)) {
+            throw new BadRequestError('A valid applicationId is required');
+        }
+        const application = await JobApplication.findById(applicationId);
+        if (!application) {
+            throw new NotFoundError('Job application not found');
+        }
+        const effectiveStudentId = studentId || application.student;
+        const effectiveJobId = jobId || application.job;
+        if (!mongoose.Types.ObjectId.isValid(effectiveStudentId) || !mongoose.Types.ObjectId.isValid(effectiveJobId)) {
+            throw new BadRequestError('Invalid student or job identifier');
+        }
+        if (!date) {
+            throw new BadRequestError('Interview date is required');
+        }
+
         const interview = await Interview.create({
             application: new mongoose.Types.ObjectId(applicationId),
-            student: new mongoose.Types.ObjectId(studentId),
-            job: new mongoose.Types.ObjectId(jobId),
+            student: new mongoose.Types.ObjectId(effectiveStudentId),
+            job: new mongoose.Types.ObjectId(effectiveJobId),
             date: new Date(date),
-            type,
+            type: type || 'TECHNICAL',
             status: 'SCHEDULED',
             meetingUrl,
         });
+
         // Also update the job application status to 'INTERVIEW'
         await JobApplication.findByIdAndUpdate(applicationId, {
             status: 'INTERVIEW',
@@ -356,10 +627,32 @@ export const scheduleInterview = async (req, res, next) => {
                     status: 'INTERVIEW',
                     updatedAt: new Date(),
                     updatedBy: new mongoose.Types.ObjectId(req.user?.id),
-                    remarks: `Interview scheduled (${type} round) on ${new Date(date).toLocaleString()}`,
+                    remarks: `Interview scheduled (${type || 'TECHNICAL'} round) on ${new Date(date).toLocaleString()}`,
                 }
             }
         });
+
+        // Notify Student
+        await Notification.create({
+            recipient: effectiveStudentId,
+            type: 'placement',
+            title: '📅 Interview Scheduled',
+            message: `An interview (${type || 'TECHNICAL'}) has been scheduled for ${new Date(date).toLocaleString()}.${meetingUrl ? ` Link: ${meetingUrl}` : ''}`,
+        });
+
+        // Audit Log
+        await AuditLog.create({
+            user: new mongoose.Types.ObjectId(req.user.id),
+            action: 'SCHEDULE_INTERVIEW',
+            details: {
+                interviewId: interview._id,
+                applicationId,
+                studentId: effectiveStudentId,
+                type: type || 'TECHNICAL',
+                date: new Date(date),
+            },
+        });
+
         res.status(201).json({
             success: true,
             data: interview,

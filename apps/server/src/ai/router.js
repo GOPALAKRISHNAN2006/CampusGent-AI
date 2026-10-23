@@ -186,18 +186,27 @@ export class AIRouter {
             throw new ForbiddenError('Authentication required');
         }
 
+        // Cleanly unwrap double-nested or multi-nested customParams
+        let normalizedParams = { ...(customParams || {}) };
+        while (normalizedParams.customParams && typeof normalizedParams.customParams === 'object') {
+            const nested = normalizedParams.customParams;
+            delete normalizedParams.customParams;
+            normalizedParams = { ...normalizedParams, ...nested };
+        }
+
+        const effectiveQuery = query || normalizedParams.query || normalizedParams.prompt || '';
         const targetStudentId = (userRole === 'STUDENT' || !studentId) ? userId : studentId;
 
         // 1. Classify intent
-        const classification = this.classifyIntent(query, userRole);
-        const selectedAgents = customParams?.agent ? [customParams.agent] : classification.selectedAgents;
+        const classification = this.classifyIntent(effectiveQuery, userRole);
+        const selectedAgents = normalizedParams?.agent ? [normalizedParams.agent] : classification.selectedAgents;
 
-        logger.info(`🧭 AIRouter: Routing user [${userId}] (${userRole}) query "${String(query).slice(0, 50)}..." to agents: [${selectedAgents.join(', ')}]`);
+        logger.info(`🧭 AIRouter: Routing user [${userId}] (${userRole}) query "${String(effectiveQuery).slice(0, 50)}..." to agents: [${selectedAgents.join(', ')}]`);
 
         // 2. Build complete student context snapshot
         const snapshot = await AIContextBuilder.buildSnapshot(targetStudentId, {
-            ...customParams,
-            query,
+            ...normalizedParams,
+            query: effectiveQuery,
         });
 
         let output;
@@ -210,13 +219,13 @@ export class AIRouter {
             if (!agent) {
                 throw new BadRequestError(`Agent "${agentName}" not available in catalog`);
             }
-            output = await agent.execute(snapshot, { ...customParams, query });
+            output = await agent.execute(snapshot, { ...normalizedParams, query: effectiveQuery });
         } else {
             // Multi-agent collaborative pipeline execution
             const pipelineOutputs = await AIOrchestrator.executePipeline(
                 targetStudentId,
                 selectedAgents,
-                { ...customParams, query },
+                { ...normalizedParams, query: effectiveQuery },
                 userRole
             );
             synthesis = pipelineOutputs['synthesis']?.data?.synthesis || null;
@@ -229,7 +238,7 @@ export class AIRouter {
 
         // 4. Record interaction into user-isolated memory
         memoryManager.addTurn(userId, {
-            userQuery: query,
+            userQuery: effectiveQuery,
             agent: selectedAgents.join('+'),
             responseSummary: synthesis || output,
             intent: classification.primaryIntent,

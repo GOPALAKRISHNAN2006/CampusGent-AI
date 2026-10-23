@@ -14,9 +14,9 @@ export const ErrorState = ({
         <AlertTriangle className="w-6 h-6" />
       </div>
       <h3 className="text-base font-semibold text-rose-900 dark:text-rose-200 mb-1">{title}</h3>
-      <p className="text-xs text-rose-600 dark:text-rose-300/80 max-w-md mb-5 leading-relaxed">{message}</p>
+      <p className="text-xs text-rose-700 dark:text-rose-200 max-w-md mb-5 leading-relaxed">{message}</p>
       {onRetry && (
-        <Button onClick={onRetry} variant="outline" size="sm" className="border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-100/50">
+        <Button onClick={onRetry} variant="outline" size="sm" className="border-rose-400 dark:border-rose-700 text-rose-700 dark:text-rose-200 hover:bg-rose-100/50 dark:hover:bg-rose-950/40">
           <RefreshCw className="w-3.5 h-3.5 mr-2" />
           Try Again
         </Button>

@@ -78,9 +78,15 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 8.5 Safe Database Seed Endpoint
+// 8.5 Safe Database Seed Endpoint (Disabled in Production)
 app.all('/api/v1/system/seed', async (req, res, next) => {
     try {
+        if (env.NODE_ENV === 'production') {
+            return res.status(403).json({
+                success: false,
+                message: 'Database auto-seed endpoint is strictly disabled in production environment.',
+            });
+        }
         const secret = req.query.key || req.headers['x-seed-key'];
         const adminCount = await User.countDocuments({ role: 'ADMIN' });
         if (adminCount > 0 && secret !== env.JWT_SECRET) {

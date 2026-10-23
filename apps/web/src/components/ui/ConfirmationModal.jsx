@@ -27,7 +27,8 @@ export const ConfirmationModal = ({
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+            className="absolute top-4 right-4 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 cursor-pointer"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -35,14 +36,14 @@ export const ConfirmationModal = ({
           <div className="flex items-start gap-4 mb-4">
             <div className={`p-3 rounded-xl flex-shrink-0 ${
               variant === 'danger'
-                ? 'bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400'
-                : 'bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400'
+                ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400'
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400'
             }`}>
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100">{title}</h3>
-              <p className="text-sm text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">{message}</p>
+              <p className="text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">{message}</p>
             </div>
           </div>
 

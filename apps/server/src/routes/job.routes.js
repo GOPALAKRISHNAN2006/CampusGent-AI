@@ -1,23 +1,50 @@
 import { Router } from 'express';
-import { createJob, getJobs, getJobById, updateJob, applyJob, getStudentApplications, getJobApplications, updateApplicationStatus, getAllApplications, getAllInterviews, scheduleInterview, updateInterviewStatus, } from '../controllers/job.controller.js';
+import {
+    createJob,
+    getJobs,
+    getJobById,
+    updateJob,
+    applyJob,
+    getStudentApplications,
+    getJobApplications,
+    updateApplicationStatus,
+    getAllApplications,
+    getAllInterviews,
+    scheduleInterview,
+    updateInterviewStatus,
+    issueOffer,
+    respondToOffer,
+    withdrawApplication,
+} from '../controllers/job.controller.js';
 import { authenticate } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/rbac.js';
 import { cacheRoute } from '../services/cache.service.js';
+
 const router = Router();
+
 // Public routes for authenticated users (cached for performance)
 router.get('/', authenticate, cacheRoute(60, 'jobs:list'), getJobs);
 router.get('/all-applications', authenticate, requirePermission('applications:read'), getAllApplications);
 router.get('/all-interviews', authenticate, requirePermission('applications:read'), getAllInterviews);
 router.get('/:id', authenticate, cacheRoute(120, 'jobs:detail'), getJobById);
+
 // Job Posting operations (Placement Officer / Admin)
 router.post('/', authenticate, requirePermission('jobs:write'), createJob);
 router.put('/:id', authenticate, requirePermission('jobs:write'), updateJob);
+
 // Applications
 router.post('/apply', authenticate, requirePermission('applications:create'), applyJob);
 router.get('/student/applications', authenticate, requirePermission('applications:read'), getStudentApplications);
 router.get('/job-applications/:jobId', authenticate, requirePermission('applications:read'), getJobApplications);
 router.put('/application/:id/status', authenticate, requirePermission('applications:write'), updateApplicationStatus);
+
+// Complete Placement Lifecycle: Offer Issuance, Decision & Withdrawal
+router.post('/application/:id/issue-offer', authenticate, requirePermission('applications:write'), issueOffer);
+router.post('/application/:id/respond-offer', authenticate, respondToOffer);
+router.post('/application/:id/withdraw', authenticate, withdrawApplication);
+
 // Interviews management
 router.post('/interviews', authenticate, requirePermission('applications:write'), scheduleInterview);
 router.put('/interviews/:id/status', authenticate, requirePermission('applications:write'), updateInterviewStatus);
+
 export default router;

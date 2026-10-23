@@ -23,6 +23,31 @@ const envSchema = z.object({
     AI_API_URL: z.string().url().default('https://generativelanguage.googleapis.com/v1beta/openai'),
     AI_MODEL: z.string().default('gemini-3.5-flash-lite'),
     CLIENT_URL: z.string().default('http://localhost:5173'),
+}).superRefine((data, ctx) => {
+    if (data.NODE_ENV === 'production') {
+        const weakSecrets = ['devsecret', 'supersecret', 'secret123', 'dev_jwt_secret', 'defaultsecret'];
+        if (data.JWT_SECRET.length < 16) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'JWT_SECRET must be at least 16 characters in production environments',
+                path: ['JWT_SECRET'],
+            });
+        }
+        if (weakSecrets.some(w => data.JWT_SECRET.toLowerCase().includes(w))) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'JWT_SECRET cannot use default or predictable development secrets in production',
+                path: ['JWT_SECRET'],
+            });
+        }
+        if (data.JWT_REFRESH_SECRET === data.JWT_SECRET) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'JWT_REFRESH_SECRET must be distinct from JWT_SECRET in production',
+                path: ['JWT_REFRESH_SECRET'],
+            });
+        }
+    }
 });
 const parseResult = envSchema.safeParse({
     ...process.env,

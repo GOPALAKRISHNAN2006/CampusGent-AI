@@ -4,6 +4,7 @@ import { apiClient } from '../api/client.js';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card.jsx';
 import { Button } from '../components/ui/Button.jsx';
 import { User, Bell, ShieldAlert, CheckCircle, AlertCircle, Lock } from 'lucide-react';
+import { ThemeToggle } from '../components/ui/ThemeToggle.jsx';
 
 export const PlacementSettings = () => {
   const { user } = useAuth();
@@ -171,6 +172,13 @@ export const PlacementSettings = () => {
                       />
                       <span className="font-semibold text-brand-800 text-xs">Enable 2FA login verification</span>
                     </label>
+                  </div>
+                  <div className="p-3 bg-brand-50/50 rounded-lg border border-brand-100 flex items-center justify-between sm:col-span-2">
+                    <div>
+                      <span className="text-brand-700 block font-bold text-[11px]">Interface Appearance</span>
+                      <span className="font-semibold text-brand-800 block text-xs mt-0.5">Toggle between Light and Dark mode</span>
+                    </div>
+                    <ThemeToggle variant="pill" />
                   </div>
                 </div>
               </CardContent>

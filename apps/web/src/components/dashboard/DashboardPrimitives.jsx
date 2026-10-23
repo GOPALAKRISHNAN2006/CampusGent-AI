@@ -147,16 +147,16 @@ export const DashboardStat = ({
     index = 0,
 }) => {
     const tones = {
-        indigo: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9]',
-        bronze: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9]',
-        espresso: 'bg-[#1F150C] text-[#E1DCC9] ring-[#412D15]',
-        sandstone: 'bg-[#E1DCC9] text-[#1F150C] ring-[#C9BF9F]',
-        emerald: 'bg-emerald-50 text-emerald-800 ring-emerald-200',
-        amber: 'bg-amber-50 text-amber-900 ring-amber-200',
-        rose: 'bg-rose-50 text-rose-700 ring-rose-200',
-        cyan: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9]',
-        purple: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9]',
-        slate: 'bg-[#F4EFE6] text-[#1F150C] ring-[#E1DCC9]',
+        indigo: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9] dark:bg-[#2A2016] dark:text-[#E1DCC9] dark:ring-[#412D15]',
+        bronze: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9] dark:bg-[#2A2016] dark:text-[#E1DCC9] dark:ring-[#412D15]',
+        espresso: 'bg-[#1F150C] text-[#E1DCC9] ring-[#412D15] dark:bg-[#2A2016] dark:text-[#E1DCC9] dark:ring-[#412D15]',
+        sandstone: 'bg-[#E1DCC9] text-[#1F150C] ring-[#C9BF9F] dark:bg-[#31210F] dark:text-[#FAF7F2] dark:ring-[#412D15]',
+        emerald: 'bg-emerald-50 text-emerald-800 ring-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:ring-emerald-800',
+        amber: 'bg-amber-50 text-amber-900 ring-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:ring-amber-800',
+        rose: 'bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:ring-rose-800',
+        cyan: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9] dark:bg-[#2A2016] dark:text-[#E1DCC9] dark:ring-[#412D15]',
+        purple: 'bg-[#FAF7F2] text-[#412D15] ring-[#E1DCC9] dark:bg-[#2A2016] dark:text-[#E1DCC9] dark:ring-[#412D15]',
+        slate: 'bg-[#F4EFE6] text-[#1F150C] ring-[#E1DCC9] dark:bg-[#241D15] dark:text-[#FAF7F2] dark:ring-[#412D15]',
     };
 
     const content = (
@@ -171,13 +171,13 @@ export const DashboardStat = ({
                 {(detail || trend) && (
                     <div className="flex items-center gap-1.5 pt-0.5">
                         {trend && (
-                            <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-bold ${trendUp ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60'}`}>
+                            <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-bold ${trendUp ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800/60'}`}>
                                 <TrendingUp className={`h-2.5 w-2.5 ${trendUp ? '' : 'rotate-180'}`} />
                                 {trend}
                             </span>
                         )}
                         {detail && (
-                            <span className="text-[11px] font-medium text-[#8F7554]">
+                            <span className="text-[11px] font-medium text-[#786144] dark:text-[#C9BF9F]">
                                 {detail}
                             </span>
                         )}

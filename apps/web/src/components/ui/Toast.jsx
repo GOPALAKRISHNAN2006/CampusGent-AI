@@ -53,17 +53,17 @@ export const ToastProvider = ({ children }) => {
 
 const ToastItem = ({ toast, onClose }) => {
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />,
-    info: <Info className="w-5 h-5 text-brand-600 flex-shrink-0" />,
+    success: <CheckCircle2 className="w-5 h-5 text-emerald-700 dark:text-emerald-400 flex-shrink-0" />,
+    error: <AlertCircle className="w-5 h-5 text-rose-700 dark:text-rose-400 flex-shrink-0" />,
+    warning: <AlertTriangle className="w-5 h-5 text-amber-700 dark:text-amber-400 flex-shrink-0" />,
+    info: <Info className="w-5 h-5 text-brand-600 dark:text-brand-350 flex-shrink-0" />,
   };
 
   const borders = {
-    success: 'border-emerald-200 bg-emerald-50/90 text-emerald-900 dark:bg-emerald-950/80 dark:border-emerald-800 dark:text-emerald-200',
-    error: 'border-rose-200 bg-rose-50/90 text-rose-900 dark:bg-rose-950/80 dark:border-rose-800 dark:text-rose-200',
-    warning: 'border-amber-200 bg-amber-50/90 text-amber-900 dark:bg-amber-950/80 dark:border-amber-800 dark:text-amber-200',
-    info: 'border-brand-200 bg-brand-50/90 text-brand-900 dark:bg-brand-950/80 dark:border-brand-800 dark:text-brand-200',
+    success: 'border-emerald-300 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/80 dark:border-emerald-700 dark:text-emerald-200',
+    error: 'border-rose-300 bg-rose-50 text-rose-950 dark:bg-rose-950/80 dark:border-rose-700 dark:text-rose-200',
+    warning: 'border-amber-300 bg-amber-50 text-amber-950 dark:bg-amber-950/80 dark:border-amber-700 dark:text-amber-200',
+    info: 'border-[#94805A]/50 bg-[#F4EFE6] text-[#1F150C] dark:bg-[#1A140E] dark:border-[#8F7554]/50 dark:text-[#FAF7F2]',
   };
 
   return (
@@ -77,11 +77,12 @@ const ToastItem = ({ toast, onClose }) => {
       {icons[toast.type] || icons.info}
       <div className="flex-1 min-w-0">
         {toast.title && <h4 className="text-sm font-semibold mb-0.5">{toast.title}</h4>}
-        <p className="text-xs leading-relaxed opacity-90">{toast.message}</p>
+        <p className="text-xs leading-relaxed font-medium">{toast.message}</p>
       </div>
       <button
         onClick={onClose}
-        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5 rounded-lg transition-colors"
+        className="text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 p-0.5 rounded-lg transition-colors cursor-pointer"
+        aria-label="Dismiss notification"
       >
         <X className="w-4 h-4" />
       </button>

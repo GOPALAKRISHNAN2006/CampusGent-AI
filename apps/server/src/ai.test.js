@@ -951,8 +951,8 @@ describe('🤖 Master AI Agents Ecosystem & Observability Suite', () => {
                 status: vi.fn().mockReturnThis(),
                 json: vi.fn()
             };
-            const next = vi.fn();
             // Seed Student Profile before finishing session to test placement integrations
+            await StudentProfile.deleteMany({ user: new mongoose.Types.ObjectId('654321098765432109876543') });
             const testProfile = await StudentProfile.create({
                 user: new mongoose.Types.ObjectId('654321098765432109876543'),
                 rollNumber: 'ROLL-MOCK-12345',
@@ -976,6 +976,7 @@ describe('🤖 Master AI Agents Ecosystem & Observability Suite', () => {
                 sourceDataVersion: 'v1.0.0',
                 status: 'ACTIVE'
             });
+            const next = vi.fn();
             await finishSession(req, res, next);
             expect(next).not.toHaveBeenCalled();
             const session = await MockInterviewSession.findById(sessionId);

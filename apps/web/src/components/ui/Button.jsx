@@ -15,23 +15,23 @@ export const Button = ({
     ...props
 }) => {
     const baseStyles =
-        'group relative inline-flex items-center justify-center font-semibold transition-all duration-200 ease-apple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#412D15] disabled:opacity-50 disabled:pointer-events-none select-none cursor-pointer';
+        'group relative inline-flex items-center justify-center font-semibold transition-all duration-200 ease-apple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#412D15] dark:focus:ring-[#E1DCC9] dark:focus:ring-offset-[#0E0B07] disabled:opacity-50 disabled:pointer-events-none select-none cursor-pointer';
 
     const variants = {
         primary:
-            'bg-gradient-to-r from-[#1F150C] via-[#140D07] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] text-[#E1DCC9] border border-[#412D15]/80 shadow-[inset_0_1px_1px_rgba(255,255,255,0.18),0_2px_8px_rgba(31,21,12,0.15)] hover:shadow-glow hover:border-[#E1DCC9]/40 active:scale-[0.97]',
+            'bg-gradient-to-r from-[#1F150C] via-[#140D07] to-[#000000] hover:from-[#412D15] hover:to-[#1F150C] text-[#E1DCC9] hover:text-[#FAF7F2] border border-[#412D15]/80 shadow-[inset_0_1px_1px_rgba(255,255,255,0.18),0_2px_8px_rgba(31,21,12,0.15)] hover:shadow-glow hover:border-[#E1DCC9]/40 active:scale-[0.97]',
         secondary:
-            'bg-white border border-[#E1DCC9] text-[#1F150C] hover:bg-[#F4EFE6] hover:border-[#412D15]/60 hover:text-[#000000] shadow-subtle hover:shadow-md active:scale-[0.97]',
+            'bg-white dark:bg-[#1A140E] border border-[#94805A] dark:border-[#8F7554]/70 text-[#1F150C] dark:text-[#FAF7F2] hover:bg-[#F4EFE6] dark:hover:bg-[#261E16] hover:border-[#412D15] dark:hover:border-[#C9BF9F] hover:text-[#000000] dark:hover:text-[#FFFFFF] shadow-subtle hover:shadow-md active:scale-[0.97]',
         sandstone:
-            'bg-[#E1DCC9] hover:bg-[#F4EFE6] text-[#1F150C] border border-[#C9BF9F] shadow-subtle hover:shadow-md active:scale-[0.97]',
+            'bg-[#E1DCC9] dark:bg-[#2A2016] hover:bg-[#F4EFE6] dark:hover:bg-[#382B1E] text-[#1F150C] dark:text-[#FAF7F2] border border-[#8F7554] dark:border-[#6B5336] shadow-subtle hover:shadow-md active:scale-[0.97]',
         outline:
-            'border border-[#412D15]/40 text-[#1F150C] bg-transparent hover:bg-[#F4EFE6] hover:border-[#412D15] active:scale-[0.97]',
+            'border border-[#6B5336] dark:border-[#C9BF9F]/70 text-[#1F150C] dark:text-[#FAF7F2] bg-transparent hover:bg-[#F4EFE6] dark:hover:bg-[#1F1812] hover:border-[#412D15] dark:hover:border-[#E1DCC9] active:scale-[0.97]',
         emerald:
             'bg-gradient-to-r from-[#412D15] to-[#1F150C] hover:from-[#6B5336] hover:to-[#412D15] text-[#E1DCC9] border border-[#412D15] shadow-sm active:scale-[0.97]',
         danger:
-            'bg-gradient-to-r from-rose-700 to-rose-800 hover:from-rose-600 hover:to-rose-700 text-white shadow-sm active:scale-[0.97] focus:ring-rose-600',
+            'bg-gradient-to-r from-rose-700 to-rose-800 hover:from-rose-600 hover:to-rose-700 text-white shadow-sm active:scale-[0.97] focus:ring-rose-600 dark:focus:ring-rose-400',
         ghost:
-            'text-[#412D15] hover:bg-[#F4EFE6] hover:text-[#1F150C] active:scale-[0.97]',
+            'text-[#412D15] dark:text-[#E1DCC9] hover:bg-[#F4EFE6] dark:hover:bg-[#241D15] hover:text-[#1F150C] dark:hover:text-[#FAF7F2] active:scale-[0.97]',
         dark:
             'bg-[#000000] hover:bg-[#1F150C] text-[#E1DCC9] border border-[#412D15]/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] active:scale-[0.97]',
     };

@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ToastProvider } from './components/ui/Toast.jsx';
 import { AppShell } from './components/layout/AppShell.jsx';
 import { Home } from './pages/Home.jsx';
@@ -128,8 +129,9 @@ const RouteFallback = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Suspense
             fallback={
@@ -229,6 +231,7 @@ function App() {
         </Router>
       </ToastProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
