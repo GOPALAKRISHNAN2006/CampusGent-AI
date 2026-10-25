@@ -116,9 +116,10 @@ export const StudentApplications = () => {
     };
 
     const filteredApps = applications.filter((app) => {
-        const jobTitle = app.job?.title || '';
-        const company = app.job?.companyName || '';
+        const jobTitle = typeof app.job === 'object' ? (app.job?.title || '') : '';
+        const company = typeof app.job === 'object' ? (app.job?.companyName || '') : '';
         const matchesSearch =
+            !searchTerm ||
             jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
             company.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = !statusFilter || app.status === statusFilter;

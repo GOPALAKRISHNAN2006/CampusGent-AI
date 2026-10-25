@@ -34,7 +34,10 @@ export const StudentPlacements = () => {
             setJobs(jobsRes.data.data.jobs || []);
             // Track which jobs the student has already applied to
             const applied = new Set();
-            (appsRes.data.data.applications || []).forEach((app) => {
+            const studentApps = Array.isArray(appsRes.data?.data)
+                ? appsRes.data.data
+                : (appsRes.data?.data?.applications || []);
+            studentApps.forEach((app) => {
                 if (app.job) {
                     applied.add(typeof app.job === 'object' ? app.job._id : app.job);
                 }

@@ -27,14 +27,24 @@ export const PlacementDriveDetail = () => {
         try {
             setLoading(true);
             setError(null);
-            const [driveRes, appsRes] = await Promise.all([
+            const [driveRes, appsRes] = await Promise.allSettled([
                 apiClient.get(`/jobs/${driveId}`),
                 apiClient.get(`/jobs/job-applications/${driveId}`)
             ]);
-            setDrive(driveRes.data.data);
-            setApplications(appsRes.data.data || []);
-            setEligCgpa(driveRes.data.data.eligibilityCriteria?.minCgpa || 6.0);
-            setEligBacklogs(driveRes.data.data.eligibilityCriteria?.maxBacklogsAllowed || 0);
+            if (driveRes.status === 'fulfilled' && driveRes.value.data?.data) {
+                const driveData = driveRes.value.data.data;
+                setDrive(driveData);
+                setEligCgpa(driveData.eligibilityCriteria?.minCgpa || 6.0);
+                setEligBacklogs(driveData.eligibilityCriteria?.maxBacklogsAllowed || 0);
+            } else {
+                setError('Failed to load drive details.');
+            }
+
+            if (appsRes.status === 'fulfilled' && appsRes.value.data?.data) {
+                setApplications(Array.isArray(appsRes.value.data.data) ? appsRes.value.data.data : []);
+            } else {
+                setApplications([]);
+            }
         }
         catch (err) {
             setError('Failed to load drive details.');

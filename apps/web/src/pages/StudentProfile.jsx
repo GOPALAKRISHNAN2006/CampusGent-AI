@@ -22,6 +22,7 @@ export const StudentProfile = () => {
         rollNumber: '',
         semester: 1,
         cgpa: 0,
+        resumeUrl: '',
         githubProfile: '',
         linkedinProfile: '',
         portfolioUrl: '',
@@ -31,6 +32,8 @@ export const StudentProfile = () => {
         careerInterests: [],
         careerGoals: []
     });
+
+    const [modalError, setModalError] = useState(null);
 
     // Dynamic Skill input state
     const [newSkillName, setNewSkillName] = useState('');
@@ -65,6 +68,7 @@ export const StudentProfile = () => {
                 rollNumber: data.rollNumber || '',
                 semester: data.semester || 1,
                 cgpa: data.cgpa || 0,
+                resumeUrl: data.resumeUrl || '',
                 githubProfile: data.githubProfile || '',
                 linkedinProfile: data.linkedinProfile || '',
                 portfolioUrl: data.portfolioUrl || '',
@@ -101,28 +105,57 @@ export const StudentProfile = () => {
         return Math.round((score / total) * 100);
     };
 
+    const normalizeUrl = (url) => {
+        if (!url) return '';
+        const trimmed = url.trim();
+        if (!trimmed) return '';
+        if (!/^https?:\/\//i.test(trimmed)) {
+            return `https://${trimmed}`;
+        }
+        return trimmed;
+    };
+
     const handleSave = async () => {
         try {
             setSaving(true);
             setError(null);
+            setModalError(null);
             const payload = {
-                rollNumber: formData.rollNumber,
-                semester: Number(formData.semester),
-                cgpa: Number(formData.cgpa),
-                githubProfile: formData.githubProfile,
-                linkedinProfile: formData.linkedinProfile,
-                portfolioUrl: formData.portfolioUrl,
-                skills: formData.skills.map((s) => ({ name: s.name, proficiency: s.proficiency })),
-                projects: formData.projects,
-                certifications: formData.certifications,
-                careerInterests: formData.careerInterests,
-                careerGoals: formData.careerGoals
+                rollNumber: formData.rollNumber?.trim() || undefined,
+                semester: Math.max(1, Math.min(8, Number(formData.semester) || 1)),
+                cgpa: Math.max(0, Math.min(10, Number(formData.cgpa) || 0)),
+                resumeUrl: normalizeUrl(formData.resumeUrl),
+                githubProfile: normalizeUrl(formData.githubProfile),
+                linkedinProfile: normalizeUrl(formData.linkedinProfile),
+                portfolioUrl: normalizeUrl(formData.portfolioUrl),
+                skills: (formData.skills || []).map((s) => ({
+                    name: s.name,
+                    proficiency: s.proficiency || 'BEGINNER',
+                    verified: s.verified || false
+                })),
+                projects: (formData.projects || []).map((p) => ({
+                    title: p.title,
+                    description: p.description || '',
+                    technologies: Array.isArray(p.technologies) ? p.technologies : (p.technologies ? [p.technologies] : []),
+                    githubUrl: normalizeUrl(p.githubUrl),
+                    demoUrl: normalizeUrl(p.demoUrl)
+                })),
+                certifications: (formData.certifications || []).map((c) => ({
+                    name: c.name,
+                    issuingOrg: c.issuingOrg || '',
+                    issueDate: c.issueDate || new Date().toISOString().slice(0, 10),
+                    credentialUrl: normalizeUrl(c.credentialUrl)
+                })),
+                careerInterests: formData.careerInterests || [],
+                careerGoals: formData.careerGoals || []
             };
             await apiClient.put('/students/profile', payload);
             await fetchProfile();
             setIsEditing(false);
         } catch (err) {
-            setError(err.response?.data?.error?.message || 'Failed to save student profile information.');
+            const msg = err.response?.data?.error?.message || err.response?.data?.message || 'Failed to save student profile information.';
+            setModalError(msg);
+            setError(msg);
         } finally {
             setSaving(false);
         }
@@ -230,58 +263,69 @@ export const StudentProfile = () => {
             <div className="space-y-6 max-w-6xl w-full mx-auto">
                 {/* Hero Profile Banner */}
                 <div className="bg-white border border-[#E1DCC9] rounded-2xl shadow-subtle overflow-hidden relative">
-                    <div className="h-28 sm:h-32 bg-gradient-to-r from-[#1F150C] via-[#31210F] to-[#0A0704] relative">
-                        <div className="absolute right-4 sm:right-6 bottom-3 sm:bottom-4 text-[11px] sm:text-xs font-semibold text-[#E1DCC9]/90 bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-[#E1DCC9]/20">
+                    <div className="h-28 sm:h-32 bg-gradient-to-r from-[#1F150C] via-[#31210F] to-[#0A0704] relative p-4 sm:p-6 flex items-start justify-between">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[11px] font-semibold text-[#E1DCC9] border border-white/15">
+                            <GraduationCap className="h-3.5 w-3.5 text-[#E1DCC9]" />
+                            <span>{profile?.department?.name || 'Engineering Student'}</span>
+                        </div>
+                        <div className="text-[11px] sm:text-xs font-semibold text-[#E1DCC9]/90 bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-[#E1DCC9]/20">
                             Student ID: {profile?.rollNumber || 'Not set'}
                         </div>
                     </div>
-                    <div className="p-4 sm:p-6 pt-0 flex flex-col md:flex-row md:items-end gap-4 sm:gap-6 relative -mt-10 sm:-mt-12">
-                        <div className="h-20 w-20 sm:h-24 sm:w-24 bg-[#1F150C] border-4 border-white text-[#E1DCC9] rounded-2xl flex items-center justify-center font-black text-2xl sm:text-3xl shadow-md shrink-0">
-                            {profile?.user?.name
-                                ? profile.user.name
-                                      .split(' ')
-                                      .map((n) => n[0])
-                                      .join('')
-                                      .slice(0, 2)
-                                      .toUpperCase()
-                                : 'ST'}
-                        </div>
-                        <div className="flex-1 space-y-2 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <div className="truncate">
+                    <div className="p-4 sm:p-6 pt-0">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-10 sm:-mt-12 mb-4">
+                            <div className="flex items-end gap-3 sm:gap-4">
+                                <div className="h-20 w-20 sm:h-24 sm:w-24 bg-[#1F150C] border-4 border-white text-[#E1DCC9] rounded-2xl flex items-center justify-center font-black text-2xl sm:text-3xl shadow-md shrink-0">
+                                    {profile?.user?.name
+                                        ? profile.user.name
+                                              .split(' ')
+                                              .map((n) => n[0])
+                                              .join('')
+                                              .slice(0, 2)
+                                              .toUpperCase()
+                                        : 'ST'}
+                                </div>
+                                <div className="pb-1 min-w-0">
                                     <h1 className="text-xl sm:text-2xl font-bold text-[#1F150C] leading-tight truncate">
                                         {profile?.user?.name || 'Student Account'}
                                     </h1>
-                                    <div className="text-xs text-[#6B5336] mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
-                                        <GraduationCap className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
-                                        <span className="font-medium">{profile?.department?.name || 'Engineering Faculty'}</span>
+                                    <div className="text-xs text-[#6B5336] mt-0.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                        <span className="font-medium">{profile?.user?.email}</span>
                                         <span className="text-[#C9BF9F]">•</span>
                                         <span>B.Tech / Semester {profile?.semester || 1}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2.5 self-start sm:self-auto shrink-0">
-                                    <Button
-                                        onClick={() => setIsEditing(true)}
-                                        variant="secondary"
-                                        size="sm"
-                                        className="text-xs flex items-center gap-2 border-[#E1DCC9]"
-                                    >
-                                        <Edit2 className="h-3.5 w-3.5 text-[#412D15]" />
-                                        <span>Edit Profile</span>
-                                    </Button>
-                                </div>
                             </div>
-                            <div className="pt-2 flex items-center gap-3">
-                                <div className="flex-1 bg-[#F4EFE6] h-2 rounded-full overflow-hidden border border-[#E1DCC9]/50">
-                                    <div
-                                        className="bg-gradient-to-r from-[#412D15] to-[#1F150C] h-full transition-all duration-500 rounded-full"
-                                        style={{ width: `${completionPercent}%` }}
-                                    />
-                                </div>
-                                <span className="text-xs font-bold text-[#412D15] whitespace-nowrap">
-                                    {completionPercent}% Completed
-                                </span>
+                            <div className="flex items-center gap-2.5 shrink-0 self-start sm:self-end">
+                                <Button
+                                    onClick={() => {
+                                        setModalError(null);
+                                        setIsEditing(true);
+                                    }}
+                                    variant="primary"
+                                    size="sm"
+                                    className="text-xs flex items-center gap-2 px-4 py-2 font-bold shadow-sm cursor-pointer"
+                                >
+                                    <Edit2 className="h-3.5 w-3.5" />
+                                    <span>Edit Profile</span>
+                                </Button>
                             </div>
+                        </div>
+
+                        {/* Profile Completion Bar */}
+                        <div className="pt-3 border-t border-[#E1DCC9]/50 flex items-center gap-3">
+                            <span className="text-[11px] font-bold text-[#6B5336] uppercase tracking-wider shrink-0">
+                                Profile Completeness
+                            </span>
+                            <div className="flex-1 bg-[#F4EFE6] h-2.5 rounded-full overflow-hidden border border-[#E1DCC9]/50">
+                                <div
+                                    className="bg-gradient-to-r from-[#412D15] to-[#1F150C] h-full transition-all duration-500 rounded-full"
+                                    style={{ width: `${completionPercent}%` }}
+                                />
+                            </div>
+                            <span className="text-xs font-bold text-[#412D15] whitespace-nowrap">
+                                {completionPercent}% Completed
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -768,6 +812,13 @@ export const StudentProfile = () => {
 
                         {/* Modal Scrollable Body */}
                         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
+                            {modalError && (
+                                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex gap-2.5 items-center">
+                                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+                                    <span className="font-semibold">{modalError}</span>
+                                </div>
+                            )}
+
                             {editTab === 'personal' && (
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -781,6 +832,18 @@ export const StudentProfile = () => {
                                                 onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
                                                 className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
                                                 placeholder="e.g. 24IT1056"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
+                                                Resume Document / PDF URL
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.resumeUrl}
+                                                onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })}
+                                                className="w-full text-xs border border-[#E1DCC9] rounded-xl p-2.5 outline-none focus:border-[#412D15] focus:ring-2 focus:ring-[#412D15]/10 bg-white text-[#1F150C]"
+                                                placeholder="https://example.com/resume.pdf"
                                             />
                                         </div>
                                         <div>
@@ -807,7 +870,7 @@ export const StudentProfile = () => {
                                                 placeholder="https://linkedin.com/in/username"
                                             />
                                         </div>
-                                        <div>
+                                        <div className="sm:col-span-2">
                                             <label className="block text-[10px] font-bold uppercase text-[#6B5336] mb-1.5 tracking-wider">
                                                 Portfolio / Website URL
                                             </label>

@@ -231,8 +231,13 @@ export const applyJob = async (req, res, next) => {
 export const getStudentApplications = async (req, res, next) => {
     try {
         const userId = req.user?.id;
-        const applications = await JobApplication.find({ student: userId })
-            .populate('job', 'title companyName location employmentType status')
+        const studentProfile = await StudentProfile.findOne({ user: userId });
+        const studentIds = [new mongoose.Types.ObjectId(userId)];
+        if (studentProfile) {
+            studentIds.push(studentProfile._id);
+        }
+        const applications = await JobApplication.find({ student: { $in: studentIds } })
+            .populate('job', 'title companyName location employmentType status salaryMin salaryMax applicationDeadline')
             .sort({ appliedAt: -1 })
             .lean();
         res.status(200).json({
@@ -265,16 +270,16 @@ export const getJobApplications = async (req, res, next) => {
     }
 };
 export const VALID_APPLICATION_TRANSITIONS = {
-    [ApplicationStatus.APPLIED]: [ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.SCREENING]: [ApplicationStatus.SHORTLISTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.SHORTLISTED]: [ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.INTERVIEW]: [ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.SELECTED]: [ApplicationStatus.OFFERED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.OFFERED]: [ApplicationStatus.OFFER_ACCEPTED, ApplicationStatus.OFFER_REJECTED, ApplicationStatus.WITHDRAWN],
-    [ApplicationStatus.OFFER_ACCEPTED]: [],
-    [ApplicationStatus.OFFER_REJECTED]: [],
-    [ApplicationStatus.REJECTED]: [],
-    [ApplicationStatus.WITHDRAWN]: [],
+    [ApplicationStatus.APPLIED]: [ApplicationStatus.APPLIED, ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SCREENING]: [ApplicationStatus.APPLIED, ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SHORTLISTED]: [ApplicationStatus.APPLIED, ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.INTERVIEW]: [ApplicationStatus.APPLIED, ApplicationStatus.SCREENING, ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.OFFERED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.SELECTED]: [ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.SELECTED, ApplicationStatus.OFFERED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.OFFERED]: [ApplicationStatus.SELECTED, ApplicationStatus.OFFERED, ApplicationStatus.OFFER_ACCEPTED, ApplicationStatus.OFFER_REJECTED, ApplicationStatus.REJECTED, ApplicationStatus.WITHDRAWN],
+    [ApplicationStatus.OFFER_ACCEPTED]: [ApplicationStatus.OFFER_ACCEPTED, ApplicationStatus.WITHDRAWN, ApplicationStatus.REJECTED],
+    [ApplicationStatus.OFFER_REJECTED]: [ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.OFFER_REJECTED, ApplicationStatus.REJECTED],
+    [ApplicationStatus.REJECTED]: [ApplicationStatus.APPLIED, ApplicationStatus.SHORTLISTED, ApplicationStatus.INTERVIEW, ApplicationStatus.REJECTED],
+    [ApplicationStatus.WITHDRAWN]: [ApplicationStatus.APPLIED, ApplicationStatus.WITHDRAWN],
 };
 
 // 8. Update Application Status (Placement Officer / Admin)

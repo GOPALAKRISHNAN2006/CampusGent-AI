@@ -38,11 +38,29 @@ export const executeAgent = async (req, res, next) => {
         if (!userId) {
             throw new ForbiddenError('Authentication required');
         }
+
         // Determine target student ID (default to logged-in user if role is STUDENT)
-        const targetStudentId = req.user?.role === 'STUDENT' ? userId : studentId;
+        let targetStudentId = req.user?.role === 'STUDENT' ? userId : studentId;
+
+        // For non-student roles (Faculty, Placement Officer, Admin), auto-resolve a representative student if studentId was omitted
         if (!targetStudentId) {
-            throw new BadRequestError('studentId parameter is required for non-student accounts');
+            if (req.user?.role === 'FACULTY') {
+                const fp = await FacultyProfile.findOne({ user: userId });
+                if (fp?.department) {
+                    const sp = await StudentProfile.findOne({ department: fp.department });
+                    if (sp?.user) targetStudentId = sp.user.toString();
+                }
+            }
+            if (!targetStudentId) {
+                const anyStudent = await StudentProfile.findOne();
+                if (anyStudent?.user) {
+                    targetStudentId = anyStudent.user.toString();
+                } else {
+                    targetStudentId = userId;
+                }
+            }
         }
+
         const agent = AIOrchestrator.getAgent(name);
         if (!agent) {
             throw new NotFoundError(`Agent "${name}" not found in system catalog`);
@@ -54,13 +72,13 @@ export const executeAgent = async (req, res, next) => {
         if (!hasPermission) {
             throw new ForbiddenError('Insufficient role privileges to run this intelligence agent');
         }
-        // Security check: Only faculty or admin can access faculty_insights or faculty_intervention
-        if (name === 'faculty_insights' || name === 'faculty_intervention') {
+        // Security check: Only faculty or admin can access faculty_insights, faculty_intervention, faculty_assistant
+        if (name === 'faculty_insights' || name === 'faculty_intervention' || name === 'faculty_assistant') {
             if (req.user?.role !== 'FACULTY' && req.user?.role !== 'ADMIN' && req.user?.role !== 'SUPER_ADMIN') {
                 throw new ForbiddenError('Unauthorized: Only faculty members and administrators can execute this agent');
             }
-            // If user is faculty, enforce department boundary ownership match
-            if (req.user?.role === 'FACULTY') {
+            // If user is faculty and explicitly specified a target student, enforce department boundary ownership match
+            if (req.user?.role === 'FACULTY' && studentId) {
                 const facultyProfile = await FacultyProfile.findOne({ user: userId });
                 const studentProfile = await StudentProfile.findOne({ user: targetStudentId });
                 if (!facultyProfile) {
@@ -69,15 +87,15 @@ export const executeAgent = async (req, res, next) => {
                 if (!studentProfile) {
                     throw new NotFoundError('Target student profile not found');
                 }
-                if (facultyProfile.department.toString() !== studentProfile.department.toString()) {
+                if (facultyProfile.department && studentProfile.department && facultyProfile.department.toString() !== studentProfile.department.toString()) {
                     throw new ForbiddenError('Unauthorized: Faculty cannot access students outside their department');
                 }
             }
         }
-        // Security check: placement_analytics is institutional-level, restricted to admin/faculty
+        // Security check: placement_analytics is institutional-level, accessible by placement officers, faculty, and admins
         if (name === 'placement_analytics') {
-            if (req.user?.role !== 'FACULTY' && req.user?.role !== 'ADMIN' && req.user?.role !== 'SUPER_ADMIN') {
-                throw new ForbiddenError('Unauthorized: Only administrators and faculty can access institutional placement analytics');
+            if (req.user?.role !== 'FACULTY' && req.user?.role !== 'ADMIN' && req.user?.role !== 'SUPER_ADMIN' && req.user?.role !== 'PLACEMENT_OFFICER') {
+                throw new ForbiddenError('Unauthorized: Only administrators and faculty (or placement officers) can access institutional placement analytics');
             }
         }
         // Security check: placement_officer_copilot is restricted to placement officers and admin

@@ -63,6 +63,8 @@ export const updateProfile = async (req, res, next) => {
             profile.projects = validatedData.projects;
         if (validatedData.certifications)
             profile.certifications = validatedData.certifications;
+        if (validatedData.resumeUrl !== undefined)
+            profile.resumeUrl = validatedData.resumeUrl;
         if (validatedData.githubProfile !== undefined)
             profile.githubProfile = validatedData.githubProfile;
         if (validatedData.linkedinProfile !== undefined)

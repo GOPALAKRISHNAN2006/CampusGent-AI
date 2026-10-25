@@ -54,31 +54,47 @@ export const LoginSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(1, 'Password is required'),
 });
+// Safe optional URL schema that auto-prefixes https:// if omitted
+const optionalUrlSchema = z.preprocess((val) => {
+    if (val === null || val === undefined || val === '') return '';
+    if (typeof val === 'string') {
+        const trimmed = val.trim();
+        if (!trimmed) return '';
+        if (!/^https?:\/\//i.test(trimmed)) {
+            return `https://${trimmed}`;
+        }
+        return trimmed;
+    }
+    return val;
+}, z.string().url().or(z.literal('')).optional());
+
 // Student Profile Updates
 export const StudentProfileUpdateSchema = z.object({
     rollNumber: z.string().min(1, 'Roll number is required').optional(),
-    semester: z.number().min(1).max(8),
-    cgpa: z.number().min(0).max(10),
+    semester: z.number().min(1).max(8).optional(),
+    cgpa: z.number().min(0).max(10).optional(),
     skills: z.array(z.object({
         name: z.string().min(1),
         proficiency: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']),
+        verified: z.boolean().optional(),
     })).optional(),
     projects: z.array(z.object({
         title: z.string().min(1),
-        description: z.string(),
-        technologies: z.array(z.string()),
-        githubUrl: z.string().url().or(z.literal('')).optional(),
-        demoUrl: z.string().url().or(z.literal('')).optional(),
+        description: z.string().optional().default(''),
+        technologies: z.array(z.string()).optional().default([]),
+        githubUrl: optionalUrlSchema,
+        demoUrl: optionalUrlSchema,
     })).optional(),
     certifications: z.array(z.object({
         name: z.string().min(1),
-        issuingOrg: z.string(),
-        issueDate: z.string(),
-        credentialUrl: z.string().url().or(z.literal('')).optional(),
+        issuingOrg: z.string().optional().default(''),
+        issueDate: z.any().optional(),
+        credentialUrl: optionalUrlSchema,
     })).optional(),
-    githubProfile: z.string().url().or(z.literal('')).optional(),
-    linkedinProfile: z.string().url().or(z.literal('')).optional(),
-    portfolioUrl: z.string().url().or(z.literal('')).optional(),
+    resumeUrl: optionalUrlSchema,
+    githubProfile: optionalUrlSchema,
+    linkedinProfile: optionalUrlSchema,
+    portfolioUrl: optionalUrlSchema,
     careerInterests: z.array(z.string()).optional(),
     careerGoals: z.array(z.string()).optional(),
 });
