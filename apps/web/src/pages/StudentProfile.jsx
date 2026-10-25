@@ -273,9 +273,9 @@ export const StudentProfile = () => {
                         </div>
                     </div>
                     <div className="p-4 sm:p-6 pt-0">
-                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-10 sm:-mt-12 mb-4">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                             <div className="flex items-end gap-3 sm:gap-4">
-                                <div className="h-20 w-20 sm:h-24 sm:w-24 bg-[#1F150C] border-4 border-white text-[#E1DCC9] rounded-2xl flex items-center justify-center font-black text-2xl sm:text-3xl shadow-md shrink-0">
+                                <div className="-mt-12 sm:-mt-14 h-20 w-20 sm:h-24 sm:w-24 bg-[#1F150C] border-4 border-white text-[#E1DCC9] rounded-2xl flex items-center justify-center font-black text-2xl sm:text-3xl shadow-md shrink-0 z-10">
                                     {profile?.user?.name
                                         ? profile.user.name
                                               .split(' ')
@@ -285,18 +285,19 @@ export const StudentProfile = () => {
                                               .toUpperCase()
                                         : 'ST'}
                                 </div>
-                                <div className="pb-1 min-w-0">
-                                    <h1 className="text-xl sm:text-2xl font-bold text-[#1F150C] leading-tight truncate">
+                                <div className="pt-2 sm:pt-0 pb-1 min-w-0">
+                                    <h1 className="text-2xl sm:text-3xl font-black text-[#1F150C] leading-tight">
                                         {profile?.user?.name || 'Student Account'}
                                     </h1>
-                                    <div className="text-xs text-[#6B5336] mt-0.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
-                                        <span className="font-medium">{profile?.user?.email}</span>
+                                    <div className="text-xs text-[#6B5336] mt-0.5 flex flex-wrap items-center gap-1.5 sm:gap-2 font-semibold">
+                                        <GraduationCap className="h-3.5 w-3.5 text-[#412D15] shrink-0" />
+                                        <span>{profile?.department?.name || 'Computer Science & Engineering'}</span>
                                         <span className="text-[#C9BF9F]">•</span>
                                         <span>B.Tech / Semester {profile?.semester || 1}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2.5 shrink-0 self-start sm:self-end">
+                            <div className="flex items-center gap-2.5 shrink-0 self-start sm:self-end pb-1">
                                 <Button
                                     onClick={() => {
                                         setModalError(null);
