@@ -145,7 +145,21 @@ export const Login = ({ role }) => {
 
             navigate('/dashboard');
         } catch (err) {
-            setApiError(err.response?.data?.error?.message || 'Login failed, check your credentials.');
+            console.error('Login request failed:', err);
+            const serverMsg = err.response?.data?.error?.message || err.response?.data?.message;
+            if (serverMsg) {
+                setApiError(serverMsg);
+            } else if (err.code === 'ECONNABORTED' || err.message?.toLowerCase().includes('timeout')) {
+                setApiError('Server connection timed out. On free hosting (Render), the backend spins down after inactivity. Please wait 15 seconds and try again.');
+            } else if (err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
+                setApiError('Unable to reach backend server. The server may be waking up, offline, or blocked by CORS policy.');
+            } else if (err.response?.status === 404) {
+                setApiError('Authentication endpoint not found (404). Please ensure VITE_API_URL includes the /api/v1 prefix.');
+            } else if (err.response?.status === 502 || err.response?.status === 503) {
+                setApiError('Backend server is temporarily unavailable (502/503). It may currently be redeploying or starting up.');
+            } else {
+                setApiError(err.message || 'Login failed. Please verify credentials and server connection.');
+            }
         }
     };
 

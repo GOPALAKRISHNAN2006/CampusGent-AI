@@ -18,8 +18,15 @@ import { UserRole, UserStatus, JobStatus, EmploymentType, ApplicationStatus } fr
 const DEFAULT_PASSWORD = 'Password@123';
 
 export const seedDatabase = async () => {
-    if (env.NODE_ENV === 'production' && process.env.ALLOW_SEED_IN_PRODUCTION !== 'true') {
-        throw new Error('❌ Production Safety Guard: Automatic seeding of demo accounts and mock records is prohibited in production mode. Set ALLOW_SEED_IN_PRODUCTION=true to force seeding.');
+    // If running in production, allow seeding if:
+    // 1. Explicit override flag is enabled (ALLOW_SEED_IN_PRODUCTION=true or AUTO_SEED=true), OR
+    // 2. The database is empty (0 users found)
+    if (env.NODE_ENV === 'production') {
+        const userCount = await User.countDocuments();
+        const explicitAllowed = process.env.ALLOW_SEED_IN_PRODUCTION === 'true' || process.env.AUTO_SEED === 'true';
+        if (userCount > 0 && !explicitAllowed) {
+            throw new Error('❌ Production Safety Guard: Database already contains users. Set ALLOW_SEED_IN_PRODUCTION=true or AUTO_SEED=true to force re-seeding.');
+        }
     }
     try {
         console.log('🌱 Connecting to database for seeding...');

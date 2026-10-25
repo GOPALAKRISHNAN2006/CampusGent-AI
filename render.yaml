@@ -19,6 +19,10 @@ services:
         generateValue: true
       - key: CLIENT_URL
         sync: false
+      - key: AUTO_SEED
+        value: "true"
+      - key: ALLOW_SEED_IN_PRODUCTION
+        value: "true"
       - key: AI_API_KEY
         sync: false
       - key: AI_API_URL

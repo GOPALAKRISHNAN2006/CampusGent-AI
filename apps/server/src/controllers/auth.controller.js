@@ -46,7 +46,8 @@ export const register = async (req, res, next) => {
                 'REGISTRATION_RESTRICTED'
             );
         }
-        const existingUser = await User.findOne({ email: validatedData.email });
+        const normalizedEmail = validatedData.email.toLowerCase().trim();
+        const existingUser = await User.findOne({ email: normalizedEmail });
         if (existingUser) {
             throw new ConflictError('Email address already registered', 'EMAIL_ALREADY_EXISTS');
         }
@@ -54,7 +55,7 @@ export const register = async (req, res, next) => {
         const passwordHash = await bcrypt.hash(validatedData.password, salt);
         const user = await User.create({
             name: validatedData.name,
-            email: validatedData.email,
+            email: normalizedEmail,
             passwordHash,
             role: validatedData.role,
             department: validatedData.department ? new mongoose.Types.ObjectId(validatedData.department) : undefined,
@@ -101,7 +102,8 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
     try {
         const validatedData = LoginSchema.parse(req.body);
-        const user = await User.findOne({ email: validatedData.email });
+        const normalizedEmail = validatedData.email.toLowerCase().trim();
+        const user = await User.findOne({ email: normalizedEmail });
         if (!user) {
             throw new UnauthorizedError('Invalid credentials', 'INVALID_CREDENTIALS');
         }
@@ -129,6 +131,7 @@ export const login = async (req, res, next) => {
             success: true,
             data: {
                 accessToken,
+                refreshToken, // Fallback for cross-origin deployments where 3rd-party cookies are partitioned or blocked
                 user: {
                     id: user._id,
                     name: user.name,
@@ -144,7 +147,7 @@ export const login = async (req, res, next) => {
 };
 export const logout = async (req, res, next) => {
     try {
-        const { refreshToken } = req.cookies;
+        const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken || req.headers['x-refresh-token'];
         if (refreshToken) {
             await RefreshToken.deleteOne({ token: refreshToken });
         }
@@ -168,7 +171,7 @@ export const logout = async (req, res, next) => {
 };
 export const refresh = async (req, res, next) => {
     try {
-        const { refreshToken } = req.cookies;
+        const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken || req.headers['x-refresh-token'];
         if (!refreshToken) {
             throw new UnauthorizedError('Refresh token is missing', 'REFRESH_TOKEN_MISSING');
         }
@@ -202,6 +205,7 @@ export const refresh = async (req, res, next) => {
             success: true,
             data: {
                 accessToken: newAccessToken,
+                refreshToken: newRefreshToken,
             },
         });
     }

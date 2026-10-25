@@ -31,20 +31,71 @@ app.set('trust proxy', 1);
 // 2. HTTP Security Headers
 app.use(helmet({ contentSecurityPolicy: false }));
 // 3. CORS configuration
-const allowedOrigins = env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/$/, ''));
-app.use(cors({
+const configuredOrigins = env.CLIENT_URL
+    ? env.CLIENT_URL.split(',').map((u) => u.trim().replace(/\/+$/, ''))
+    : ['http://localhost:5173'];
+
+const isOriginAllowed = (origin) => {
+    if (!origin) return true; // Direct API calls, postman, mobile apps, or server-to-server
+    const cleanOrigin = origin.replace(/\/+$/, '');
+
+    // Check configured origins or wildcard
+    if (configuredOrigins.includes('*') || configuredOrigins.includes(cleanOrigin)) {
+        return true;
+    }
+
+    // Auto-allow all Vercel domains (e.g., https://xxx.vercel.app, preview branches)
+    if (/^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app')) {
+        return true;
+    }
+
+    // Auto-allow all Render domains (e.g., https://xxx.onrender.com)
+    if (/^https:\/\/[a-zA-Z0-9_-]+\.onrender\.com$/.test(cleanOrigin) ||
+        cleanOrigin.endsWith('.onrender.com')) {
+        return true;
+    }
+
+    // Auto-allow Cloudflare Pages / Netlify / Railway
+    if (cleanOrigin.endsWith('.pages.dev') ||
+        cleanOrigin.endsWith('.netlify.app') ||
+        cleanOrigin.endsWith('.up.railway.app')) {
+        return true;
+    }
+
+    // Auto-allow localhost on any port
+    if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(cleanOrigin)) {
+        return true;
+    }
+
+    return false;
+};
+
+const corsOptions = {
     origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        const cleanOrigin = origin.replace(/\/$/, '');
-        if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes('*')) {
+        if (isOriginAllowed(origin)) {
             return callback(null, true);
         }
-        return callback(new Error(`CORS blocked for origin: ${origin}`));
+        logger.warn(`⚠️ CORS blocked request from origin: ${origin}`);
+        return callback(null, false);
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'x-request-id',
+        'x-refresh-token',
+        'x-seed-key',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+    ],
+    exposedHeaders: ['x-request-id'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 // 4. Content compression
 app.use(compression());
 // 5. Request Parsers & Sanitization
@@ -78,22 +129,28 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 8.5 Safe Database Seed Endpoint (Disabled in Production)
+// 8.5 Safe Database Seed Endpoint
 app.all('/api/v1/system/seed', async (req, res, next) => {
     try {
-        if (env.NODE_ENV === 'production') {
-            return res.status(403).json({
-                success: false,
-                message: 'Database auto-seed endpoint is strictly disabled in production environment.',
-            });
-        }
         const secret = req.query.key || req.headers['x-seed-key'];
         const adminCount = await User.countDocuments({ role: 'ADMIN' });
-        if (adminCount > 0 && secret !== env.JWT_SECRET) {
-            return res.status(403).json({
-                success: false,
-                message: 'Admin account already exists. Pass ?key=<JWT_SECRET> to re-seed.',
-            });
+        const userCount = await User.countDocuments();
+
+        if (env.NODE_ENV === 'production') {
+            const isAuthorized = secret === env.JWT_SECRET || process.env.ALLOW_SEED_IN_PRODUCTION === 'true' || process.env.AUTO_SEED === 'true' || userCount === 0;
+            if (!isAuthorized) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Access denied. In production, pass ?key=<JWT_SECRET> or header x-seed-key to initialize/seed database.',
+                });
+            }
+        } else {
+            if (adminCount > 0 && secret !== env.JWT_SECRET) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Admin account already exists. Pass ?key=<JWT_SECRET> to re-seed.',
+                });
+            }
         }
         await seedDatabase();
         res.status(200).json({

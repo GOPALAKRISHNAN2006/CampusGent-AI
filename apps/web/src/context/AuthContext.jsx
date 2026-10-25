@@ -1,15 +1,26 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { apiClient, setAccessToken } from '../api/client.js';
+import { apiClient, setAccessToken, getStoredRefreshToken, setStoredRefreshToken } from '../api/client.js';
 const AuthContext = createContext(undefined);
 let authInitializationPromise = null;
 
 const initializeAuth = async () => {
     if (!authInitializationPromise) {
         authInitializationPromise = (async () => {
-            const refreshResponse = await apiClient.post('/auth/refresh');
+            const fallbackToken = getStoredRefreshToken();
+            const refreshResponse = await apiClient.post(
+                '/auth/refresh',
+                { refreshToken: fallbackToken },
+                {
+                    headers: fallbackToken ? { 'x-refresh-token': fallbackToken } : {},
+                }
+            );
             const token = refreshResponse.data.data.accessToken;
+            const newRefreshToken = refreshResponse.data.data.refreshToken;
             setAccessToken(token);
+            if (newRefreshToken) {
+                setStoredRefreshToken(newRefreshToken);
+            }
             const meResponse = await apiClient.get('/auth/me');
             return meResponse.data.data;
         })().finally(() => {
@@ -33,6 +44,7 @@ export const AuthProvider = ({ children }) => {
             catch (error) {
                 // Clean session
                 setAccessToken(null);
+                setStoredRefreshToken(null);
                 if (active) setUser(null);
             }
             finally {
@@ -44,6 +56,7 @@ export const AuthProvider = ({ children }) => {
         const handleGlobalLogout = () => {
             setUser(null);
             setAccessToken(null);
+            setStoredRefreshToken(null);
         };
         window.addEventListener('auth-logout', handleGlobalLogout);
         return () => {
@@ -55,13 +68,17 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const response = await apiClient.post('/auth/login', credentials);
-            const { accessToken: token, user: userData } = response.data.data;
+            const { accessToken: token, refreshToken: rToken, user: userData } = response.data.data;
             setAccessToken(token);
+            if (rToken) {
+                setStoredRefreshToken(rToken);
+            }
             setUser(userData);
             return userData;
         }
         catch (error) {
             setAccessToken(null);
+            setStoredRefreshToken(null);
             setUser(null);
             throw error;
         }
@@ -75,13 +92,17 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         setIsLoading(true);
         try {
-            await apiClient.post('/auth/logout');
+            const fallbackToken = getStoredRefreshToken();
+            await apiClient.post('/auth/logout', { refreshToken: fallbackToken }, {
+                headers: fallbackToken ? { 'x-refresh-token': fallbackToken } : {},
+            });
         }
         catch (error) {
             console.error('Logout error:', error);
         }
         finally {
             setAccessToken(null);
+            setStoredRefreshToken(null);
             setUser(null);
             setIsLoading(false);
         }
