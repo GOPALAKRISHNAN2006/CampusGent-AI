@@ -628,7 +628,8 @@ export const seedDatabase = async () => {
 };
 
 // If run directly via node src/seed.js
-if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+import { pathToFileURL } from 'url';
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
     seedDatabase()
         .then(() => process.exit(0))
         .catch(() => process.exit(1));

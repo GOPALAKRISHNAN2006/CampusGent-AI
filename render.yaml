@@ -3,7 +3,7 @@ services:
     name: campusgent-server
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run build:shared && npm run build:server
     startCommand: node apps/server/src/server.js
     healthCheckPath: /api/health
     envVars:

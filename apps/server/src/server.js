@@ -6,37 +6,39 @@ import { seedDatabase } from './seed.js';
 import mongoose from 'mongoose';
 
 const startServer = async () => {
-    // Connect to Database
-    await connectDB();
-
-    // Auto-seed core roles if admin account does not exist or database is empty
-    try {
-        const adminExists = await User.findOne({ email: 'admin@campusgent.edu' });
-        const userCount = await User.countDocuments();
-
-        const shouldSeed = !adminExists && (
-            env.NODE_ENV !== 'production' ||
-            userCount === 0 ||
-            process.env.AUTO_SEED === 'true' ||
-            process.env.ALLOW_SEED_IN_PRODUCTION === 'true'
-        );
-
-        if (shouldSeed) {
-            console.log('🌱 Admin account not detected or database empty. Initializing database with core roles (Admin, Faculty, Placement Officer, Student)...');
-            await seedDatabase();
-            console.log('✅ Auto-seed completed successfully.');
-        } else if (!adminExists) {
-            console.warn('⚠️ Admin account not detected in production. To seed core roles, visit /api/v1/system/seed?key=<JWT_SECRET> or set AUTO_SEED=true in environment variables.');
-        }
-    } catch (seedErr) {
-        console.warn('⚠️ Auto-seed check notice:', seedErr.message);
-    }
-
-    // Start Express Listening
-    const server = app.listen(env.PORT, () => {
+    // Start Express Listening immediately so cloud health checks (Render/Railway/AWS) pass
+    const server = app.listen(env.PORT, '0.0.0.0', () => {
         console.log(`🚀 Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
         console.log(`📡 CORS Origin configured for: ${env.CLIENT_URL}`);
+        console.log(`🏥 Health check ready at: /api/health`);
     });
+
+    // Connect to Database and perform auto-seed if needed
+    (async () => {
+        try {
+            await connectDB();
+
+            const adminExists = await User.findOne({ email: 'admin@campusgent.edu' });
+            const userCount = await User.countDocuments();
+
+            const shouldSeed = !adminExists && (
+                env.NODE_ENV !== 'production' ||
+                userCount === 0 ||
+                process.env.AUTO_SEED === 'true' ||
+                process.env.ALLOW_SEED_IN_PRODUCTION === 'true'
+            );
+
+            if (shouldSeed) {
+                console.log('🌱 Admin account not detected or database empty. Initializing database with core roles (Admin, Faculty, Placement Officer, Student)...');
+                await seedDatabase();
+                console.log('✅ Auto-seed completed successfully.');
+            } else if (!adminExists) {
+                console.warn('⚠️ Admin account not detected in production. To seed core roles, visit /api/v1/system/seed?key=<JWT_SECRET> or set AUTO_SEED=true in environment variables.');
+            }
+        } catch (seedErr) {
+            console.warn('⚠️ Database/seed check notice:', seedErr.message);
+        }
+    })();
 
     // Graceful Shutdown on termination signals
     const shutdown = async (signal) => {

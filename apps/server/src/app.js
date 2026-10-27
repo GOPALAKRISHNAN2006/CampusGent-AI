@@ -17,6 +17,7 @@ import { seedDatabase } from './seed.js';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 import { sanitizeNoSql } from './middleware/sanitize.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -119,10 +120,13 @@ app.use(morgan(morganFormat, {
 }));
 // 8. Health Check Endpoint
 app.get('/api/health', (req, res) => {
+    const isDbConnected = mongoose.connection.readyState === 1;
     res.status(200).json({
         success: true,
         data: {
             status: 'OK',
+            database: isDbConnected ? 'connected' : 'connecting',
+            uptime: process.uptime(),
             timestamp: new Date().toISOString(),
             version: '1.0.0',
         },
@@ -162,8 +166,20 @@ app.all('/api/v1/system/seed', async (req, res, next) => {
     }
 });
 
-// 9. API Routes & Rate Limiting
-app.use('/api/v1', apiLimiter, apiRoutes);
+// 9. API Routes & Rate Limiting with DB readiness guard
+app.use('/api/v1', (req, res, next) => {
+    if (req.path === '/system/seed') return next();
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({
+            success: false,
+            error: {
+                message: 'Database connection in progress or unavailable. On Render, please ensure MONGODB_URI is set and MongoDB Atlas Network Access allows 0.0.0.0/0.',
+                code: 'DATABASE_UNAVAILABLE',
+            },
+        });
+    }
+    next();
+}, apiLimiter, apiRoutes);
 
 // 10. Static Frontend SPA Serving (Full-Stack Support with caching headers)
 if (fs.existsSync(webDistPath)) {
